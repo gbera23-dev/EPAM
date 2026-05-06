@@ -21,7 +21,7 @@ public class TrainerService {
         String username = generateUsername(trainer);
         String password = StringUtils.generateRandomPassword();
 
-        user.setUserName(username);
+        user.setUsername(username);
         user.setPassword(password);
 
 
@@ -40,7 +40,7 @@ public class TrainerService {
         User user = trainer.getUser();
         List<Trainer> trainers = trainerDAO.getAll();
         String username = user.getFirstName() + "." + user.getLastName();
-        long count = trainers.stream().filter(t -> t.getUser().getUserName().startsWith(username))
+        long count = trainers.stream().filter(t -> t.getUser().getUsername().startsWith(username))
                 .count();
         return count != 0 ? username + count : username;
     }

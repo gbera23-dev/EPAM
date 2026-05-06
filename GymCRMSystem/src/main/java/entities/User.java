@@ -1,13 +1,11 @@
 package entities;
 
 
-import org.springframework.stereotype.Component;
-
-public class User implements GymEntity {
-
+public class User {
+    private long userId;
     private String firstName;
     private String lastName;
-    private String userName;
+    private String username;
     private String password;
     private boolean isActive;
 
@@ -16,18 +14,30 @@ public class User implements GymEntity {
         return "User{" +
                 "firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
-                ", userName='" + userName + '\'' +
+                ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
                 ", isActive=" + isActive +
                 '}';
     }
 
-    public User(String firstName, String lastName, String userName, String password, boolean isActive) {
+    public User(){}
+
+    
+    public User(long userId, String firstName, String lastName, String username, String password, boolean isActive) {
+        this.userId = userId;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.userName = userName;
+        this.username = username;
         this.password = password;
         this.isActive = isActive;
+    }
+
+    public long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(long userId) {
+        this.userId = userId;
     }
 
     public String getFirstName() {
@@ -46,12 +56,12 @@ public class User implements GymEntity {
         this.lastName = lastName;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getUsername() {
+        return username;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getPassword() {
@@ -62,11 +72,12 @@ public class User implements GymEntity {
         this.password = password;
     }
 
-    public boolean isActive() {
+    public boolean getIsActive() {
         return isActive;
     }
 
-    public void setActive(boolean active) {
-        isActive = active;
+    public void setIsActive(boolean isActive) {
+        this.isActive = isActive;
     }
+
 }

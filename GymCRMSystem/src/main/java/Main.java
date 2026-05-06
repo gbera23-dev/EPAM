@@ -1,12 +1,6 @@
-import entities.Trainee;
-import entities.User;
 import facade.GymFacade;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-
-import java.sql.Date;
-
-import static java.time.LocalDate.now;
 
 public class Main {
 
@@ -18,21 +12,14 @@ public static void main(String[] args) {
 
     GymFacade gymFacade = applicationContext.getBean(GymFacade.class);
 
-    Trainee trainee = new Trainee(
-       1L, Date.valueOf(now()),
-            "Main street", new User("joni", "jojoni", null, null, true));
+    System.out.println(gymFacade.getTrainer(53L));
 
-    gymFacade.createTrainee(trainee);
+    System.out.println(gymFacade.getTrainee(43L));
 
-    Trainee retrievedTrainee = gymFacade.getTrainee(1L);
 
-    System.out.println(retrievedTrainee);
+    System.out.println(gymFacade.getTraining(12L));
+
 }
-
-
-
-
-
 
 
 }

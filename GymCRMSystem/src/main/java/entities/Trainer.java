@@ -7,6 +7,21 @@ public class Trainer implements GymEntity {
     private String specialization;
     private User user;
 
+    @Override
+    public String toString() {
+        return "Trainer{" +
+                "trainerPK=" + trainerPK +
+                ", specialization='" + specialization + '\'' +
+                ", user=" + user +
+                '}';
+    }
+
+    public Trainer(long trainerPK, String specialization, User user) {
+        this.trainerPK = trainerPK;
+        this.specialization = specialization;
+        this.user = user;
+    }
+
     public long getTrainerPK() {
         return trainerPK;
     }
@@ -30,4 +45,10 @@ public class Trainer implements GymEntity {
     public void setUser(User user) {
         this.user = user;
     }
+
+    @Override
+    public long getEntityId() {
+        return this.trainerPK;
+    }
+
 }

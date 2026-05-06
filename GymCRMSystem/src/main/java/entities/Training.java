@@ -12,6 +12,19 @@ public class Training implements GymEntity {
     private Date date;
     private int duration;
 
+    @Override
+    public String toString() {
+        return "Training{" +
+                "trainingPK=" + trainingPK +
+                ", traineeId=" + traineeId +
+                ", trainerId=" + trainerId +
+                ", name='" + name + '\'' +
+                ", trainingType=" + trainingType +
+                ", date=" + date +
+                ", duration=" + duration +
+                '}';
+    }
+
     public Training(long trainingPK, long traineeId, long trainerId, String name,
                     TrainingType trainingType, Date date, int duration) {
         this.trainingPK = trainingPK;
@@ -77,5 +90,10 @@ public class Training implements GymEntity {
 
     public void setDate(Date date) {
         this.date = date;
+    }
+
+    @Override
+    public long getEntityId() {
+        return this.trainingPK;
     }
 }

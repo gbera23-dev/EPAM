@@ -59,4 +59,9 @@ public class Trainee implements GymEntity {
     public void setUserId(User user) {
         this.user = user;
     }
+
+    @Override
+    public long getEntityId() {
+        return this.TraineePK;
+    }
 }

@@ -22,7 +22,7 @@ public class TraineeService {
         String username = generateUsername(trainee);
         String password = StringUtils.generateRandomPassword();
 
-        user.setUserName(username);
+        user.setUsername(username);
         user.setPassword(password);
 
         traineeDAO.save(trainee.getTraineePK(), trainee);
@@ -45,7 +45,7 @@ public class TraineeService {
         User user = trainee.getUser();
         List<Trainee> trainees = traineeDAO.getAll();
         String username = user.getFirstName() + "." + user.getLastName();
-        long count = trainees.stream().filter(t -> t.getUser().getUserName().startsWith(username))
+        long count = trainees.stream().filter(t -> t.getUser().getUsername().startsWith(username))
                 .count();
         return count != 0 ? username + count : username;
     }
