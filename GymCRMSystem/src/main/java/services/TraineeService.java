@@ -1,14 +1,14 @@
 package services;
 
-import Utils.StringUtils;
+import utils.StringUtils;
 import entities.Trainee;
 import entities.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import persistence.TraineeDAO;
+import utils.UserUtils;
 
 import java.util.List;
-
 
 
 @Service
@@ -20,12 +20,12 @@ public class TraineeService {
 
 
     public void createTraineeProfile(Trainee trainee) {
-        User user = trainee.getUser();
-        String username = generateUsername(trainee);
-        String password = StringUtils.generateRandomPassword();
-
-        user.setUsername(username);
-        user.setPassword(password);
+        User currentUser = trainee.getUser();
+        List<User> users = traineeDAO.getAll().
+                stream().
+                map(Trainee::getUser).
+                toList();
+        UserUtils.generateUserCredentials(currentUser, users);
 
         traineeDAO.save(trainee.getTraineePK(), trainee);
     }
@@ -42,13 +42,4 @@ public class TraineeService {
         traineeDAO.delete(traineeId);
     }
 
-
-    private String generateUsername(Trainee trainee) {
-        User user = trainee.getUser();
-        List<Trainee> trainees = traineeDAO.getAll();
-        String username = user.getFirstName() + "." + user.getLastName();
-        long count = trainees.stream().filter(t -> t.getUser().getUsername().startsWith(username))
-                .count();
-        return count != 0 ? username + count : username;
-    }
 }

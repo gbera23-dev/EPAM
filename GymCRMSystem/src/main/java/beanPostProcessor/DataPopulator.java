@@ -1,6 +1,6 @@
-package BeanPostProcessor;
+package beanPostProcessor;
 
-import Builders.Builder;
+import builders.Builder;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import entities.GymEntity;

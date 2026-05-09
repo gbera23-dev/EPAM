@@ -1,4 +1,4 @@
-package Builders;
+package builders;
 
 import entities.GymEntity;
 

@@ -1,7 +1,6 @@
-import Builders.TrainingBuilder;
+import builders.TrainingBuilder;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import entities.Training;
-import entities.TrainingType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

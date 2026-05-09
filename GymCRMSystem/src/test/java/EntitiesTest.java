@@ -82,7 +82,7 @@ class TraineeTest {
         Trainee trainee = createTrainee();
         User newUser = new User(2L, "Jane", "Smith", "jane.smith", "pw", false);
 
-        trainee.setUserId(newUser);
+        trainee.setUser(newUser);
 
         assertEquals(newUser, trainee.getUser());
     }

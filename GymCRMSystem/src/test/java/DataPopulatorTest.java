@@ -1,10 +1,8 @@
-import BeanPostProcessor.DataPopulator;
-import Builders.Builder;
-import Builders.TraineeBuilder;
+import beanPostProcessor.DataPopulator;
+import builders.Builder;
+import builders.TraineeBuilder;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import entities.GymEntity;
-import entities.Trainee;
-import entities.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

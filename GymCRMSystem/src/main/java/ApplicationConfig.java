@@ -1,7 +1,5 @@
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.json.JsonMapper;
 import entities.*;
-import facade.GymFacade;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.*;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
@@ -15,9 +13,9 @@ import java.util.*;
         "persistence",
         "services",
         "facade",
-        "BeanPostProcessor",
-        "Builders",
-        "Logging"
+        "beanPostProcessor",
+        "builders",
+        "logging"
         })
 @EnableAspectJAutoProxy
 @Configuration

@@ -1,12 +1,9 @@
-import Builders.TraineeBuilder;
+import builders.TraineeBuilder;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import entities.GymEntity;
 import entities.Trainee;
-import entities.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
