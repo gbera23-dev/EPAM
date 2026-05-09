@@ -47,13 +47,13 @@ public class ApplicationConfig {
         return Pspc;
     }
 
-    @Bean(name="TraineeResource")
-    public Resource traineeResource(@Value("${data.TraineeDataPath}") String path) {
+    @Bean(name="TrainerResource")
+    public Resource trainerResource(@Value("${data.TrainerDataPath}") String path) {
         return new ClassPathResource(path);
     }
 
-    @Bean(name="TrainerResource")
-    public Resource trainerResource(@Value("${data.TrainerDataPath}") String path) {
+    @Bean(name="TraineeResource")
+    public Resource traineeResource(@Value("${data.TraineeDataPath}") String path) {
         return new ClassPathResource(path);
     }
 

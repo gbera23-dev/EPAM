@@ -17,6 +17,8 @@ public class TraineeService {
     @Autowired
     TraineeDAO traineeDAO;
 
+
+
     public void createTraineeProfile(Trainee trainee) {
         User user = trainee.getUser();
         String username = generateUsername(trainee);
