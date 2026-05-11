@@ -4,8 +4,12 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 
 public class Main {
 
-
-public static void main(String[] args) {
+    /**
+     * Main entry of the application
+     * @param args Currently not used, but if application is extended, we might allow whoever starts the application
+     *             to alter the application's behavior based on Program arguments
+     */
+    public static void main(String[] args) {
     ApplicationContext applicationContext =
             new AnnotationConfigApplicationContext(ApplicationConfig.class);
 

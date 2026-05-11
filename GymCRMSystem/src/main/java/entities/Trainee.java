@@ -1,7 +1,5 @@
 package entities;
 
-import org.springframework.stereotype.Component;
-
 import java.util.Date;
 
 public class Trainee implements GymEntity {

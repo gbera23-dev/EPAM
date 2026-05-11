@@ -8,6 +8,10 @@ import services.TraineeService;
 import services.TrainerService;
 import services.TrainingService;
 
+
+/**
+ * The class combines all the functionality of all the services.
+ */
 @Component
 public class GymFacade {
 

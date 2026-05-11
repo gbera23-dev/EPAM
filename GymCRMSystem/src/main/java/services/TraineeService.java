@@ -1,6 +1,5 @@
 package services;
 
-import utils.StringUtils;
 import entities.Trainee;
 import entities.User;
 import org.springframework.beans.factory.annotation.Autowired;

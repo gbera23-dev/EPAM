@@ -13,8 +13,6 @@ import org.springframework.stereotype.Component;
 
 import java.io.*;
 import java.util.*;
-import java.util.stream.Collectors;
-
 
 @Component
 public class DataPopulator implements BeanPostProcessor {
@@ -33,8 +31,16 @@ public class DataPopulator implements BeanPostProcessor {
         this.objectMapperProvider = objectMapperProvider;
     }
 
+    /**
+     * Method checks for beans that exist as Storage and injects data present in .json files in the appropriate
+     * Storage
+     * @param bean the new bean instance
+     * @param beanName the name of the bean
+     * @return Bean object
+     */
     @Override
-    public  Object postProcessBeforeInitialization(@NonNull Object bean, String beanName) {
+    @SuppressWarnings("unchecked")
+    public Object postProcessBeforeInitialization(@NonNull Object bean, String beanName) {
         if(beanName.endsWith("Storage") && bean instanceof Map) {
             List<GymEntity> entities = null;
             try {
@@ -48,26 +54,31 @@ public class DataPopulator implements BeanPostProcessor {
             for(GymEntity entity : entities) {
                 beanMap.put(entity.getEntityId(), entity);
             }
+
         }
 
         return bean;
     }
 
-
-    private String readData(Resource resource) {
-        try(BufferedReader br =  new BufferedReader(new InputStreamReader(resource.getInputStream()))) {;
-            return br.lines().collect(Collectors.joining());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
+    /**
+     * Given the storage bean, gives appropriate resource bean(for instance, TraineeStorage -> TraineeResource)
+     * @param beanName Name of the storage bean
+     * @return Resource instance
+     */
     private Resource fetchAppropriateResource(String beanName) {
         String name = beanName.substring(0, beanName.indexOf("Storage"));
         String resourceName = name + "Resource";
         return dataMap.get(resourceName);
     }
 
+    /**
+     * Fetches the appropriate builder for the particular Storage bean(Trainee, Trainer or Training) and
+     * for each entry, builds the appropriate entity instance
+     * @param beanName Name of the bean
+     * @param resource Appropriate Resource instance
+     * @return List of GymEntities
+     * @throws IOException Exception is thrown if the builder for the particular entity is not implemented
+     */
     private List<GymEntity> getAllEntities(String beanName, Resource resource) throws IOException {
         String name = beanName.substring(0, beanName.indexOf("Storage"));
         ObjectMapper objectMapper = objectMapperProvider.getObject();
@@ -83,7 +94,7 @@ public class DataPopulator implements BeanPostProcessor {
 
 
         if(builder == null) {
-            throw new IllegalArgumentException("appropriate builder could not be found");
+            throw new IllegalArgumentException("appropriate builder could not be found!");
         }
 
         List<Map<String, Object>> entryList = objectMapper.readValue(resource.getInputStream(),

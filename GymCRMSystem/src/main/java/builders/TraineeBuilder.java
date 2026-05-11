@@ -11,7 +11,7 @@ import java.util.Map;
 @Component("TraineeBuilder")
 public class TraineeBuilder implements Builder {
 
-    private ObjectMapper objectMapper;
+    private final ObjectMapper objectMapper;
 
     public TraineeBuilder(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;

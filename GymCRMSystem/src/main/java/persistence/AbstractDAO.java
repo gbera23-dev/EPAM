@@ -3,6 +3,11 @@ package persistence;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Generic Abstract class extended by appropriate Entity DAO's. Provides basic CRUD functionality.
+ * Note that DAO classes of this application use Map as in - memory storage.
+ * @param <T> The entity we are currently working on.
+ */
 public abstract class AbstractDAO<T> {
 
     private Map<Long, T> storage;

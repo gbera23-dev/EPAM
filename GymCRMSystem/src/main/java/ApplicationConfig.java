@@ -8,7 +8,10 @@ import org.springframework.core.io.Resource;
 
 import java.util.*;
 
-
+/**
+ * Configuration class, which allows us to provide beans to the application. Both ComponentScan and Java - based
+ * registration(@Bean registration) is used to provide beans
+ */
 @ComponentScan(basePackages = {
         "persistence",
         "services",

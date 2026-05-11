@@ -11,7 +11,7 @@ import java.util.Map;
 public class TrainingBuilder implements Builder {
 
 
-    private ObjectMapper objectMapper;
+    private final ObjectMapper objectMapper;
 
     public TrainingBuilder(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;

@@ -10,7 +10,7 @@ import java.util.Map;
 @Component("TrainerBuilder")
 public class TrainerBuilder implements Builder {
 
-    private ObjectMapper objectMapper;
+    private final ObjectMapper objectMapper;
 
     public TrainerBuilder(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;

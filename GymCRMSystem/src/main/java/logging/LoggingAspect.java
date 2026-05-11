@@ -7,6 +7,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+/**
+ * Class utilizes AOP to provide Logging for the whole application
+ */
 @Aspect
 @Component
 public class LoggingAspect {
@@ -67,6 +70,11 @@ public class LoggingAspect {
         return result;
     }
 
+    /**
+     * Used As a general logger, when something goes wrong in our application(Exception is thrown)
+     * @param joinPoint Where the exception was thrown
+     * @param ex Exception
+     */
     @AfterThrowing(pointcut = "serviceLayer() || persistenceLayer()", throwing = "ex")
     public void logGlobalError(JoinPoint joinPoint, Exception ex) {
         logger.error("Exception {} thrown in {} by method {} with message: {}",
