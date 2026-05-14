@@ -65,7 +65,7 @@ public class UserUtilsTest {
 
         assertNotNull(newUser.getUsername());
         assertNotNull(newUser.getPassword());
-        assertTrue(newUser.getIsActive());
+        assertTrue(newUser.isActive());
         assertEquals(1L, newUser.getUserId());
     }
 

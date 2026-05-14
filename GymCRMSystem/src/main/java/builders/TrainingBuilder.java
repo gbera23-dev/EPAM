@@ -5,7 +5,7 @@ import entities.Training;
 import entities.TrainingType;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.Map;
 @Component("TrainingBuilder")
 public class TrainingBuilder implements Builder {
@@ -25,7 +25,7 @@ public class TrainingBuilder implements Builder {
                 ((Number) entry.get("trainerId")).longValue(),
                 (String)entry.get("name"),
                 objectMapper.convertValue(entry.get("trainingType"), TrainingType.class),
-                objectMapper.convertValue(entry.get("date"), Date.class),
+                objectMapper.convertValue(entry.get("date"), LocalDate.class),
                 (int)entry.get("duration")
         );
     }

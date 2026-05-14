@@ -1,7 +1,8 @@
 import entities.*;
 import org.junit.jupiter.api.Test;
 
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -9,7 +10,7 @@ class TraineeTest {
 
     private Trainee createTrainee() {
         User user = new User(1L, "John", "Doe", "john.doe", "pass", true);
-        return new Trainee(10L, new Date(), "123 Main St", user);
+        return new Trainee(10L, LocalDate.now(), "123 Main St", user);
     }
 
     @Test
@@ -23,16 +24,16 @@ class TraineeTest {
     void testGetTraineePKReturnsCorrectValue() {
         Trainee trainee = createTrainee();
 
-        assertEquals(10L, trainee.getTraineePK());
+        assertEquals(10L, trainee.getTraineePk());
     }
 
     @Test
     void testSetTraineePKUpdatesValue() {
         Trainee trainee = createTrainee();
 
-        trainee.setTraineePK(99L);
+        trainee.setTraineePk(99L);
 
-        assertEquals(99L, trainee.getTraineePK());
+        assertEquals(99L, trainee.getTraineePk());
     }
 
     @Test
@@ -53,7 +54,7 @@ class TraineeTest {
 
     @Test
     void testGetDateOfBirthReturnsCorrectValue() {
-        Date dob = new Date();
+        LocalDate dob = LocalDate.now();
         Trainee trainee = new Trainee(1L, dob, "addr", null);
 
         assertEquals(dob, trainee.getDateOfBirth());
@@ -62,7 +63,7 @@ class TraineeTest {
     @Test
     void testSetDateOfBirthUpdatesValue() {
         Trainee trainee = createTrainee();
-        Date newDate = new Date(0);
+        LocalDate newDate = LocalDate.now();
 
         trainee.setDateOfBirth(newDate);
 
@@ -110,19 +111,19 @@ class TrainerTest {
     }
 
     @Test
-    void testGetTrainerPKReturnsCorrectValue() {
+    void testgetTrainerPkReturnsCorrectValue() {
         Trainer trainer = createTrainer();
 
-        assertEquals(20L, trainer.getTrainerPK());
+        assertEquals(20L, trainer.getTrainerPk());
     }
 
     @Test
     void testSetTrainerPKUpdatesValue() {
         Trainer trainer = createTrainer();
 
-        trainer.setTrainerPK(55L);
+        trainer.setTrainerPk(55L);
 
-        assertEquals(55L, trainer.getTrainerPK());
+        assertEquals(55L, trainer.getTrainerPk());
     }
 
     @Test
@@ -173,7 +174,8 @@ class TrainingTest {
         TrainingType type = new TrainingType();
         type.setId(1L);
         type.setName("Cardio");
-        return new Training(30L, 5L, 8L, "Morning Jog", type, new Date(), 45);
+        return new Training(30L, 5L, 8L, "Morning Jog", type,
+                LocalDate.now(), 45);
     }
 
     @Test
@@ -184,19 +186,19 @@ class TrainingTest {
     }
 
     @Test
-    void testGetTrainingPKReturnsCorrectValue() {
+    void testGetTrainingPkReturnsCorrectValue() {
         Training training = createTraining();
 
-        assertEquals(30L, training.getTrainingPK());
+        assertEquals(30L, training.getTrainingPk());
     }
 
     @Test
     void testSetTrainingPKUpdatesValue() {
         Training training = createTraining();
 
-        training.setTrainingPK(88L);
+        training.setTrainingPk(88L);
 
-        assertEquals(88L, training.getTrainingPK());
+        assertEquals(88L, training.getTrainingPk());
     }
 
     @Test
@@ -283,7 +285,7 @@ class TrainingTest {
 
     @Test
     void testGetDateReturnsCorrectValue() {
-        Date date = new Date();
+        LocalDate date = LocalDate.now();
         Training training = new Training(1L, 1L, 1L, "test", null, date, 10);
 
         assertEquals(date, training.getDate());
@@ -292,7 +294,7 @@ class TrainingTest {
     @Test
     void testSetDateUpdatesValue() {
         Training training = createTraining();
-        Date newDate = new Date(0);
+        LocalDate newDate = LocalDate.now();
 
         training.setDate(newDate);
 
@@ -434,16 +436,16 @@ class UserTest {
     void testGetIsActiveReturnsTrueWhenActive() {
         User user = createUser();
 
-        assertTrue(user.getIsActive());
+        assertTrue(user.isActive());
     }
 
     @Test
     void testSetIsActiveUpdatesToFalse() {
         User user = createUser();
 
-        user.setIsActive(false);
+        user.setActive(false);
 
-        assertFalse(user.getIsActive());
+        assertFalse(user.isActive());
     }
 
     @Test

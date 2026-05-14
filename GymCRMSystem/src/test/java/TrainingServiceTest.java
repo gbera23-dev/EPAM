@@ -1,15 +1,14 @@
 import entities.Training;
 import entities.TrainingType;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import persistence.TrainingDAO;
-import services.TrainingService;
+import services.TrainingServiceImpl;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -21,13 +20,13 @@ class TrainingServiceTest {
     private TrainingDAO trainingDAO;
 
     @InjectMocks
-    private TrainingService trainingService;
+    private TrainingServiceImpl trainingService;
 
     private Training createTraining(long pk) {
         TrainingType type = new TrainingType();
         type.setId(1L);
         type.setName("Strength");
-        return new Training(pk, 10L, 20L, "Morning Training", type, new Date(), 60);
+        return new Training(pk, 10L, 20L, "Morning Training", type, LocalDate.now(), 60);
     }
 
     @Test

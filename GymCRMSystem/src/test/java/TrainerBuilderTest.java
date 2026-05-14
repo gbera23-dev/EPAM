@@ -29,7 +29,7 @@ class TrainerBuilderTest {
 
         Trainer result = trainerBuilder.build(entry);
 
-        assertEquals(1L, result.getTrainerPK());
+        assertEquals(1L, result.getTrainerPk());
     }
 
     @Test
@@ -74,6 +74,6 @@ class TrainerBuilderTest {
 
         Trainer result = trainerBuilder.build(entry);
 
-        assertEquals(100L, result.getTrainerPK());
+        assertEquals(100L, result.getTrainerPk());
     }
 }

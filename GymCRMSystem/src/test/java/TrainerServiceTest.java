@@ -1,14 +1,12 @@
 import entities.Trainer;
 import entities.User;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import persistence.TrainerDAO;
-import services.TrainerService;
+import services.TrainerServiceImpl;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -24,7 +22,7 @@ class TrainerServiceTest {
     private TrainerDAO trainerDAO;
 
     @InjectMocks
-    private TrainerService trainerService;
+    private TrainerServiceImpl trainerService;
 
     private Trainer createTrainer(long pk, String firstName, String lastName, String username) {
         User user = new User(pk, firstName, lastName, username, "pass", true);

@@ -1,5 +1,7 @@
 package persistence;
 
+import lombok.Setter;
+
 import java.util.List;
 import java.util.Map;
 
@@ -8,13 +10,10 @@ import java.util.Map;
  * Note that DAO classes of this application use Map as in - memory storage.
  * @param <T> The entity we are currently working on.
  */
+@Setter
 public abstract class AbstractDAO<T> {
 
     private Map<Long, T> storage;
-
-    public void setStorage(Map<Long, T> storage) {
-        this.storage = storage;
-    }
 
     public T getEntity(long entityPK) {
         return storage.get(entityPK);

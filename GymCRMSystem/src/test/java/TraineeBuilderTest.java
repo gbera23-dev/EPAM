@@ -30,7 +30,7 @@ class TraineeBuilderTest {
 
         Trainee result = traineeBuilder.build(entry);
 
-        assertEquals(1L, result.getTraineePK());
+        assertEquals(1L, result.getTraineePk());
     }
 
     @Test
@@ -78,7 +78,7 @@ class TraineeBuilderTest {
 
         Trainee result = traineeBuilder.build(entry);
 
-        assertEquals(999999999L, result.getTraineePK());
+        assertEquals(999999999L, result.getTraineePk());
     }
 
 }

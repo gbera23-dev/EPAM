@@ -7,7 +7,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import persistence.TraineeDAO;
-import services.TraineeService;
+import services.TraineeServiceImpl;
 
 import java.util.Collections;
 import java.util.List;
@@ -22,7 +22,7 @@ class TraineeServiceTest {
     private TraineeDAO traineeDAO;
 
     @InjectMocks
-    private TraineeService traineeService;
+    private TraineeServiceImpl traineeService;
 
     private Trainee trainee;
     private User user;

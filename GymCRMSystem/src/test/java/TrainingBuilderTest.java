@@ -26,7 +26,7 @@ class TrainingBuilderTest {
 
         Training result = trainingBuilder.build(entry);
 
-        assertEquals(1L, result.getTrainingPK());
+        assertEquals(1L, result.getTrainingPk());
     }
 
     @Test

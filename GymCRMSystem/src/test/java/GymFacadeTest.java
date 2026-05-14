@@ -9,11 +9,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import services.TraineeService;
-import services.TrainerService;
-import services.TrainingService;
+import services.TraineeServiceImpl;
+import services.TrainerServiceImpl;
+import services.TrainingServiceImpl;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -22,13 +22,13 @@ import static org.mockito.Mockito.*;
 class GymFacadeTest {
 
     @Mock
-    private TraineeService traineeService;
+    private TraineeServiceImpl traineeService;
 
     @Mock
-    private TrainerService trainerService;
+    private TrainerServiceImpl trainerService;
 
     @Mock
-    private TrainingService trainingService;
+    private TrainingServiceImpl trainingService;
 
     @InjectMocks
     private GymFacade gymFacade;
@@ -42,7 +42,7 @@ class GymFacadeTest {
     }
 
     private Training createTraining(long pk) {
-        return new Training(pk, 1L, 2L, "Session", new TrainingType(), new Date(), 30);
+        return new Training(pk, 1L, 2L, "Session", new TrainingType(), LocalDate.now(), 30);
     }
 
     @Test

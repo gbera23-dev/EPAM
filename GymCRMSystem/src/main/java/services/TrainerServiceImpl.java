@@ -1,0 +1,40 @@
+package services;
+
+import entities.Trainer;
+import entities.User;
+import org.springframework.stereotype.Service;
+import persistence.TrainerDAO;
+import utils.UserUtils;
+
+import java.util.List;
+
+@Service
+public class TrainerServiceImpl implements TrainerService {
+
+    TrainerDAO trainerDAO;
+
+    public TrainerServiceImpl(TrainerDAO trainerDAO) {
+        this.trainerDAO = trainerDAO;
+    }
+
+    public void createTrainerProfile(Trainer trainer) {
+        User currentUser = trainer.getUser();
+        List<User> users = trainerDAO.getAll().
+                        stream().
+                        map(Trainer::getUser).
+                        toList();
+        UserUtils.generateUserCredentials(currentUser, users);
+
+        trainerDAO.save(trainer.getTrainerPk(), trainer);
+    }
+
+    public void updateTrainerProfile(Trainer trainer) {
+        trainerDAO.save(trainer.getTrainerPk(), trainer);
+    }
+
+    public Trainer selectTrainerProfile(long trainerId) {
+        return trainerDAO.getEntity(trainerId);
+    }
+
+
+}
