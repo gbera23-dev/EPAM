@@ -1,0 +1,1055 @@
+[
+  {
+    "traineePK": 1,
+    "dateOfBirth": "2005-08-16",
+    "address": "791 Pine Rd, Georgetown",
+    "user": {
+      "userId": 1001,
+      "firstName": "Mary",
+      "lastName": "Jones",
+      "username": "mary.jones43",
+      "password": "kDuAgxTAX5",
+      "isActive": false
+    }
+  },
+  {
+    "traineePK": 2,
+    "dateOfBirth": "1979-05-21",
+    "address": "310 Maple Dr, Georgetown",
+    "user": {
+      "userId": 1002,
+      "firstName": "James",
+      "lastName": "Rodriguez",
+      "username": "james.rodriguez89",
+      "password": "sm5sUUHYog",
+      "isActive": false
+    }
+  },
+  {
+    "traineePK": 3,
+    "dateOfBirth": "2003-07-20",
+    "address": "75 Maple Dr, Springfield",
+    "user": {
+      "userId": 1003,
+      "firstName": "David",
+      "lastName": "Brown",
+      "username": "david.brown95",
+      "password": "miHMiUOAJp",
+      "isActive": false
+    }
+  },
+  {
+    "traineePK": 4,
+    "dateOfBirth": "2000-09-18",
+    "address": "26 Main St, Georgetown",
+    "user": {
+      "userId": 1004,
+      "firstName": "John",
+      "lastName": "Miller",
+      "username": "john.miller65",
+      "password": "eBXi3O2k0B",
+      "isActive": false
+    }
+  },
+  {
+    "traineePK": 5,
+    "dateOfBirth": "1987-08-07",
+    "address": "440 Washington Blvd, Clinton",
+    "user": {
+      "userId": 1005,
+      "firstName": "Michael",
+      "lastName": "Jones",
+      "username": "michael.jones31",
+      "password": "ioRnjeRvMb",
+      "isActive": true
+    }
+  },
+  {
+    "traineePK": 6,
+    "dateOfBirth": "1993-09-24",
+    "address": "675 Oak Ave, Franklin",
+    "user": {
+      "userId": 1006,
+      "firstName": "Elizabeth",
+      "lastName": "Johnson",
+      "username": "elizabeth.johnson70",
+      "password": "Nkd1g5loZa",
+      "isActive": true
+    }
+  },
+  {
+    "traineePK": 7,
+    "dateOfBirth": "1984-05-28",
+    "address": "626 Washington Blvd, Riverside",
+    "user": {
+      "userId": 1007,
+      "firstName": "David",
+      "lastName": "Davis",
+      "username": "david.davis57",
+      "password": "9AqxLPE7RF",
+      "isActive": false
+    }
+  },
+  {
+    "traineePK": 8,
+    "dateOfBirth": "1994-12-20",
+    "address": "902 Maple Dr, Georgetown",
+    "user": {
+      "userId": 1008,
+      "firstName": "John",
+      "lastName": "Garcia",
+      "username": "john.garcia53",
+      "password": "9nk4Mgw3kW",
+      "isActive": true
+    }
+  },
+  {
+    "traineePK": 9,
+    "dateOfBirth": "1998-03-20",
+    "address": "831 Main St, Riverside",
+    "user": {
+      "userId": 1009,
+      "firstName": "Linda",
+      "lastName": "Garcia",
+      "username": "linda.garcia42",
+      "password": "0nU1vIxA08",
+      "isActive": false
+    }
+  },
+  {
+    "traineePK": 10,
+    "dateOfBirth": "1978-02-13",
+    "address": "785 Maple Dr, Franklin",
+    "user": {
+      "userId": 1010,
+      "firstName": "David",
+      "lastName": "Johnson",
+      "username": "david.johnson71",
+      "password": "ZXZSeePQfZ",
+      "isActive": true
+    }
+  },
+  {
+    "traineePK": 11,
+    "dateOfBirth": "1999-08-21",
+    "address": "648 Oak Ave, Riverside",
+    "user": {
+      "userId": 1011,
+      "firstName": "Elizabeth",
+      "lastName": "Brown",
+      "username": "elizabeth.brown39",
+      "password": "2fETILjuZ6",
+      "isActive": false
+    }
+  },
+  {
+    "traineePK": 12,
+    "dateOfBirth": "2007-12-07",
+    "address": "369 Cedar Ln, Georgetown",
+    "user": {
+      "userId": 1012,
+      "firstName": "Patricia",
+      "lastName": "Brown",
+      "username": "patricia.brown12",
+      "password": "tnrqS01FGX",
+      "isActive": true
+    }
+  },
+  {
+    "traineePK": 13,
+    "dateOfBirth": "1988-10-27",
+    "address": "820 Oak Ave, Springfield",
+    "user": {
+      "userId": 1013,
+      "firstName": "Linda",
+      "lastName": "Jones",
+      "username": "linda.jones17",
+      "password": "Xz59tOaZ1J",
+      "isActive": false
+    }
+  },
+  {
+    "traineePK": 14,
+    "dateOfBirth": "1994-12-27",
+    "address": "658 Main St, Georgetown",
+    "user": {
+      "userId": 1014,
+      "firstName": "James",
+      "lastName": "Rodriguez",
+      "username": "james.rodriguez46",
+      "password": "M5NpSCfzmU",
+      "isActive": true
+    }
+  },
+  {
+    "traineePK": 15,
+    "dateOfBirth": "1980-03-02",
+    "address": "651 Oak Ave, Clinton",
+    "user": {
+      "userId": 1015,
+      "firstName": "Michael",
+      "lastName": "Martinez",
+      "username": "michael.martinez49",
+      "password": "e5zkuIaBpK",
+      "isActive": false
+    }
+  },
+  {
+    "traineePK": 16,
+    "dateOfBirth": "1979-02-09",
+    "address": "188 Cedar Ln, Clinton",
+    "user": {
+      "userId": 1016,
+      "firstName": "Mary",
+      "lastName": "Garcia",
+      "username": "mary.garcia68",
+      "password": "N1mAR0Bkl4",
+      "isActive": true
+    }
+  },
+  {
+    "traineePK": 17,
+    "dateOfBirth": "1982-10-29",
+    "address": "10 Pine Rd, Georgetown",
+    "user": {
+      "userId": 1017,
+      "firstName": "John",
+      "lastName": "Rodriguez",
+      "username": "john.rodriguez52",
+      "password": "zITMAqaUQB",
+      "isActive": false
+    }
+  },
+  {
+    "traineePK": 18,
+    "dateOfBirth": "2002-10-10",
+    "address": "744 Washington Blvd, Springfield",
+    "user": {
+      "userId": 1018,
+      "firstName": "James",
+      "lastName": "Martinez",
+      "username": "james.martinez35",
+      "password": "HoNgcgRtxL",
+      "isActive": false
+    }
+  },
+  {
+    "traineePK": 19,
+    "dateOfBirth": "2001-01-23",
+    "address": "237 Washington Blvd, Georgetown",
+    "user": {
+      "userId": 1019,
+      "firstName": "Mary",
+      "lastName": "Williams",
+      "username": "mary.williams39",
+      "password": "6U5C2SEBBg",
+      "isActive": true
+    }
+  },
+  {
+    "traineePK": 20,
+    "dateOfBirth": "1982-03-17",
+    "address": "710 Main St, Franklin",
+    "user": {
+      "userId": 1020,
+      "firstName": "David",
+      "lastName": "Garcia",
+      "username": "david.garcia63",
+      "password": "BQUxr7BkFR",
+      "isActive": false
+    }
+  },
+  {
+    "traineePK": 21,
+    "dateOfBirth": "1978-04-16",
+    "address": "516 Maple Dr, Clinton",
+    "user": {
+      "userId": 1021,
+      "firstName": "Jennifer",
+      "lastName": "Miller",
+      "username": "jennifer.miller62",
+      "password": "7cyQVzLr9q",
+      "isActive": true
+    }
+  },
+  {
+    "traineePK": 22,
+    "dateOfBirth": "1992-12-03",
+    "address": "871 Cedar Ln, Clinton",
+    "user": {
+      "userId": 1022,
+      "firstName": "Patricia",
+      "lastName": "Brown",
+      "username": "patricia.brown58",
+      "password": "46uY1Kczbj",
+      "isActive": false
+    }
+  },
+  {
+    "traineePK": 23,
+    "dateOfBirth": "2002-01-17",
+    "address": "693 Cedar Ln, Riverside",
+    "user": {
+      "userId": 1023,
+      "firstName": "David",
+      "lastName": "Garcia",
+      "username": "david.garcia79",
+      "password": "UMldIlYI44",
+      "isActive": false
+    }
+  },
+  {
+    "traineePK": 24,
+    "dateOfBirth": "1999-01-12",
+    "address": "38 Oak Ave, Georgetown",
+    "user": {
+      "userId": 1024,
+      "firstName": "Linda",
+      "lastName": "Williams",
+      "username": "linda.williams40",
+      "password": "pttk67eR8z",
+      "isActive": false
+    }
+  },
+  {
+    "traineePK": 25,
+    "dateOfBirth": "1980-07-22",
+    "address": "615 Maple Dr, Franklin",
+    "user": {
+      "userId": 1025,
+      "firstName": "Linda",
+      "lastName": "Williams",
+      "username": "linda.williams36",
+      "password": "eTou4mK99p",
+      "isActive": true
+    }
+  },
+  {
+    "traineePK": 26,
+    "dateOfBirth": "1990-11-24",
+    "address": "188 Pine Rd, Springfield",
+    "user": {
+      "userId": 1026,
+      "firstName": "James",
+      "lastName": "Jones",
+      "username": "james.jones22",
+      "password": "fDgPU58r8x",
+      "isActive": true
+    }
+  },
+  {
+    "traineePK": 27,
+    "dateOfBirth": "1991-08-28",
+    "address": "523 Cedar Ln, Franklin",
+    "user": {
+      "userId": 1027,
+      "firstName": "Patricia",
+      "lastName": "Davis",
+      "username": "patricia.davis97",
+      "password": "EkQnT5Rj8q",
+      "isActive": true
+    }
+  },
+  {
+    "traineePK": 28,
+    "dateOfBirth": "1995-01-31",
+    "address": "884 Maple Dr, Franklin",
+    "user": {
+      "userId": 1028,
+      "firstName": "Jennifer",
+      "lastName": "Miller",
+      "username": "jennifer.miller74",
+      "password": "8FjCms2jxW",
+      "isActive": true
+    }
+  },
+  {
+    "traineePK": 29,
+    "dateOfBirth": "2001-06-27",
+    "address": "825 Cedar Ln, Georgetown",
+    "user": {
+      "userId": 1029,
+      "firstName": "Robert",
+      "lastName": "Miller",
+      "username": "robert.miller12",
+      "password": "nzd4xVmnS7",
+      "isActive": true
+    }
+  },
+  {
+    "traineePK": 30,
+    "dateOfBirth": "1987-10-07",
+    "address": "548 Main St, Georgetown",
+    "user": {
+      "userId": 1030,
+      "firstName": "Mary",
+      "lastName": "Garcia",
+      "username": "mary.garcia94",
+      "password": "kediHF0AHA",
+      "isActive": true
+    }
+  },
+  {
+    "traineePK": 31,
+    "dateOfBirth": "1995-12-06",
+    "address": "7 Oak Ave, Springfield",
+    "user": {
+      "userId": 1031,
+      "firstName": "Robert",
+      "lastName": "Brown",
+      "username": "robert.brown47",
+      "password": "cKif3dZq5p",
+      "isActive": false
+    }
+  },
+  {
+    "traineePK": 32,
+    "dateOfBirth": "1991-09-06",
+    "address": "599 Washington Blvd, Riverside",
+    "user": {
+      "userId": 1032,
+      "firstName": "Robert",
+      "lastName": "Garcia",
+      "username": "robert.garcia24",
+      "password": "g38C0VevbV",
+      "isActive": false
+    }
+  },
+  {
+    "traineePK": 33,
+    "dateOfBirth": "1981-09-11",
+    "address": "515 Cedar Ln, Georgetown",
+    "user": {
+      "userId": 1033,
+      "firstName": "Jennifer",
+      "lastName": "Davis",
+      "username": "jennifer.davis76",
+      "password": "Bht8OugI7L",
+      "isActive": false
+    }
+  },
+  {
+    "traineePK": 34,
+    "dateOfBirth": "2001-04-22",
+    "address": "851 Pine Rd, Franklin",
+    "user": {
+      "userId": 1034,
+      "firstName": "David",
+      "lastName": "Martinez",
+      "username": "david.martinez20",
+      "password": "NCNXjmA2FY",
+      "isActive": true
+    }
+  },
+  {
+    "traineePK": 35,
+    "dateOfBirth": "1993-10-29",
+    "address": "161 Pine Rd, Springfield",
+    "user": {
+      "userId": 1035,
+      "firstName": "John",
+      "lastName": "Miller",
+      "username": "john.miller91",
+      "password": "7NpYrz1hod",
+      "isActive": true
+    }
+  },
+  {
+    "traineePK": 36,
+    "dateOfBirth": "1979-10-28",
+    "address": "172 Washington Blvd, Franklin",
+    "user": {
+      "userId": 1036,
+      "firstName": "Robert",
+      "lastName": "Brown",
+      "username": "robert.brown98",
+      "password": "CRRHHi1eDj",
+      "isActive": true
+    }
+  },
+  {
+    "traineePK": 37,
+    "dateOfBirth": "2006-05-30",
+    "address": "727 Main St, Franklin",
+    "user": {
+      "userId": 1037,
+      "firstName": "Mary",
+      "lastName": "Jones",
+      "username": "mary.jones47",
+      "password": "9KNyqh7ryK",
+      "isActive": true
+    }
+  },
+  {
+    "traineePK": 38,
+    "dateOfBirth": "1982-09-04",
+    "address": "728 Main St, Georgetown",
+    "user": {
+      "userId": 1038,
+      "firstName": "James",
+      "lastName": "Johnson",
+      "username": "james.johnson42",
+      "password": "6dQk6SjVf3",
+      "isActive": false
+    }
+  },
+  {
+    "traineePK": 39,
+    "dateOfBirth": "1985-02-03",
+    "address": "275 Pine Rd, Franklin",
+    "user": {
+      "userId": 1039,
+      "firstName": "James",
+      "lastName": "Miller",
+      "username": "james.miller96",
+      "password": "dT4dreMTHU",
+      "isActive": true
+    }
+  },
+  {
+    "traineePK": 40,
+    "dateOfBirth": "1983-03-31",
+    "address": "776 Oak Ave, Franklin",
+    "user": {
+      "userId": 1040,
+      "firstName": "David",
+      "lastName": "Smith",
+      "username": "david.smith71",
+      "password": "1Pm3YIvzbx",
+      "isActive": false
+    }
+  },
+  {
+    "traineePK": 41,
+    "dateOfBirth": "2001-05-09",
+    "address": "619 Cedar Ln, Franklin",
+    "user": {
+      "userId": 1041,
+      "firstName": "Michael",
+      "lastName": "Miller",
+      "username": "michael.miller79",
+      "password": "9N0EBm2NUA",
+      "isActive": true
+    }
+  },
+  {
+    "traineePK": 42,
+    "dateOfBirth": "1990-12-12",
+    "address": "742 Oak Ave, Georgetown",
+    "user": {
+      "userId": 1042,
+      "firstName": "Mary",
+      "lastName": "Rodriguez",
+      "username": "mary.rodriguez96",
+      "password": "AzYZusksZS",
+      "isActive": false
+    }
+  },
+  {
+    "traineePK": 43,
+    "dateOfBirth": "1989-01-27",
+    "address": "827 Cedar Ln, Georgetown",
+    "user": {
+      "userId": 1043,
+      "firstName": "Michael",
+      "lastName": "Williams",
+      "username": "michael.williams93",
+      "password": "4rpABTKs5x",
+      "isActive": false
+    }
+  },
+  {
+    "traineePK": 44,
+    "dateOfBirth": "1984-11-02",
+    "address": "554 Main St, Clinton",
+    "user": {
+      "userId": 1044,
+      "firstName": "Michael",
+      "lastName": "Johnson",
+      "username": "michael.johnson38",
+      "password": "uKTunMU7Zt",
+      "isActive": false
+    }
+  },
+  {
+    "traineePK": 45,
+    "dateOfBirth": "2007-11-25",
+    "address": "79 Maple Dr, Clinton",
+    "user": {
+      "userId": 1045,
+      "firstName": "Mary",
+      "lastName": "Miller",
+      "username": "mary.miller34",
+      "password": "GMwfSx3j8I",
+      "isActive": true
+    }
+  },
+  {
+    "traineePK": 46,
+    "dateOfBirth": "1998-12-01",
+    "address": "559 Cedar Ln, Clinton",
+    "user": {
+      "userId": 1046,
+      "firstName": "Linda",
+      "lastName": "Smith",
+      "username": "linda.smith55",
+      "password": "6MbVL4XNTx",
+      "isActive": false
+    }
+  },
+  {
+    "traineePK": 47,
+    "dateOfBirth": "1983-03-31",
+    "address": "483 Oak Ave, Franklin",
+    "user": {
+      "userId": 1047,
+      "firstName": "David",
+      "lastName": "Miller",
+      "username": "david.miller61",
+      "password": "7MhEd6WLgC",
+      "isActive": true
+    }
+  },
+  {
+    "traineePK": 48,
+    "dateOfBirth": "1984-08-10",
+    "address": "55 Main St, Riverside",
+    "user": {
+      "userId": 1048,
+      "firstName": "Mary",
+      "lastName": "Martinez",
+      "username": "mary.martinez19",
+      "password": "of47OJrBqP",
+      "isActive": true
+    }
+  },
+  {
+    "traineePK": 49,
+    "dateOfBirth": "1985-03-24",
+    "address": "651 Maple Dr, Springfield",
+    "user": {
+      "userId": 1049,
+      "firstName": "James",
+      "lastName": "Jones",
+      "username": "james.jones85",
+      "password": "fm5yrAF6aD",
+      "isActive": true
+    }
+  },
+  {
+    "traineePK": 50,
+    "dateOfBirth": "1987-12-02",
+    "address": "320 Oak Ave, Riverside",
+    "user": {
+      "userId": 1050,
+      "firstName": "Jennifer",
+      "lastName": "Garcia",
+      "username": "jennifer.garcia31",
+      "password": "PNCoXXOBDO",
+      "isActive": true
+    }
+  },
+  {
+    "traineePK": 51,
+    "dateOfBirth": "1987-06-04",
+    "address": "892 Main St, Franklin",
+    "user": {
+      "userId": 1051,
+      "firstName": "Linda",
+      "lastName": "Rodriguez",
+      "username": "linda.rodriguez50",
+      "password": "Lr9JQVS4ss",
+      "isActive": true
+    }
+  },
+  {
+    "traineePK": 52,
+    "dateOfBirth": "1978-02-06",
+    "address": "780 Oak Ave, Riverside",
+    "user": {
+      "userId": 1052,
+      "firstName": "Patricia",
+      "lastName": "Miller",
+      "username": "patricia.miller57",
+      "password": "XtcpfcqQtE",
+      "isActive": false
+    }
+  },
+  {
+    "traineePK": 53,
+    "dateOfBirth": "1986-12-01",
+    "address": "412 Pine Rd, Springfield",
+    "user": {
+      "userId": 1053,
+      "firstName": "James",
+      "lastName": "Rodriguez",
+      "username": "james.rodriguez24",
+      "password": "PMHFdExJ09",
+      "isActive": false
+    }
+  },
+  {
+    "traineePK": 54,
+    "dateOfBirth": "1989-09-28",
+    "address": "540 Maple Dr, Springfield",
+    "user": {
+      "userId": 1054,
+      "firstName": "Patricia",
+      "lastName": "Garcia",
+      "username": "patricia.garcia55",
+      "password": "McMx8f4J6Y",
+      "isActive": true
+    }
+  },
+  {
+    "traineePK": 55,
+    "dateOfBirth": "1977-06-22",
+    "address": "173 Oak Ave, Springfield",
+    "user": {
+      "userId": 1055,
+      "firstName": "Linda",
+      "lastName": "Martinez",
+      "username": "linda.martinez16",
+      "password": "HJ2dnco5SI",
+      "isActive": false
+    }
+  },
+  {
+    "traineePK": 56,
+    "dateOfBirth": "2003-09-12",
+    "address": "882 Cedar Ln, Springfield",
+    "user": {
+      "userId": 1056,
+      "firstName": "Mary",
+      "lastName": "Williams",
+      "username": "mary.williams37",
+      "password": "zBDiRozfGb",
+      "isActive": false
+    }
+  },
+  {
+    "traineePK": 57,
+    "dateOfBirth": "2007-01-26",
+    "address": "12 Washington Blvd, Clinton",
+    "user": {
+      "userId": 1057,
+      "firstName": "David",
+      "lastName": "Jones",
+      "username": "david.jones20",
+      "password": "BRrCgLZojd",
+      "isActive": true
+    }
+  },
+  {
+    "traineePK": 58,
+    "dateOfBirth": "1985-01-27",
+    "address": "682 Oak Ave, Clinton",
+    "user": {
+      "userId": 1058,
+      "firstName": "Linda",
+      "lastName": "Davis",
+      "username": "linda.davis85",
+      "password": "BWDuZxpKMI",
+      "isActive": true
+    }
+  },
+  {
+    "traineePK": 59,
+    "dateOfBirth": "1977-12-13",
+    "address": "17 Maple Dr, Georgetown",
+    "user": {
+      "userId": 1059,
+      "firstName": "James",
+      "lastName": "Rodriguez",
+      "username": "james.rodriguez58",
+      "password": "x26qWAZPhZ",
+      "isActive": true
+    }
+  },
+  {
+    "traineePK": 60,
+    "dateOfBirth": "1985-06-10",
+    "address": "969 Oak Ave, Springfield",
+    "user": {
+      "userId": 1060,
+      "firstName": "Patricia",
+      "lastName": "Williams",
+      "username": "patricia.williams88",
+      "password": "LN4cLEDzFX",
+      "isActive": true
+    }
+  },
+  {
+    "traineePK": 61,
+    "dateOfBirth": "2007-12-27",
+    "address": "735 Maple Dr, Georgetown",
+    "user": {
+      "userId": 1061,
+      "firstName": "John",
+      "lastName": "Smith",
+      "username": "john.smith20",
+      "password": "WpBDnf6Dc0",
+      "isActive": true
+    }
+  },
+  {
+    "traineePK": 62,
+    "dateOfBirth": "2001-10-08",
+    "address": "433 Main St, Franklin",
+    "user": {
+      "userId": 1062,
+      "firstName": "Jennifer",
+      "lastName": "Martinez",
+      "username": "jennifer.martinez48",
+      "password": "Jy80rA7ujO",
+      "isActive": false
+    }
+  },
+  {
+    "traineePK": 63,
+    "dateOfBirth": "1976-09-13",
+    "address": "888 Cedar Ln, Clinton",
+    "user": {
+      "userId": 1063,
+      "firstName": "Patricia",
+      "lastName": "Jones",
+      "username": "patricia.jones83",
+      "password": "6LGOrFV7qd",
+      "isActive": false
+    }
+  },
+  {
+    "traineePK": 64,
+    "dateOfBirth": "1996-10-24",
+    "address": "909 Washington Blvd, Franklin",
+    "user": {
+      "userId": 1064,
+      "firstName": "Patricia",
+      "lastName": "Brown",
+      "username": "patricia.brown47",
+      "password": "a9kfHV4GLY",
+      "isActive": false
+    }
+  },
+  {
+    "traineePK": 65,
+    "dateOfBirth": "1985-11-14",
+    "address": "577 Oak Ave, Riverside",
+    "user": {
+      "userId": 1065,
+      "firstName": "Mary",
+      "lastName": "Jones",
+      "username": "mary.jones92",
+      "password": "b0KNNLlcnM",
+      "isActive": false
+    }
+  },
+  {
+    "traineePK": 66,
+    "dateOfBirth": "1978-07-22",
+    "address": "433 Cedar Ln, Georgetown",
+    "user": {
+      "userId": 1066,
+      "firstName": "Jennifer",
+      "lastName": "Johnson",
+      "username": "jennifer.johnson44",
+      "password": "cJZdb9tF1O",
+      "isActive": false
+    }
+  },
+  {
+    "traineePK": 67,
+    "dateOfBirth": "1995-06-11",
+    "address": "509 Pine Rd, Clinton",
+    "user": {
+      "userId": 1067,
+      "firstName": "Mary",
+      "lastName": "Rodriguez",
+      "username": "mary.rodriguez36",
+      "password": "7pBlgXbeai",
+      "isActive": false
+    }
+  },
+  {
+    "traineePK": 68,
+    "dateOfBirth": "1984-04-12",
+    "address": "968 Washington Blvd, Georgetown",
+    "user": {
+      "userId": 1068,
+      "firstName": "David",
+      "lastName": "Brown",
+      "username": "david.brown30",
+      "password": "lQuMaWtQVR",
+      "isActive": true
+    }
+  },
+  {
+    "traineePK": 69,
+    "dateOfBirth": "1987-10-18",
+    "address": "737 Washington Blvd, Franklin",
+    "user": {
+      "userId": 1069,
+      "firstName": "Linda",
+      "lastName": "Williams",
+      "username": "linda.williams84",
+      "password": "geeEh4GRqo",
+      "isActive": false
+    }
+  },
+  {
+    "traineePK": 70,
+    "dateOfBirth": "1980-02-20",
+    "address": "863 Oak Ave, Franklin",
+    "user": {
+      "userId": 1070,
+      "firstName": "James",
+      "lastName": "Davis",
+      "username": "james.davis23",
+      "password": "suhyBqnArc",
+      "isActive": true
+    }
+  },
+  {
+    "traineePK": 71,
+    "dateOfBirth": "2002-06-25",
+    "address": "534 Pine Rd, Georgetown",
+    "user": {
+      "userId": 1071,
+      "firstName": "Jennifer",
+      "lastName": "Jones",
+      "username": "jennifer.jones34",
+      "password": "sKaIYnDvwe",
+      "isActive": false
+    }
+  },
+  {
+    "traineePK": 72,
+    "dateOfBirth": "1998-05-09",
+    "address": "546 Main St, Clinton",
+    "user": {
+      "userId": 1072,
+      "firstName": "Jennifer",
+      "lastName": "Johnson",
+      "username": "jennifer.johnson35",
+      "password": "hnCab4wnvR",
+      "isActive": true
+    }
+  },
+  {
+    "traineePK": 73,
+    "dateOfBirth": "2003-01-06",
+    "address": "922 Oak Ave, Riverside",
+    "user": {
+      "userId": 1073,
+      "firstName": "Jennifer",
+      "lastName": "Williams",
+      "username": "jennifer.williams85",
+      "password": "V1bZRJmBNO",
+      "isActive": false
+    }
+  },
+  {
+    "traineePK": 74,
+    "dateOfBirth": "1989-09-11",
+    "address": "365 Main St, Riverside",
+    "user": {
+      "userId": 1074,
+      "firstName": "James",
+      "lastName": "Brown",
+      "username": "james.brown30",
+      "password": "Z8T6LVUAcp",
+      "isActive": false
+    }
+  },
+  {
+    "traineePK": 75,
+    "dateOfBirth": "1990-10-29",
+    "address": "738 Cedar Ln, Springfield",
+    "user": {
+      "userId": 1075,
+      "firstName": "James",
+      "lastName": "Garcia",
+      "username": "james.garcia95",
+      "password": "HdKLb2OgVK",
+      "isActive": true
+    }
+  },
+  {
+    "traineePK": 76,
+    "dateOfBirth": "2002-04-18",
+    "address": "493 Maple Dr, Clinton",
+    "user": {
+      "userId": 1076,
+      "firstName": "Patricia",
+      "lastName": "Jones",
+      "username": "patricia.jones41",
+      "password": "lKQCYrQetg",
+      "isActive": false
+    }
+  },
+  {
+    "traineePK": 77,
+    "dateOfBirth": "2004-07-13",
+    "address": "840 Washington Blvd, Clinton",
+    "user": {
+      "userId": 1077,
+      "firstName": "Robert",
+      "lastName": "Brown",
+      "username": "robert.brown47",
+      "password": "1jBjGt2Li9",
+      "isActive": false
+    }
+  },
+  {
+    "traineePK": 78,
+    "dateOfBirth": "1993-10-01",
+    "address": "943 Cedar Ln, Franklin",
+    "user": {
+      "userId": 1078,
+      "firstName": "Michael",
+      "lastName": "Brown",
+      "username": "michael.brown80",
+      "password": "Y0QEgMpWW8",
+      "isActive": false
+    }
+  },
+  {
+    "traineePK": 79,
+    "dateOfBirth": "2002-03-20",
+    "address": "76 Washington Blvd, Springfield",
+    "user": {
+      "userId": 1079,
+      "firstName": "Patricia",
+      "lastName": "Jones",
+      "username": "patricia.jones13",
+      "password": "71P3HEaihX",
+      "isActive": false
+    }
+  },
+  {
+    "traineePK": 80,
+    "dateOfBirth": "2004-07-20",
+    "address": "8 Maple Dr, Franklin",
+    "user": {
+      "userId": 1080,
+      "firstName": "Jennifer",
+      "lastName": "Johnson",
+      "username": "jennifer.johnson15",
+      "password": "tGhJkeo0CS",
+      "isActive": false
+    }
+  },
+  {
+    "traineePK": 81,
+    "dateOfBirth": "1992-12-15",
+    "address": "195 Maple Dr, Georgetown",
+    "user": {
+      "userId": 1081,
+      "firstName": "Elizabeth",
+      "lastName": "Brown",
+      "username": "elizabeth.brown76",
+      "password": "w8w1GjV7Q3",
+      "isActive": true
+    }
+  }
+]

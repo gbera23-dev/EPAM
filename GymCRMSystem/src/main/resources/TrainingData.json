@@ -1,0 +1,1106 @@
+[
+  {
+    "trainingPK": 1,
+    "traineeId": 15,
+    "trainerId": 2,
+    "name": "Morning Flow",
+    "trainingType": {
+      "id": 1,
+      "name": "Yoga"
+    },
+    "date": "2024-05-10T08:00:00Z",
+    "duration": 60
+  },
+  {
+    "trainingPK": 2,
+    "traineeId": 42,
+    "trainerId": 1,
+    "name": "Heavy Leg Day",
+    "trainingType": {
+      "id": 2,
+      "name": "Bodybuilding"
+    },
+    "date": "2024-05-10T10:30:00Z",
+    "duration": 90
+  },
+  {
+    "trainingPK": 3,
+    "traineeId": 7,
+    "trainerId": 8,
+    "name": "Sparring Basics",
+    "trainingType": {
+      "id": 3,
+      "name": "Boxing"
+    },
+    "date": "2024-05-10T14:00:00Z",
+    "duration": 45
+  },
+  {
+    "trainingPK": 4,
+    "traineeId": 88,
+    "trainerId": 4,
+    "name": "WOD Alpha",
+    "trainingType": {
+      "id": 4,
+      "name": "CrossFit"
+    },
+    "date": "2024-05-11T07:00:00Z",
+    "duration": 60
+  },
+  {
+    "trainingPK": 5,
+    "traineeId": 23,
+    "trainerId": 3,
+    "name": "Fat Burner 500",
+    "trainingType": {
+      "id": 5,
+      "name": "HIIT"
+    },
+    "date": "2024-05-11T12:00:00Z",
+    "duration": 30
+  },
+  {
+    "trainingPK": 6,
+    "traineeId": 5,
+    "trainerId": 18,
+    "name": "Deadlift Max",
+    "trainingType": {
+      "id": 6,
+      "name": "Powerlifting"
+    },
+    "date": "2024-05-11T16:00:00Z",
+    "duration": 120
+  },
+  {
+    "trainingPK": 7,
+    "traineeId": 66,
+    "trainerId": 7,
+    "name": "Salsa Beats",
+    "trainingType": {
+      "id": 7,
+      "name": "Zumba"
+    },
+    "date": "2024-05-12T18:30:00Z",
+    "duration": 60
+  },
+  {
+    "trainingPK": 8,
+    "traineeId": 12,
+    "trainerId": 9,
+    "name": "Laps & Drills",
+    "trainingType": {
+      "id": 8,
+      "name": "Swimming"
+    },
+    "date": "2024-05-12T06:00:00Z",
+    "duration": 45
+  },
+  {
+    "trainingPK": 9,
+    "traineeId": 31,
+    "trainerId": 5,
+    "name": "Core Strength",
+    "trainingType": {
+      "id": 9,
+      "name": "Pilates"
+    },
+    "date": "2024-05-13T09:00:00Z",
+    "duration": 60
+  },
+  {
+    "trainingPK": 10,
+    "traineeId": 50,
+    "trainerId": 1,
+    "name": "Chest/Triceps",
+    "trainingType": {
+      "id": 2,
+      "name": "Bodybuilding"
+    },
+    "date": "2024-05-13T17:00:00Z",
+    "duration": 75
+  },
+  {
+    "trainingPK": 11,
+    "traineeId": 3,
+    "trainerId": 11,
+    "name": "Sun Salutation",
+    "trainingType": {
+      "id": 1,
+      "name": "Yoga"
+    },
+    "date": "2024-05-14T07:30:00Z",
+    "duration": 60
+  },
+  {
+    "trainingPK": 12,
+    "traineeId": 99,
+    "trainerId": 15,
+    "name": "Murph Prep",
+    "trainingType": {
+      "id": 4,
+      "name": "CrossFit"
+    },
+    "date": "2024-05-14T11:00:00Z",
+    "duration": 90
+  },
+  {
+    "trainingPK": 13,
+    "traineeId": 21,
+    "trainerId": 16,
+    "name": "Heavy Bag",
+    "trainingType": {
+      "id": 3,
+      "name": "Boxing"
+    },
+    "date": "2024-05-14T19:00:00Z",
+    "duration": 60
+  },
+  {
+    "trainingPK": 14,
+    "traineeId": 54,
+    "trainerId": 13,
+    "name": "Tabata Sprint",
+    "trainingType": {
+      "id": 5,
+      "name": "HIIT"
+    },
+    "date": "2024-05-15T12:30:00Z",
+    "duration": 30
+  },
+  {
+    "trainingPK": 15,
+    "traineeId": 77,
+    "trainerId": 20,
+    "name": "Flexibility 101",
+    "trainingType": {
+      "id": 1,
+      "name": "Yoga"
+    },
+    "date": "2024-05-15T18:00:00Z",
+    "duration": 60
+  },
+  {
+    "trainingPK": 16,
+    "traineeId": 8,
+    "trainerId": 6,
+    "name": "Hypertrophy",
+    "trainingType": {
+      "id": 2,
+      "name": "Bodybuilding"
+    },
+    "date": "2024-05-16T15:00:00Z",
+    "duration": 90
+  },
+  {
+    "trainingPK": 17,
+    "traineeId": 19,
+    "trainerId": 14,
+    "name": "Reformer Basics",
+    "trainingType": {
+      "id": 9,
+      "name": "Pilates"
+    },
+    "date": "2024-05-16T10:00:00Z",
+    "duration": 60
+  },
+  {
+    "trainingPK": 18,
+    "traineeId": 44,
+    "trainerId": 17,
+    "name": "Dance Party",
+    "trainingType": {
+      "id": 7,
+      "name": "Zumba"
+    },
+    "date": "2024-05-17T19:00:00Z",
+    "duration": 50
+  },
+  {
+    "trainingPK": 19,
+    "traineeId": 61,
+    "trainerId": 19,
+    "name": "Endurance Swim",
+    "trainingType": {
+      "id": 8,
+      "name": "Swimming"
+    },
+    "date": "2024-05-17T06:30:00Z",
+    "duration": 60
+  },
+  {
+    "trainingPK": 20,
+    "traineeId": 2,
+    "trainerId": 18,
+    "name": "Bench Press Day",
+    "trainingType": {
+      "id": 6,
+      "name": "Powerlifting"
+    },
+    "date": "2024-05-18T14:00:00Z",
+    "duration": 100
+  },
+  {
+    "trainingPK": 21,
+    "traineeId": 33,
+    "trainerId": 24,
+    "name": "Functional Power",
+    "trainingType": {
+      "id": 4,
+      "name": "CrossFit"
+    },
+    "date": "2024-05-18T09:00:00Z",
+    "duration": 60
+  },
+  {
+    "trainingPK": 22,
+    "traineeId": 70,
+    "trainerId": 23,
+    "name": "Posture Work",
+    "trainingType": {
+      "id": 9,
+      "name": "Pilates"
+    },
+    "date": "2024-05-19T11:00:00Z",
+    "duration": 45
+  },
+  {
+    "trainingPK": 23,
+    "traineeId": 82,
+    "trainerId": 22,
+    "name": "Full Body Blast",
+    "trainingType": {
+      "id": 5,
+      "name": "HIIT"
+    },
+    "date": "2024-05-19T17:30:00Z",
+    "duration": 45
+  },
+  {
+    "trainingPK": 24,
+    "traineeId": 14,
+    "trainerId": 25,
+    "name": "Speed Bag",
+    "trainingType": {
+      "id": 3,
+      "name": "Boxing"
+    },
+    "date": "2024-05-20T20:00:00Z",
+    "duration": 60
+  },
+  {
+    "trainingPK": 25,
+    "traineeId": 55,
+    "trainerId": 21,
+    "name": "Upper Body Sculpt",
+    "trainingType": {
+      "id": 2,
+      "name": "Bodybuilding"
+    },
+    "date": "2024-05-20T13:00:00Z",
+    "duration": 75
+  },
+  {
+    "trainingPK": 26,
+    "traineeId": 9,
+    "trainerId": 26,
+    "name": "Cardio Dance",
+    "trainingType": {
+      "id": 7,
+      "name": "Zumba"
+    },
+    "date": "2024-05-21T18:00:00Z",
+    "duration": 60
+  },
+  {
+    "trainingPK": 27,
+    "traineeId": 38,
+    "trainerId": 27,
+    "name": "Squat Strength",
+    "trainingType": {
+      "id": 6,
+      "name": "Powerlifting"
+    },
+    "date": "2024-05-21T16:00:00Z",
+    "duration": 90
+  },
+  {
+    "trainingPK": 28,
+    "traineeId": 47,
+    "trainerId": 28,
+    "name": "Stroke Technique",
+    "trainingType": {
+      "id": 8,
+      "name": "Swimming"
+    },
+    "date": "2024-05-22T07:00:00Z",
+    "duration": 60
+  },
+  {
+    "trainingPK": 29,
+    "traineeId": 100,
+    "trainerId": 29,
+    "name": "Evening Zen",
+    "trainingType": {
+      "id": 1,
+      "name": "Yoga"
+    },
+    "date": "2024-05-22T21:00:00Z",
+    "duration": 60
+  },
+  {
+    "trainingPK": 30,
+    "traineeId": 67,
+    "trainerId": 30,
+    "name": "Contest Prep",
+    "trainingType": {
+      "id": 2,
+      "name": "Bodybuilding"
+    },
+    "date": "2024-05-23T10:00:00Z",
+    "duration": 120
+  },
+  {
+    "trainingPK": 31,
+    "traineeId": 1,
+    "trainerId": 32,
+    "name": "Mat Work",
+    "trainingType": {
+      "id": 9,
+      "name": "Pilates"
+    },
+    "date": "2024-05-23T14:00:00Z",
+    "duration": 60
+  },
+  {
+    "trainingPK": 32,
+    "traineeId": 52,
+    "trainerId": 31,
+    "name": "Interval Runs",
+    "trainingType": {
+      "id": 5,
+      "name": "HIIT"
+    },
+    "date": "2024-05-24T08:00:00Z",
+    "duration": 40
+  },
+  {
+    "trainingPK": 33,
+    "traineeId": 28,
+    "trainerId": 33,
+    "name": "Olympic Lifts",
+    "trainingType": {
+      "id": 4,
+      "name": "CrossFit"
+    },
+    "date": "2024-05-24T17:00:00Z",
+    "duration": 90
+  },
+  {
+    "trainingPK": 34,
+    "traineeId": 73,
+    "trainerId": 34,
+    "name": "Footwork Drills",
+    "trainingType": {
+      "id": 3,
+      "name": "Boxing"
+    },
+    "date": "2024-05-25T11:00:00Z",
+    "duration": 60
+  },
+  {
+    "trainingPK": 35,
+    "traineeId": 4,
+    "trainerId": 35,
+    "name": "Rhythm Blast",
+    "trainingType": {
+      "id": 7,
+      "name": "Zumba"
+    },
+    "date": "2024-05-25T19:30:00Z",
+    "duration": 60
+  },
+  {
+    "trainingPK": 36,
+    "traineeId": 89,
+    "trainerId": 36,
+    "name": "Back & Biceps",
+    "trainingType": {
+      "id": 6,
+      "name": "Powerlifting"
+    },
+    "date": "2024-05-26T15:30:00Z",
+    "duration": 110
+  },
+  {
+    "trainingPK": 37,
+    "traineeId": 16,
+    "trainerId": 37,
+    "name": "Dolphin Kick",
+    "trainingType": {
+      "id": 8,
+      "name": "Swimming"
+    },
+    "date": "2024-05-26T06:00:00Z",
+    "duration": 60
+  },
+  {
+    "trainingPK": 38,
+    "traineeId": 59,
+    "trainerId": 38,
+    "name": "Hatha Yoga",
+    "trainingType": {
+      "id": 1,
+      "name": "Yoga"
+    },
+    "date": "2024-05-27T08:30:00Z",
+    "duration": 75
+  },
+  {
+    "trainingPK": 39,
+    "traineeId": 30,
+    "trainerId": 39,
+    "name": "Mass Builder",
+    "trainingType": {
+      "id": 2,
+      "name": "Bodybuilding"
+    },
+    "date": "2024-05-27T18:00:00Z",
+    "duration": 90
+  },
+  {
+    "trainingPK": 40,
+    "traineeId": 92,
+    "trainerId": 40,
+    "name": "Metcon",
+    "trainingType": {
+      "id": 5,
+      "name": "HIIT"
+    },
+    "date": "2024-05-28T12:00:00Z",
+    "duration": 45
+  },
+  {
+    "trainingPK": 41,
+    "traineeId": 11,
+    "trainerId": 41,
+    "name": "Pelvic Tilt",
+    "trainingType": {
+      "id": 9,
+      "name": "Pilates"
+    },
+    "date": "2024-05-28T09:00:00Z",
+    "duration": 60
+  },
+  {
+    "trainingPK": 42,
+    "traineeId": 64,
+    "trainerId": 42,
+    "name": "AMRAP 20",
+    "trainingType": {
+      "id": 4,
+      "name": "CrossFit"
+    },
+    "date": "2024-05-29T17:30:00Z",
+    "duration": 60
+  },
+  {
+    "trainingPK": 43,
+    "traineeId": 35,
+    "trainerId": 43,
+    "name": "Counter Punch",
+    "trainingType": {
+      "id": 3,
+      "name": "Boxing"
+    },
+    "date": "2024-05-29T19:00:00Z",
+    "duration": 60
+  },
+  {
+    "trainingPK": 44,
+    "traineeId": 79,
+    "trainerId": 44,
+    "name": "Latin Burn",
+    "trainingType": {
+      "id": 7,
+      "name": "Zumba"
+    },
+    "date": "2024-05-30T18:30:00Z",
+    "duration": 60
+  },
+  {
+    "trainingPK": 45,
+    "traineeId": 25,
+    "trainerId": 45,
+    "name": "Sumo Squat",
+    "trainingType": {
+      "id": 6,
+      "name": "Powerlifting"
+    },
+    "date": "2024-05-30T15:00:00Z",
+    "duration": 90
+  },
+  {
+    "trainingPK": 46,
+    "traineeId": 53,
+    "trainerId": 46,
+    "name": "Open Water Prep",
+    "trainingType": {
+      "id": 8,
+      "name": "Swimming"
+    },
+    "date": "2024-05-31T07:30:00Z",
+    "duration": 90
+  },
+  {
+    "trainingPK": 47,
+    "traineeId": 80,
+    "trainerId": 47,
+    "name": "Vinyasa",
+    "trainingType": {
+      "id": 1,
+      "name": "Yoga"
+    },
+    "date": "2024-05-31T20:00:00Z",
+    "duration": 60
+  },
+  {
+    "trainingPK": 48,
+    "traineeId": 18,
+    "trainerId": 48,
+    "name": "Arnold Split",
+    "trainingType": {
+      "id": 2,
+      "name": "Bodybuilding"
+    },
+    "date": "2024-06-01T11:00:00Z",
+    "duration": 90
+  },
+  {
+    "trainingPK": 49,
+    "traineeId": 48,
+    "trainerId": 49,
+    "name": "Mountain Climbers",
+    "trainingType": {
+      "id": 5,
+      "name": "HIIT"
+    },
+    "date": "2024-06-01T16:00:00Z",
+    "duration": 30
+  },
+  {
+    "trainingPK": 50,
+    "traineeId": 95,
+    "trainerId": 50,
+    "name": "Alignment",
+    "trainingType": {
+      "id": 9,
+      "name": "Pilates"
+    },
+    "date": "2024-06-02T10:00:00Z",
+    "duration": 60
+  },
+  {
+    "trainingPK": 51,
+    "traineeId": 6,
+    "trainerId": 51,
+    "name": "Double Unders",
+    "trainingType": {
+      "id": 4,
+      "name": "CrossFit"
+    },
+    "date": "2024-06-02T18:00:00Z",
+    "duration": 45
+  },
+  {
+    "trainingPK": 52,
+    "traineeId": 71,
+    "trainerId": 52,
+    "name": "Shadow Boxing",
+    "trainingType": {
+      "id": 3,
+      "name": "Boxing"
+    },
+    "date": "2024-06-03T19:30:00Z",
+    "duration": 60
+  },
+  {
+    "trainingPK": 53,
+    "traineeId": 27,
+    "trainerId": 53,
+    "name": "Hip Hop Zumba",
+    "trainingType": {
+      "id": 7,
+      "name": "Zumba"
+    },
+    "date": "2024-06-03T17:00:00Z",
+    "duration": 60
+  },
+  {
+    "trainingPK": 54,
+    "traineeId": 41,
+    "trainerId": 54,
+    "name": "Lockout Tech",
+    "trainingType": {
+      "id": 6,
+      "name": "Powerlifting"
+    },
+    "date": "2024-06-04T15:30:00Z",
+    "duration": 120
+  },
+  {
+    "trainingPK": 55,
+    "traineeId": 85,
+    "trainerId": 55,
+    "name": "Treading Water",
+    "trainingType": {
+      "id": 8,
+      "name": "Swimming"
+    },
+    "date": "2024-06-04T07:00:00Z",
+    "duration": 45
+  },
+  {
+    "trainingPK": 56,
+    "traineeId": 10,
+    "trainerId": 56,
+    "name": "Asana Flow",
+    "trainingType": {
+      "id": 1,
+      "name": "Yoga"
+    },
+    "date": "2024-06-05T08:00:00Z",
+    "duration": 60
+  },
+  {
+    "trainingPK": 57,
+    "traineeId": 63,
+    "trainerId": 57,
+    "name": "Leg Extension",
+    "trainingType": {
+      "id": 2,
+      "name": "Bodybuilding"
+    },
+    "date": "2024-06-05T18:30:00Z",
+    "duration": 75
+  },
+  {
+    "trainingPK": 58,
+    "traineeId": 32,
+    "trainerId": 58,
+    "name": "EMOM 15",
+    "trainingType": {
+      "id": 5,
+      "name": "HIIT"
+    },
+    "date": "2024-06-06T12:00:00Z",
+    "duration": 15
+  },
+  {
+    "trainingPK": 59,
+    "traineeId": 98,
+    "trainerId": 59,
+    "name": "Spine Stretch",
+    "trainingType": {
+      "id": 9,
+      "name": "Pilates"
+    },
+    "date": "2024-06-06T10:30:00Z",
+    "duration": 60
+  },
+  {
+    "trainingPK": 60,
+    "traineeId": 20,
+    "trainerId": 60,
+    "name": "Snatch Practice",
+    "trainingType": {
+      "id": 4,
+      "name": "CrossFit"
+    },
+    "date": "2024-06-07T17:00:00Z",
+    "duration": 90
+  },
+  {
+    "trainingPK": 61,
+    "traineeId": 75,
+    "trainerId": 61,
+    "name": "Uppercut Drill",
+    "trainingType": {
+      "id": 3,
+      "name": "Boxing"
+    },
+    "date": "2024-06-07T20:00:00Z",
+    "duration": 60
+  },
+  {
+    "trainingPK": 62,
+    "traineeId": 46,
+    "trainerId": 62,
+    "name": "Reggaeton Mix",
+    "trainingType": {
+      "id": 7,
+      "name": "Zumba"
+    },
+    "date": "2024-06-08T11:00:00Z",
+    "duration": 60
+  },
+  {
+    "trainingPK": 63,
+    "traineeId": 13,
+    "trainerId": 63,
+    "name": "Rack Pulls",
+    "trainingType": {
+      "id": 6,
+      "name": "Powerlifting"
+    },
+    "date": "2024-06-08T14:00:00Z",
+    "duration": 100
+  },
+  {
+    "trainingPK": 64,
+    "traineeId": 84,
+    "trainerId": 64,
+    "name": "Breaststroke",
+    "trainingType": {
+      "id": 8,
+      "name": "Swimming"
+    },
+    "date": "2024-06-09T06:30:00Z",
+    "duration": 60
+  },
+  {
+    "trainingPK": 65,
+    "traineeId": 39,
+    "trainerId": 65,
+    "name": "Power Yoga",
+    "trainingType": {
+      "id": 1,
+      "name": "Yoga"
+    },
+    "date": "2024-06-09T09:00:00Z",
+    "duration": 90
+  },
+  {
+    "trainingPK": 66,
+    "traineeId": 57,
+    "trainerId": 66,
+    "name": "Deltoid Fly",
+    "trainingType": {
+      "id": 2,
+      "name": "Bodybuilding"
+    },
+    "date": "2024-06-10T17:30:00Z",
+    "duration": 60
+  },
+  {
+    "trainingPK": 67,
+    "traineeId": 24,
+    "trainerId": 67,
+    "name": "Burpee Hell",
+    "trainingType": {
+      "id": 5,
+      "name": "HIIT"
+    },
+    "date": "2024-06-10T12:00:00Z",
+    "duration": 45
+  },
+  {
+    "trainingPK": 68,
+    "traineeId": 91,
+    "trainerId": 68,
+    "name": "Side Kick Series",
+    "trainingType": {
+      "id": 9,
+      "name": "Pilates"
+    },
+    "date": "2024-06-11T10:00:00Z",
+    "duration": 45
+  },
+  {
+    "trainingPK": 69,
+    "traineeId": 45,
+    "trainerId": 69,
+    "name": "Wall Balls",
+    "trainingType": {
+      "id": 4,
+      "name": "CrossFit"
+    },
+    "date": "2024-06-11T18:00:00Z",
+    "duration": 60
+  },
+  {
+    "trainingPK": 70,
+    "traineeId": 17,
+    "trainerId": 70,
+    "name": "Slip & Slide",
+    "trainingType": {
+      "id": 3,
+      "name": "Boxing"
+    },
+    "date": "2024-06-12T19:00:00Z",
+    "duration": 60
+  },
+  {
+    "trainingPK": 71,
+    "traineeId": 81,
+    "trainerId": 71,
+    "name": "Baila Flow",
+    "trainingType": {
+      "id": 7,
+      "name": "Zumba"
+    },
+    "date": "2024-06-12T17:30:00Z",
+    "duration": 60
+  },
+  {
+    "trainingPK": 72,
+    "traineeId": 36,
+    "trainerId": 72,
+    "name": "Arch Support",
+    "trainingType": {
+      "id": 6,
+      "name": "Powerlifting"
+    },
+    "date": "2024-06-13T16:00:00Z",
+    "duration": 90
+  },
+  {
+    "trainingPK": 73,
+    "traineeId": 69,
+    "trainerId": 73,
+    "name": "Backstroke",
+    "trainingType": {
+      "id": 8,
+      "name": "Swimming"
+    },
+    "date": "2024-06-13T07:00:00Z",
+    "duration": 60
+  },
+  {
+    "trainingPK": 74,
+    "traineeId": 22,
+    "trainerId": 74,
+    "name": "Kundalini",
+    "trainingType": {
+      "id": 1,
+      "name": "Yoga"
+    },
+    "date": "2024-06-14T08:00:00Z",
+    "duration": 75
+  },
+  {
+    "trainingPK": 75,
+    "traineeId": 58,
+    "trainerId": 75,
+    "name": "Calf Raise Max",
+    "trainingType": {
+      "id": 2,
+      "name": "Bodybuilding"
+    },
+    "date": "2024-06-14T18:30:00Z",
+    "duration": 45
+  },
+  {
+    "trainingPK": 76,
+    "traineeId": 94,
+    "trainerId": 76,
+    "name": "Sprints",
+    "trainingType": {
+      "id": 5,
+      "name": "HIIT"
+    },
+    "date": "2024-06-15T12:00:00Z",
+    "duration": 30
+  },
+  {
+    "trainingPK": 77,
+    "traineeId": 29,
+    "trainerId": 77,
+    "name": "Hundred Series",
+    "trainingType": {
+      "id": 9,
+      "name": "Pilates"
+    },
+    "date": "2024-06-15T11:00:00Z",
+    "duration": 60
+  },
+  {
+    "trainingPK": 78,
+    "traineeId": 72,
+    "trainerId": 78,
+    "name": "Muscle Ups",
+    "trainingType": {
+      "id": 4,
+      "name": "CrossFit"
+    },
+    "date": "2024-06-16T10:00:00Z",
+    "duration": 90
+  },
+  {
+    "trainingPK": 79,
+    "traineeId": 40,
+    "trainerId": 79,
+    "name": "Speed Work",
+    "trainingType": {
+      "id": 3,
+      "name": "Boxing"
+    },
+    "date": "2024-06-16T19:30:00Z",
+    "duration": 60
+  },
+  {
+    "trainingPK": 80,
+    "traineeId": 86,
+    "trainerId": 80,
+    "name": "Afro-Beat Mix",
+    "trainingType": {
+      "id": 7,
+      "name": "Zumba"
+    },
+    "date": "2024-06-17T18:00:00Z",
+    "duration": 60
+  },
+  {
+    "trainingPK": 81,
+    "traineeId": 14,
+    "trainerId": 81,
+    "name": "Grip Strength",
+    "trainingType": {
+      "id": 6,
+      "name": "Powerlifting"
+    },
+    "date": "2024-06-17T15:00:00Z",
+    "duration": 120
+  },
+  {
+    "trainingPK": 82,
+    "traineeId": 65,
+    "trainerId": 82,
+    "name": "Butterfly",
+    "trainingType": {
+      "id": 8,
+      "name": "Swimming"
+    },
+    "date": "2024-06-18T06:30:00Z",
+    "duration": 60
+  },
+  {
+    "trainingPK": 83,
+    "traineeId": 37,
+    "trainerId": 83,
+    "name": "Restorative",
+    "trainingType": {
+      "id": 1,
+      "name": "Yoga"
+    },
+    "date": "2024-06-18T20:00:00Z",
+    "duration": 90
+  },
+  {
+    "trainingPK": 84,
+    "traineeId": 51,
+    "trainerId": 84,
+    "name": "Lat Pulldown",
+    "trainingType": {
+      "id": 2,
+      "name": "Bodybuilding"
+    },
+    "date": "2024-06-19T17:00:00Z",
+    "duration": 75
+  },
+  {
+    "trainingPK": 85,
+    "traineeId": 90,
+    "trainerId": 85,
+    "name": "Box Jumps",
+    "trainingType": {
+      "id": 5,
+      "name": "HIIT"
+    },
+    "date": "2024-06-19T12:00:00Z",
+    "duration": 45
+  },
+  {
+    "trainingPK": 86,
+    "traineeId": 26,
+    "trainerId": 86,
+    "name": "Swan Dive",
+    "trainingType": {
+      "id": 9,
+      "name": "Pilates"
+    },
+    "date": "2024-06-20T10:00:00Z",
+    "duration": 60
+  },
+  {
+    "trainingPK": 87,
+    "traineeId": 78,
+    "trainerId": 87,
+    "name": "Hero WOD",
+    "trainingType": {
+      "id": 4,
+      "name": "CrossFit"
+    },
+    "date": "2024-06-20T17:30:00Z",
+    "duration": 120
+  },
+  {
+    "trainingPK": 88,
+    "traineeId": 43,
+    "trainerId": 88,
+    "name": "Clinch Tech",
+    "trainingType": {
+      "id": 3,
+      "name": "Boxing"
+    },
+    "date": "2024-06-21T19:00:00Z",
+    "duration": 60
+  },
+  {
+    "trainingPK": 89,
+    "traineeId": 83,
+    "trainerId": 89,
+    "name": "Carnival Zumba",
+    "trainingType": {
+      "id": 7,
+      "name": "Zumba"
+    },
+    "date": "2024-06-21T18:30:00Z",
+    "duration": 60
+  },
+  {
+    "trainingPK": 90,
+    "traineeId": 34,
+    "trainerId": 90,
+    "name": "Good Mornings",
+    "trainingType": {
+      "id": 6,
+      "name": "Powerlifting"
+    },
+    "date": "2024-06-22T14:00:00Z",
+    "duration": 90
+  },
+  {
+    "trainingPK": 91,
+    "traineeId": 60,
+    "trainerId": 91,
+    "name": "Sprint Finish",
+    "trainingType": {
+      "id": 8,
+      "name": "Swimming"
+    },
+    "date": "2024-06-22T07:30:00Z",
+    "duration": 60
+  },
+  {
+    "trainingPK": 92,
+    "traineeId": 2,
+    "trainerId": 92,
+    "name": "Chair Yoga",
+    "trainingType": {
+      "id": 1,
+      "name": "Yoga"
+    },
+    "date": "2024-06-23T08:00:00Z",
+    "duration": 45
+  }
+]
