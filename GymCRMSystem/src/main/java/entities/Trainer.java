@@ -1,24 +1,47 @@
 package entities;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import jakarta.persistence.*;
+import lombok.*;
+
+import java.util.List;
 
 @AllArgsConstructor
+@NoArgsConstructor
 @ToString
 @Setter
 @Getter
+@Entity
 public class Trainer implements GymEntity {
 
-    private long trainerPk;
-    private String specialization;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="Trainer_id")
+    private long id;
+
+    @ManyToOne
+    @JoinColumn(name="Specialization")
+    private TrainingType trainingType;
+
+    @OneToOne
+    @JoinColumn(name="User_id")
     private User user;
+
+    @OneToMany(mappedBy="trainer")
+    private List<Training> trainings;
+
+    @ManyToMany
+    @JoinTable(
+            name="trainer_trainee",
+            joinColumns = @JoinColumn(name="Trainer_id"),
+            inverseJoinColumns = @JoinColumn(name="trainee_id")
+    )
+    private List<Trainee> trainees;
 
     @Override
     public long getEntityId() {
-        return this.trainerPk;
+        return id;
     }
 
 }

@@ -7,7 +7,7 @@ import persistence.TrainingDAO;
 @Service
 public class TrainingServiceImpl implements TrainingService{
 
-    TrainingDAO trainingDAO;
+    private final TrainingDAO trainingDAO;
 
     public TrainingServiceImpl(TrainingDAO trainingDAO) {
         this.trainingDAO = trainingDAO;
@@ -18,7 +18,7 @@ public class TrainingServiceImpl implements TrainingService{
     }
 
     public void createTrainingProfile(Training training) {
-        trainingDAO.save(training.getTrainingPk(), training);
+        trainingDAO.save(training.getId(), training);
     }
 
 }

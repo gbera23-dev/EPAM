@@ -12,7 +12,7 @@ import java.util.List;
 @Service
 public class TraineeServiceImpl implements TraineeService {
 
-    TraineeDAO traineeDAO;
+    private final TraineeDAO traineeDAO;
 
     public TraineeServiceImpl(TraineeDAO traineeDAO) {
         this.traineeDAO = traineeDAO;
@@ -26,7 +26,7 @@ public class TraineeServiceImpl implements TraineeService {
                 toList();
         UserUtils.generateUserCredentials(currentUser, users);
 
-        traineeDAO.save(trainee.getTraineePk(), trainee);
+        traineeDAO.save(trainee.getId(), trainee);
     }
 
     public Trainee selectTraineeProfile(long traineeId) {
@@ -34,7 +34,7 @@ public class TraineeServiceImpl implements TraineeService {
     }
 
     public void updateTraineeProfile(Trainee trainee) {
-        traineeDAO.save(trainee.getTraineePk(), trainee);
+        traineeDAO.save(trainee.getId(), trainee);
     }
 
     public void deleteTraineeProfile(long traineeId) {

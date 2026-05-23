@@ -11,7 +11,7 @@ import java.util.List;
 @Service
 public class TrainerServiceImpl implements TrainerService {
 
-    TrainerDAO trainerDAO;
+    private final TrainerDAO trainerDAO;
 
     public TrainerServiceImpl(TrainerDAO trainerDAO) {
         this.trainerDAO = trainerDAO;
@@ -25,11 +25,11 @@ public class TrainerServiceImpl implements TrainerService {
                         toList();
         UserUtils.generateUserCredentials(currentUser, users);
 
-        trainerDAO.save(trainer.getTrainerPk(), trainer);
+        trainerDAO.save(trainer.getId(), trainer);
     }
 
     public void updateTrainerProfile(Trainer trainer) {
-        trainerDAO.save(trainer.getTrainerPk(), trainer);
+        trainerDAO.save(trainer.getId(), trainer);
     }
 
     public Trainer selectTrainerProfile(long trainerId) {
