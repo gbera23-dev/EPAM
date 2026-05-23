@@ -33,6 +33,7 @@ public class GymFacade {
     public void updateTrainee(Trainee trainee) {
         traineeService.updateTraineeProfile(trainee);
     }
+
     public void deleteTrainee(Long id) {
         traineeService.deleteTraineeProfile(id);
     }

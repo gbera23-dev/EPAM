@@ -2,23 +2,23 @@ package services;
 
 import entities.Training;
 import org.springframework.stereotype.Service;
-import persistence.TrainingDAO;
+import persistence.TrainingRepository;
 
 @Service
 public class TrainingServiceImpl implements TrainingService{
 
-    private final TrainingDAO trainingDAO;
+    private final TrainingRepository trainingRepository;
 
-    public TrainingServiceImpl(TrainingDAO trainingDAO) {
-        this.trainingDAO = trainingDAO;
+    public TrainingServiceImpl(TrainingRepository trainingRepository) {
+        this.trainingRepository = trainingRepository;
     }
 
     public Training selectTrainingProfile(long trainingId) {
-        return trainingDAO.getEntity(trainingId);
+        return trainingRepository.findById(trainingId).orElse(null);
     }
 
     public void createTrainingProfile(Training training) {
-        trainingDAO.save(training.getId(), training);
+        trainingRepository.save(training);
     }
 
 }

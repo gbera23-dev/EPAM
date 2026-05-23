@@ -8,6 +8,7 @@ import org.springframework.context.annotation.*;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -25,6 +26,7 @@ import java.util.concurrent.ConcurrentHashMap;
         "logging"
         })
 @EnableAspectJAutoProxy
+@EnableJpaRepositories(basePackages = "persistence")
 @Configuration
 public class ApplicationConfig {
 

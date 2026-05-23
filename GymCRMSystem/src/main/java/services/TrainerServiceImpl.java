@@ -3,7 +3,7 @@ package services;
 import entities.Trainer;
 import entities.User;
 import org.springframework.stereotype.Service;
-import persistence.TrainerDAO;
+import persistence.TrainerRepository;
 import utils.UserUtils;
 
 import java.util.List;
@@ -11,29 +11,32 @@ import java.util.List;
 @Service
 public class TrainerServiceImpl implements TrainerService {
 
-    private final TrainerDAO trainerDAO;
+    private final TrainerRepository trainerRepository;
 
-    public TrainerServiceImpl(TrainerDAO trainerDAO) {
-        this.trainerDAO = trainerDAO;
+    public TrainerServiceImpl(TrainerRepository trainerRepository) {
+        this.trainerRepository = trainerRepository;
     }
 
     public void createTrainerProfile(Trainer trainer) {
         User currentUser = trainer.getUser();
-        List<User> users = trainerDAO.getAll().
+
+        List<User> users = trainerRepository.findAll().
                         stream().
                         map(Trainer::getUser).
                         toList();
+
+
         UserUtils.generateUserCredentials(currentUser, users);
 
-        trainerDAO.save(trainer.getId(), trainer);
+        trainerRepository.save(trainer);
     }
 
     public void updateTrainerProfile(Trainer trainer) {
-        trainerDAO.save(trainer.getId(), trainer);
+        trainerRepository.save(trainer);
     }
 
     public Trainer selectTrainerProfile(long trainerId) {
-        return trainerDAO.getEntity(trainerId);
+        return trainerRepository.findById(trainerId).orElse(null);
     }
 
 

@@ -1,4 +1,3 @@
-import builders.TrainerBuilder;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import entities.Trainer;
 import org.junit.jupiter.api.BeforeEach;
