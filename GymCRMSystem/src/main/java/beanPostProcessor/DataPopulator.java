@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 import java.io.*;
 import java.util.*;
 
-//@Component
+@Component
 public class DataPopulator implements BeanPostProcessor {
 
 

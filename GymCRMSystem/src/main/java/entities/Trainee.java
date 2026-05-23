@@ -17,7 +17,7 @@ public class Trainee implements GymEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="Trainee_id")
-    private long id;
+    private Long id;
 
     @Column(name="Date_of_birth")
     private LocalDate dateOfBirth;

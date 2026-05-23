@@ -16,7 +16,7 @@ public class Training implements GymEntity {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     @Column(name="Training_id")
-    private long id;
+    private Long id;
 
     @ManyToOne
     @JoinColumn(name="Trainee_id")

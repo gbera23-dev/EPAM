@@ -1,5 +1,6 @@
 import beanPostProcessor.DataPopulator;
 import builders.Builder;
+import builders.TraineeBuilder;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import entities.GymEntity;
 import org.junit.jupiter.api.BeforeEach;
