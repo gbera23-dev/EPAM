@@ -2,7 +2,6 @@ import entities.Trainee;
 import entities.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import persistence.TraineeDAO;
 
 import java.util.HashMap;
 import java.util.List;

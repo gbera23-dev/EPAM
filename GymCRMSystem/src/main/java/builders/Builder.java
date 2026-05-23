@@ -1,6 +1,7 @@
 package builders;
 
-import entities.GymEntity;
+
+import dto.GymDTO;
 
 import java.util.Map;
 
@@ -15,5 +16,5 @@ public interface Builder {
      * @param entry Map of entries
      * @return One of the implementations of GymEntity's instance(Trainee, Trainer, Training)
      */
-    GymEntity build(Map<String, Object> entry);
+    GymDTO build(Map<String, Object> entry);
 }

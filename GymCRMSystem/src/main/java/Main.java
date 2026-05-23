@@ -1,7 +1,10 @@
-import entities.Trainer;
+import dto.TraineeDTO;
+import dto.TrainerDTO;
 import facade.GymFacade;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+
+import java.util.Map;
 
 public class Main {
 
@@ -15,7 +18,8 @@ public class Main {
             new AnnotationConfigApplicationContext(ApplicationConfig.class, DataConfig.class);
 
 
-    GymFacade gymFacade = applicationContext.getBean(GymFacade.class);
+        GymFacade gymFacade = applicationContext.getBean(GymFacade.class);
+
 
 }
 

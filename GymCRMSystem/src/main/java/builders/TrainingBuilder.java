@@ -1,8 +1,8 @@
 package builders;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import entities.Training;
-import entities.TrainingType;
+import dto.TrainingDTO;
+import dto.TrainingTypeDTO;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -18,13 +18,13 @@ public class TrainingBuilder implements Builder {
     }
 
     @Override
-    public Training build(Map<String, Object> entry) {
-        return new Training(
+    public TrainingDTO build(Map<String, Object> entry) {
+        return new TrainingDTO(
                 ((Number) entry.get("trainingPK")).longValue(),
                 ((Number) entry.get("traineeId")).longValue(),
                 ((Number) entry.get("trainerId")).longValue(),
                 (String)entry.get("name"),
-                objectMapper.convertValue(entry.get("trainingType"), TrainingType.class),
+                objectMapper.convertValue(entry.get("trainingType"), TrainingTypeDTO.class),
                 objectMapper.convertValue(entry.get("date"), LocalDate.class),
                 (int)entry.get("duration")
         );

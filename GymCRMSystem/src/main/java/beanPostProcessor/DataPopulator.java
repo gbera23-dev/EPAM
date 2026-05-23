@@ -3,7 +3,7 @@ package beanPostProcessor;
 import builders.Builder;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import entities.GymEntity;
+import dto.GymDTO;
 import org.jspecify.annotations.NonNull;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.config.BeanPostProcessor;
@@ -42,16 +42,16 @@ public class DataPopulator implements BeanPostProcessor {
     @SuppressWarnings("unchecked")
     public Object postProcessBeforeInitialization(@NonNull Object bean, String beanName) {
         if(beanName.endsWith("Storage") && bean instanceof Map) {
-            List<GymEntity> entities = null;
+            List<GymDTO> entities = null;
             try {
                 entities = getAllEntities(beanName, fetchAppropriateResource(beanName));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
 
-            Map<Long, GymEntity> beanMap = (Map<Long, GymEntity>)bean;
+            Map<Long, GymDTO> beanMap = (Map<Long, GymDTO>)bean;
 
-            for(GymEntity entity : entities) {
+            for(GymDTO entity : entities) {
                 beanMap.put(entity.getEntityId(), entity);
             }
 
@@ -79,7 +79,7 @@ public class DataPopulator implements BeanPostProcessor {
      * @return List of GymEntities
      * @throws IOException Exception is thrown if the builder for the particular entity is not implemented
      */
-    private List<GymEntity> getAllEntities(String beanName, Resource resource) throws IOException {
+    private List<GymDTO> getAllEntities(String beanName, Resource resource) throws IOException {
         String name = beanName.substring(0, beanName.indexOf("Storage"));
         ObjectMapper objectMapper = objectMapperProvider.getObject();
 

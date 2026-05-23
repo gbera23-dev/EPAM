@@ -1,6 +1,6 @@
 import builders.TrainerBuilder;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import entities.Trainer;
+import dto.TrainerDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -27,9 +27,9 @@ class TrainerBuilderTest {
         entry.put("specialization", "Yoga");
         entry.put("user", null);
 
-        Trainer result = trainerBuilder.build(entry);
+        TrainerDTO result = trainerBuilder.build(entry);
 
-        assertEquals(1L, result.getId());
+        assertEquals(1L, result.getTrainerPk());
     }
 
     @Test
@@ -39,9 +39,9 @@ class TrainerBuilderTest {
         entry.put("specialization", "Cardio");
         entry.put("user", null);
 
-        Trainer result = trainerBuilder.build(entry);
+        TrainerDTO result = trainerBuilder.build(entry);
 
-        assertEquals("Cardio", result.getTrainingType().getName());
+        assertEquals("Cardio", result.getSpecialization());
     }
 
     @Test
@@ -59,7 +59,7 @@ class TrainerBuilderTest {
         entry.put("specialization", "Strength");
         entry.put("user", userMap);
 
-        Trainer result = trainerBuilder.build(entry);
+        TrainerDTO result = trainerBuilder.build(entry);
 
         assertNotNull(result.getUser());
         assertEquals("Jane", result.getUser().getFirstName());
@@ -72,8 +72,8 @@ class TrainerBuilderTest {
         entry.put("specialization", "Pilates");
         entry.put("user", null);
 
-        Trainer result = trainerBuilder.build(entry);
+        TrainerDTO result = trainerBuilder.build(entry);
 
-        assertEquals(100L, result.getId());
+        assertEquals(100L, result.getEntityId());
     }
 }
