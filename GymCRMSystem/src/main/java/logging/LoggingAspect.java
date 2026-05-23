@@ -52,21 +52,21 @@ public class LoggingAspect {
         String methodName = pjp.getSignature().getName();
         String className = pjp.getSignature().getDeclaringTypeName();
 
-        logger.info("DAO method {} of {} started execution", methodName, className);
-        logger.debug("DAO method {} called with arguments: {}", methodName, pjp.getArgs());
+        logger.info("Repository method {} of {} started execution", methodName, className);
+        logger.debug("Repository method {} called with arguments: {}", methodName, pjp.getArgs());
 
         long start = System.currentTimeMillis();
         Object result = pjp.proceed();
         long executionTime = System.currentTimeMillis() - start;
 
         if (executionTime >= SLOW_EXECUTION_THRESHOLD_MS) {
-            logger.warn("DAO method {} of {} exceeded slow execution threshold: {} ms",
+            logger.warn("Repository method {} of {} exceeded slow execution threshold: {} ms",
                     methodName, className, executionTime);
         } else {
-            logger.debug("DAO method {} of {} completed in {} ms", methodName, className, executionTime);
+            logger.debug("Repository method {} of {} completed in {} ms", methodName, className, executionTime);
         }
 
-        logger.info("DAO method {} of {} finished successfully", methodName, className);
+        logger.info("Repository method {} of {} finished successfully", methodName, className);
         return result;
     }
 

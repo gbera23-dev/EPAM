@@ -36,7 +36,7 @@ public class TrainerServiceImpl implements TrainerService {
     }
 
     public Trainer selectTrainerProfile(long trainerId) {
-        return trainerRepository.findById(trainerId).orElse(null);
+        return trainerRepository.getReferenceById(trainerId);
     }
 
 

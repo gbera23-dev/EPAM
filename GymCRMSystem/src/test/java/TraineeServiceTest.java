@@ -1,11 +1,13 @@
 import entities.Trainee;
 import entities.User;
+import mappers.TraineeMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import persistence.TraineeRepository;
 import services.TraineeServiceImpl;
 
 import java.util.Collections;
@@ -18,7 +20,7 @@ import static org.mockito.Mockito.*;
 class TraineeServiceTest {
 
     @Mock
-    private TraineeDAO traineeDAO;
+    private TraineeRepository traineeRepository;
 
     @InjectMocks
     private TraineeServiceImpl traineeService;
@@ -33,12 +35,12 @@ class TraineeServiceTest {
         user.setLastName("Doe");
         user.setUsername("");
         user.setPassword("");
-        trainee = new Trainee(1L, null, "123 Main St", user);
+        trainee = new Trainee(1L, null, "123 Main St", user, null, null);
     }
 
     @Test
     void testCreateTraineeProfilePasswordIsValid() {
-        when(traineeDAO.getAll()).thenReturn(Collections.emptyList());
+        when(traineeRepository.findAll()).thenReturn(Collections.emptyList());
 
         traineeService.createTraineeProfile(trainee);
 
@@ -50,9 +52,9 @@ class TraineeServiceTest {
     void testCreateTraineeProfileUsernameIsSerialized() {
         User existingUser = new User();
         existingUser.setUsername("John.Doe");
-        Trainee existingTrainee = new Trainee(2L, null, "456 Other St", existingUser);
+        Trainee existingTrainee = new Trainee(2L, null, "456 Other St", existingUser, null, null);
 
-        when(traineeDAO.getAll()).thenReturn(List.of(existingTrainee));
+        when(traineeRepository.findAll()).thenReturn(List.of(existingTrainee));
 
         traineeService.createTraineeProfile(trainee);
 
@@ -61,17 +63,17 @@ class TraineeServiceTest {
 
     @Test
     void testCreateTraineeProfileSavesTraineeToDAO() {
-        when(traineeDAO.getAll()).thenReturn(Collections.emptyList());
+        when(traineeRepository.findAll()).thenReturn(Collections.emptyList());
 
         traineeService.createTraineeProfile(trainee);
 
-        verify(traineeDAO).save(1L, trainee);
+        verify(traineeRepository).save(trainee);
     }
 
 
     @Test
     void testSelectTraineeProfileReturnsTraineeWhenExists() {
-        when(traineeDAO.getEntity(1L)).thenReturn(trainee);
+        when(traineeRepository.getReferenceById(1L)).thenReturn(trainee);
 
         Trainee result = traineeService.selectTraineeProfile(1L);
 
@@ -80,7 +82,7 @@ class TraineeServiceTest {
 
     @Test
     void testSelectTraineeProfileReturnsNullWhenNotExists() {
-        when(traineeDAO.getEntity(99L)).thenReturn(null);
+        when(traineeRepository.getReferenceById(99L)).thenReturn(null);
 
         assertNull(traineeService.selectTraineeProfile(99L));
     }
@@ -90,20 +92,20 @@ class TraineeServiceTest {
     void testUpdateTraineeProfileSavesUpdatedTrainee() {
         traineeService.updateTraineeProfile(trainee);
 
-        verify(traineeDAO).save(1L, trainee);
+        verify(traineeRepository).save(trainee);
     }
 
     @Test
     void testDeleteTraineeProfileDeletesTraineeFromDAO() {
         traineeService.deleteTraineeProfile(1L);
 
-        verify(traineeDAO).delete(1L);
+        verify(traineeRepository).deleteById(1L);
     }
 
     @Test
     void testDeleteTraineeProfileDoesNotInteractWithSave() {
         traineeService.deleteTraineeProfile(1L);
 
-        verify(traineeDAO, never()).save(anyLong(), any());
+        verify(traineeRepository, never()).save(any());
     }
 }

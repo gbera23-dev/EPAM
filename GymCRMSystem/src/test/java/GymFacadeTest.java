@@ -34,15 +34,18 @@ class GymFacadeTest {
     private GymFacade gymFacade;
 
     private Trainee createTrainee(long pk) {
-        return new Trainee(pk, null, "Address", new User(pk, "F", "L", "f.l", "pw", true));
+        return new Trainee(pk, null, "Address", new User(pk, "F", "L", "f.l", "pw", true, null, null), null, null);
     }
 
     private Trainer createTrainer(long pk) {
-        return new Trainer(pk, "Yoga", new User(pk, "T", "R", "t.r", "pw", true));
+        TrainingType trainingType = new TrainingType();
+        trainingType.setName("Yoga");
+
+        return new Trainer(pk, trainingType, new User(pk, "T", "R", "t.r", "pw", true, null, null), null, null);
     }
 
     private Training createTraining(long pk) {
-        return new Training(pk, 1L, 2L, "Session", new TrainingType(), LocalDate.now(), 30);
+        return new Training(pk, null, null, "Session", new TrainingType(), LocalDate.now(), 30);
     }
 
     @Test

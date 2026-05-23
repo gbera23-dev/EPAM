@@ -9,8 +9,8 @@ import static org.junit.jupiter.api.Assertions.*;
 class TraineeTest {
 
     private Trainee createTrainee() {
-        User user = new User(1L, "John", "Doe", "john.doe", "pass", true);
-        return new Trainee(10L, LocalDate.now(), "123 Main St", user);
+        User user = new User(1L, "John", "Doe", "john.doe", "pass", true, null, null);
+        return new Trainee(10L, LocalDate.now(), "123 Main St", user, null, null);
     }
 
     @Test
@@ -24,16 +24,16 @@ class TraineeTest {
     void testGetTraineePKReturnsCorrectValue() {
         Trainee trainee = createTrainee();
 
-        assertEquals(10L, trainee.getTraineePk());
+        assertEquals(10L, trainee.getId());
     }
 
     @Test
     void testSetTraineePKUpdatesValue() {
         Trainee trainee = createTrainee();
 
-        trainee.setTraineePk(99L);
+        trainee.setId(99L);
 
-        assertEquals(99L, trainee.getTraineePk());
+        assertEquals(99L, trainee.getId());
     }
 
     @Test
@@ -55,7 +55,7 @@ class TraineeTest {
     @Test
     void testGetDateOfBirthReturnsCorrectValue() {
         LocalDate dob = LocalDate.now();
-        Trainee trainee = new Trainee(1L, dob, "addr", null);
+        Trainee trainee = new Trainee(1L, dob, "addr", null, null, null);
 
         assertEquals(dob, trainee.getDateOfBirth());
     }
@@ -72,8 +72,8 @@ class TraineeTest {
 
     @Test
     void testGetUserReturnsCorrectUser() {
-        User user = new User(1L, "John", "Doe", "john.doe", "pass", true);
-        Trainee trainee = new Trainee(1L, null, "addr", user);
+        User user = new User(1L, "John", "Doe", "john.doe", "pass", true, null, null);
+        Trainee trainee = new Trainee(1L, null, "addr", user, null, null);
 
         assertEquals(user, trainee.getUser());
     }
@@ -81,7 +81,7 @@ class TraineeTest {
     @Test
     void testSetUserIdUpdatesUser() {
         Trainee trainee = createTrainee();
-        User newUser = new User(2L, "Jane", "Smith", "jane.smith", "pw", false);
+        User newUser = new User(2L, "Jane", "Smith", "jane.smith", "pw", false, null, null);
 
         trainee.setUser(newUser);
 
@@ -99,8 +99,10 @@ class TraineeTest {
 class TrainerTest {
 
     private Trainer createTrainer() {
-        User user = new User(2L, "Alice", "Wonder", "alice.wonder", "pw123", true);
-        return new Trainer(20L, "Pilates", user);
+        User user = new User(2L, "Alice", "Wonder", "alice.wonder", "pw123", true, null, null);
+        TrainingType trainingType = new TrainingType();
+        trainingType.setName("Pilates");
+        return new Trainer(20L, trainingType, user, null, null);
     }
 
     @Test
@@ -114,32 +116,33 @@ class TrainerTest {
     void testgetTrainerPkReturnsCorrectValue() {
         Trainer trainer = createTrainer();
 
-        assertEquals(20L, trainer.getTrainerPk());
+        assertEquals(20L, trainer.getId());
     }
 
     @Test
     void testSetTrainerPKUpdatesValue() {
         Trainer trainer = createTrainer();
 
-        trainer.setTrainerPk(55L);
+        trainer.setId(55L);
 
-        assertEquals(55L, trainer.getTrainerPk());
+        assertEquals(55L, trainer.getId());
     }
 
     @Test
     void testGetSpecializationReturnsCorrectValue() {
         Trainer trainer = createTrainer();
 
-        assertEquals("Pilates", trainer.getSpecialization());
+        assertEquals("Pilates", trainer.getTrainingType().getName());
     }
 
     @Test
     void testSetSpecializationUpdatesValue() {
         Trainer trainer = createTrainer();
+        TrainingType trainingType = new TrainingType();
+        trainingType.setName("CrossFit");
+        trainer.setTrainingType(trainingType);
 
-        trainer.setSpecialization("CrossFit");
-
-        assertEquals("CrossFit", trainer.getSpecialization());
+        assertEquals("CrossFit", trainer.getTrainingType().getName());
     }
 
     @Test
@@ -153,7 +156,7 @@ class TrainerTest {
     @Test
     void testSetUserUpdatesUser() {
         Trainer trainer = createTrainer();
-        User newUser = new User(3L, "Bob", "Green", "bob.green", "pw", true);
+        User newUser = new User(3L, "Bob", "Green", "bob.green", "pw", true, null, null);
 
         trainer.setUser(newUser);
 
@@ -174,7 +177,12 @@ class TrainingTest {
         TrainingType type = new TrainingType();
         type.setId(1L);
         type.setName("Cardio");
-        return new Training(30L, 5L, 8L, "Morning Jog", type,
+        Trainer trainer = new Trainer();
+        Trainee trainee = new Trainee();
+        trainee.setId(5L);
+        trainer.setId(8L);
+
+        return new Training(30L, trainee,trainer, "Morning Jog", type,
                 LocalDate.now(), 45);
     }
 
@@ -189,48 +197,52 @@ class TrainingTest {
     void testGetTrainingPkReturnsCorrectValue() {
         Training training = createTraining();
 
-        assertEquals(30L, training.getTrainingPk());
+        assertEquals(30L, training.getId());
     }
 
     @Test
     void testSetTrainingPKUpdatesValue() {
         Training training = createTraining();
 
-        training.setTrainingPk(88L);
+        training.setId(88L);
 
-        assertEquals(88L, training.getTrainingPk());
+        assertEquals(88L, training.getId());
     }
 
     @Test
     void testGetTraineeIdReturnsCorrectValue() {
         Training training = createTraining();
 
-        assertEquals(5L, training.getTraineeId());
+        assertEquals(5L, training.getTrainee().getId());
     }
 
     @Test
     void testSetTraineeIdUpdatesValue() {
         Training training = createTraining();
+        Trainee trainee = new Trainee();
 
-        training.setTraineeId(99);
+        trainee.setId(99L);
 
-        assertEquals(99L, training.getTraineeId());
+        training.setTrainee(trainee);
+
+        assertEquals(99L, training.getTrainee().getId());
     }
 
     @Test
     void testGetTrainerIdReturnsCorrectValue() {
         Training training = createTraining();
 
-        assertEquals(8L, training.getTrainerId());
+        assertEquals(8L, training.getTrainer().getId());
     }
 
     @Test
     void testSetTrainerIdUpdatesValue() {
         Training training = createTraining();
+        Trainer trainer = new Trainer();
+        trainer.setId(77L);
+        training.setTrainer(trainer);
 
-        training.setTrainerId(77);
-
-        assertEquals(77L, training.getTrainerId());
+        assertEquals(77L, training.getTrainer().getId());
     }
 
     @Test
@@ -286,7 +298,7 @@ class TrainingTest {
     @Test
     void testGetDateReturnsCorrectValue() {
         LocalDate date = LocalDate.now();
-        Training training = new Training(1L, 1L, 1L, "test", null, date, 10);
+        Training training = new Training(1L, null, null, "test", null, date, 10);
 
         assertEquals(date, training.getDate());
     }
@@ -349,23 +361,23 @@ class TrainingTypeTest {
 class UserTest {
 
     private User createUser() {
-        return new User(1L, "John", "Doe", "john.doe", "password123", true);
+        return new User(1L, "John", "Doe", "john.doe", "password123", true, null, null);
     }
 
     @Test
     void testGetUserIdReturnsCorrectValue() {
         User user = createUser();
 
-        assertEquals(1L, user.getUserId());
+        assertEquals(1L, user.getId());
     }
 
     @Test
     void testSetUserIdUpdatesValue() {
         User user = createUser();
 
-        user.setUserId(42L);
+        user.setId(42L);
 
-        assertEquals(42L, user.getUserId());
+        assertEquals(42L, user.getId());
     }
 
     @Test

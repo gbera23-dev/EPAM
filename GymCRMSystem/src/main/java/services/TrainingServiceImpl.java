@@ -14,7 +14,7 @@ public class TrainingServiceImpl implements TrainingService{
     }
 
     public Training selectTrainingProfile(long trainingId) {
-        return trainingRepository.findById(trainingId).orElse(null);
+        return trainingRepository.getReferenceById(trainingId);
     }
 
     public void createTrainingProfile(Training training) {

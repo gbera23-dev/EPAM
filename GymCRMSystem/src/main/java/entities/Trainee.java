@@ -25,7 +25,7 @@ public class Trainee implements GymEntity {
     @Column(name="Address")
     private String address;
 
-    @OneToOne
+    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name="User_id")
     private User user;
 

@@ -5,6 +5,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import persistence.TrainingRepository;
 import services.TrainingServiceImpl;
 
 import java.time.LocalDate;
@@ -18,7 +19,7 @@ class TrainingServiceTest {
 
 
     @Mock
-    private TrainingDAO trainingDAO;
+    private TrainingRepository trainingRepository;
 
     @InjectMocks
     private TrainingServiceImpl trainingService;
@@ -27,13 +28,13 @@ class TrainingServiceTest {
         TrainingType type = new TrainingType();
         type.setId(1L);
         type.setName("Strength");
-        return new Training(pk, 10L, 20L, "Morning Training", type, LocalDate.now(), 60);
+        return new Training(pk, null, null, "Morning Training", type, LocalDate.now(), 60);
     }
 
     @Test
     void testSelectTrainingProfileReturnsTraining() {
         Training training = createTraining(1L);
-        when(trainingDAO.getEntity(1L)).thenReturn(training);
+        when(trainingRepository.getReferenceById(1L)).thenReturn(training);
 
         Training result = trainingService.selectTrainingProfile(1L);
 
@@ -42,7 +43,6 @@ class TrainingServiceTest {
 
     @Test
     void testSelectTrainingProfileReturnsNullWhenNotFound() {
-        when(trainingDAO.getEntity(99L)).thenReturn(null);
 
         Training result = trainingService.selectTrainingProfile(99L);
 
@@ -55,7 +55,7 @@ class TrainingServiceTest {
 
         trainingService.createTrainingProfile(training);
 
-        verify(trainingDAO).save(2L, training);
+        verify(trainingRepository).save(training);
     }
 
     @Test
@@ -64,15 +64,15 @@ class TrainingServiceTest {
 
         trainingService.createTrainingProfile(training);
 
-        verify(trainingDAO, times(1)).save(7L, training);
+        verify(trainingRepository, times(1)).save(training);
     }
 
     @Test
     void testSelectTrainingProfileCallsDAOWithCorrectId() {
-        when(trainingDAO.getEntity(3L)).thenReturn(null);
+        when(trainingRepository.getReferenceById(3L)).thenReturn(null);
 
         trainingService.selectTrainingProfile(3L);
 
-        verify(trainingDAO).getEntity(3L);
+        verify(trainingRepository).getReferenceById(3L);
     }
 }
