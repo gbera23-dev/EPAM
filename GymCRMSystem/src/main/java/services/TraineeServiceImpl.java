@@ -71,13 +71,28 @@ public class TraineeServiceImpl implements TraineeService {
     @Override
     @Transactional
     public void deleteTraineeProfileById(long traineeId) {
-        traineeRepository.deleteById(traineeId);
+        Trainee trainee = traineeRepository.findById(traineeId)
+                .orElseThrow(() -> new EntityNotFoundException("Trainee not found"));
+
+        trainee.getTrainers().clear();
+        traineeRepository.save(trainee);
+
+        traineeRepository.delete(trainee);
     }
 
     @Override
     @Transactional
     public void deleteTraineeProfileByUsername(String username) {
-        traineeRepository.deleteByUserUsername(username);
+        Trainee trainee = traineeRepository.findByUserUsername(username);
+
+        if (trainee == null) {
+            throw new EntityNotFoundException("Trainee not found with username: " + username);
+        }
+
+        trainee.getTrainers().clear();
+        traineeRepository.save(trainee);
+
+        traineeRepository.delete(trainee);
     }
 
     @Override
@@ -97,6 +112,10 @@ public class TraineeServiceImpl implements TraineeService {
         Trainee trainee = traineeRepository.findById(traineeId).orElseThrow(() ->
                  new EntityNotFoundException("Trainee not found!"));
 
+        if (trainee.getUser().isActive()) {
+            throw new IllegalStateException("Trainee profile is already active!");
+        }
+
         trainee.getUser().setActive(true);
     }
 
@@ -105,6 +124,10 @@ public class TraineeServiceImpl implements TraineeService {
     public void deactivateTraineeProfile(long traineeId) {
         Trainee trainee = traineeRepository.findById(traineeId).orElseThrow(() ->
                 new EntityNotFoundException("Trainee not found!"));
+
+        if (!trainee.getUser().isActive()) {
+            throw new IllegalStateException("Trainee profile is already inactive!");
+        }
 
         trainee.getUser().setActive(false);
     }

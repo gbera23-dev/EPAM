@@ -1,13 +1,11 @@
 package services;
 
-import entities.Trainee;
 import entities.Trainer;
 import entities.Training;
 import entities.User;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import persistence.TraineeRepository;
 import persistence.TrainerRepository;
 import persistence.TrainingRepository;
 import utils.UserUtils;
@@ -73,6 +71,10 @@ public class TrainerServiceImpl implements TrainerService {
         Trainer trainer = trainerRepository.findById(trainerId).orElseThrow(() ->
                 new EntityNotFoundException("Trainer not found!"));
 
+        if (trainer.getUser().isActive()) {
+            throw new IllegalStateException("Trainee profile is already active!");
+        }
+
         trainer.getUser().setActive(true);
     }
 
@@ -81,6 +83,10 @@ public class TrainerServiceImpl implements TrainerService {
     public void deactivateTrainerProfile(long trainerId) {
         Trainer trainer = trainerRepository.findById(trainerId).orElseThrow(() ->
                 new EntityNotFoundException("Trainer not found!"));
+
+        if (!trainer.getUser().isActive()) {
+            throw new IllegalStateException("Trainee profile is already inactive!");
+        }
 
         trainer.getUser().setActive(false);
     }

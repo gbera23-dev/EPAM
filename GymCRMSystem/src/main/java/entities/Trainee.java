@@ -29,7 +29,7 @@ public class Trainee implements GymEntity {
     @JoinColumn(name="User_id")
     private User user;
 
-    @OneToMany(mappedBy="trainee")
+    @OneToMany(mappedBy="trainee", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Training> trainings;
 
     @ManyToMany(mappedBy="trainees")

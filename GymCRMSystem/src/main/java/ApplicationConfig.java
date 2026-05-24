@@ -3,7 +3,6 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import dto.TraineeDTO;
 import dto.TrainerDTO;
 import dto.TrainingDTO;
-import entities.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.*;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
@@ -26,7 +25,8 @@ import java.util.concurrent.ConcurrentHashMap;
         "builders",
         "logging",
         "mappers",
-        "Database"
+        "database",
+        "auth"
         })
 @EnableAspectJAutoProxy
 @EnableJpaRepositories(basePackages = "persistence")

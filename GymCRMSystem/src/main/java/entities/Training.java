@@ -33,7 +33,7 @@ public class Training implements GymEntity {
     @JoinColumn(name="TrainingType_id")
     private TrainingType trainingType;
 
-    @Column(name="Training_data", nullable=false)
+    @Column(name="Training_date", nullable=false)
     private LocalDate date;
 
     @Column(name="Duration", nullable=false)

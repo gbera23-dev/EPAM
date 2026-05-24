@@ -1,5 +1,3 @@
-import dto.TraineeDTO;
-import dto.TrainerDTO;
 import entities.Trainee;
 import entities.User;
 import facade.GymFacade;
@@ -7,7 +5,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import java.time.LocalDate;
-import java.util.Map;
 
 public class Main {
 
@@ -23,7 +20,7 @@ public class Main {
 
         GymFacade gymFacade = applicationContext.getBean(GymFacade.class);
 
-        User user = new User(null, "James", "Davis", null, null, false,
+        User user = new User(null, "John", "Nolan", null, null, false,
                 null, null);
 
         Trainee trainee = new Trainee(null, LocalDate.now(), "tokutoku", user, null, null);

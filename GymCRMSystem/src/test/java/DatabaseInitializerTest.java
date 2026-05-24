@@ -1,4 +1,4 @@
-import Database.DatabaseInitializer;
+import database.DatabaseInitializer;
 import dto.TraineeDTO;
 import dto.TrainerDTO;
 import dto.TrainingDTO;

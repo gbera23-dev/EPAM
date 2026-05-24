@@ -15,6 +15,7 @@ import persistence.TrainingRepository;
 import services.TraineeServiceImpl;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -46,6 +47,7 @@ class TraineeServiceTest {
         user.setFirstName("John");
         user.setLastName("Doe");
         trainee = new Trainee();
+        trainee.setTrainers(new ArrayList<>());
         trainee.setUser(user);
     }
 
@@ -163,23 +165,25 @@ class TraineeServiceTest {
 
     @Test
     void testDeleteTraineeProfileByIdDeletesTrainee() {
+        when(traineeRepository.findById(1L)).thenReturn(Optional.of(trainee));
+
         traineeService.deleteTraineeProfileById(1L);
 
-        verify(traineeRepository).deleteById(1L);
-    }
-
-    @Test
-    void testDeleteTraineeProfileByIdDoesNotSave() {
-        traineeService.deleteTraineeProfileById(1L);
-
-        verify(traineeRepository, never()).save(any());
+        verify(traineeRepository).save(trainee);
+        verify(traineeRepository).delete(trainee);
     }
 
     @Test
     void testDeleteTraineeProfileByUsernameDeletesTrainee() {
-        traineeService.deleteTraineeProfileByUsername("John.Doe");
+        String name = "John.Doe";
 
-        verify(traineeRepository).deleteByUserUsername("John.Doe");
+        when(traineeRepository.findByUserUsername(name)).thenReturn(trainee);
+
+        traineeService.deleteTraineeProfileByUsername(name);
+
+        verify(traineeRepository).findByUserUsername(name);
+        verify(traineeRepository).save(trainee);
+        verify(traineeRepository).delete(trainee);
     }
 
     @Test
