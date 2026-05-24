@@ -4,7 +4,7 @@ import dto.UserDTO;
 import entities.User;
 import org.springframework.stereotype.Component;
 
-@Component("UserMapper")
+@Component("mappers.UserMapper")
 public class UserMapper implements Mapper<UserDTO, User> {
 
     @Override

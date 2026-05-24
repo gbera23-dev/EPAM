@@ -4,7 +4,7 @@ import dto.TraineeDTO;
 import entities.Trainee;
 import org.springframework.stereotype.Component;
 
-@Component("TraineeMapper")
+@Component("mappers.TraineeMapper")
 public class TraineeMapper implements Mapper<TraineeDTO, Trainee> {
 
     private final UserMapper userMapper;

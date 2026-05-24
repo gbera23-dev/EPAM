@@ -47,9 +47,9 @@ public class DatabaseInitializer implements ApplicationListener<ContextRefreshed
         }
 
         if (databaseInit) {
-            Mapper<TraineeDTO, Trainee> traineeMapper = (Mapper<TraineeDTO, Trainee>) mappers.get("TraineeMapper");
-            Mapper<TrainerDTO, Trainer> trainerMapper = (Mapper<TrainerDTO, Trainer>) mappers.get("TrainerMapper");
-            Mapper<TrainingDTO, Training> trainingMapper = (Mapper<TrainingDTO, Training>) mappers.get("TrainingMapper");
+            Mapper<TraineeDTO, Trainee> traineeMapper = (Mapper<TraineeDTO, Trainee>) mappers.get("mappers.TraineeMapper");
+            Mapper<TrainerDTO, Trainer> trainerMapper = (Mapper<TrainerDTO, Trainer>) mappers.get("mappers.TrainerMapper");
+            Mapper<TrainingDTO, Training> trainingMapper = (Mapper<TrainingDTO, Training>) mappers.get("mappers.TrainingMapper");
 
             Map<Long, TraineeDTO> traineeStorage = (Map<Long, TraineeDTO>) storages.get("TraineeStorage");
             Map<Long, TrainerDTO> trainerStorage = (Map<Long, TrainerDTO>) storages.get("TrainerStorage");

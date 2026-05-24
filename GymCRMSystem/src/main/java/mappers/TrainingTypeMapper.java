@@ -4,7 +4,7 @@ import dto.TrainingTypeDTO;
 import entities.TrainingType;
 import org.springframework.stereotype.Component;
 
-@Component("TrainingTypeMapper")
+@Component("mappers.TrainingTypeMapper")
 public class TrainingTypeMapper implements Mapper<TrainingTypeDTO, TrainingType> {
 
     @Override

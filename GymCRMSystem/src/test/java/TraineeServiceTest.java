@@ -1,6 +1,8 @@
 import entities.Trainee;
+import entities.Trainer;
+import entities.Training;
 import entities.User;
-import mappers.TraineeMapper;
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -8,10 +10,14 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import persistence.TraineeRepository;
+import persistence.TrainerRepository;
+import persistence.TrainingRepository;
 import services.TraineeServiceImpl;
 
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -21,6 +27,12 @@ class TraineeServiceTest {
 
     @Mock
     private TraineeRepository traineeRepository;
+
+    @Mock
+    private TrainerRepository trainerRepository;
+
+    @Mock
+    private TrainingRepository trainingRepository;
 
     @InjectMocks
     private TraineeServiceImpl traineeService;
@@ -33,14 +45,13 @@ class TraineeServiceTest {
         user = new User();
         user.setFirstName("John");
         user.setLastName("Doe");
-        user.setUsername("");
-        user.setPassword("");
-        trainee = new Trainee(1L, null, "123 Main St", user, null, null);
+        trainee = new Trainee();
+        trainee.setUser(user);
     }
 
     @Test
-    void testCreateTraineeProfilePasswordIsValid() {
-        when(traineeRepository.findAll()).thenReturn(Collections.emptyList());
+    void testCreateTraineeProfileGeneratesNonEmptyPassword() {
+        when(traineeRepository.getUsernameWithMaxNumberSuffix(trainee)).thenReturn(Collections.emptyList());
 
         traineeService.createTraineeProfile(trainee);
 
@@ -49,12 +60,19 @@ class TraineeServiceTest {
     }
 
     @Test
-    void testCreateTraineeProfileUsernameIsSerialized() {
+    void testCreateTraineeProfileGeneratesBaseUsername() {
+        when(traineeRepository.getUsernameWithMaxNumberSuffix(trainee)).thenReturn(Collections.emptyList());
+
+        traineeService.createTraineeProfile(trainee);
+
+        assertEquals("John.Doe", user.getUsername());
+    }
+
+    @Test
+    void testCreateTraineeProfileAppendsCounterWhenUsernameExists() {
         User existingUser = new User();
         existingUser.setUsername("John.Doe");
-        Trainee existingTrainee = new Trainee(2L, null, "456 Other St", existingUser, null, null);
-
-        when(traineeRepository.findAll()).thenReturn(List.of(existingTrainee));
+        when(traineeRepository.getUsernameWithMaxNumberSuffix(trainee)).thenReturn(List.of(existingUser));
 
         traineeService.createTraineeProfile(trainee);
 
@@ -62,50 +80,206 @@ class TraineeServiceTest {
     }
 
     @Test
-    void testCreateTraineeProfileSavesTraineeToDAO() {
-        when(traineeRepository.findAll()).thenReturn(Collections.emptyList());
+    void testCreateTraineeProfileAppendsCorrectCountWhenMultipleExist() {
+        User u1 = new User();
+        u1.setUsername("John.Doe");
+        User u2 = new User();
+        u2.setUsername("John.Doe1");
+        when(traineeRepository.getUsernameWithMaxNumberSuffix(trainee)).thenReturn(List.of(u1, u2));
+
+        traineeService.createTraineeProfile(trainee);
+
+        assertEquals("John.Doe2", user.getUsername());
+    }
+
+    @Test
+    void testCreateTraineeProfileSavesTrainee() {
+        when(traineeRepository.getUsernameWithMaxNumberSuffix(trainee)).thenReturn(Collections.emptyList());
 
         traineeService.createTraineeProfile(trainee);
 
         verify(traineeRepository).save(trainee);
     }
 
-
     @Test
-    void testSelectTraineeProfileReturnsTraineeWhenExists() {
+    void testSelectTraineeProfileByIdReturnsTrainee() {
         when(traineeRepository.getReferenceById(1L)).thenReturn(trainee);
 
-        Trainee result = traineeService.selectTraineeProfile(1L);
+        Trainee result = traineeService.selectTraineeProfileById(1L);
 
         assertSame(trainee, result);
     }
 
     @Test
-    void testSelectTraineeProfileReturnsNullWhenNotExists() {
-        when(traineeRepository.getReferenceById(99L)).thenReturn(null);
+    void testSelectTraineeProfileByUsernameReturnsTrainee() {
+        when(traineeRepository.findByUserUsername("John.Doe")).thenReturn(trainee);
 
-        assertNull(traineeService.selectTraineeProfile(99L));
+        Trainee result = traineeService.selectTraineeProfileByUsername("John.Doe");
+
+        assertSame(trainee, result);
     }
 
+    @Test
+    void testSelectTraineeProfileByUsernameReturnsNullWhenNotFound() {
+        when(traineeRepository.findByUserUsername("unknown")).thenReturn(null);
+
+        assertNull(traineeService.selectTraineeProfileByUsername("unknown"));
+    }
 
     @Test
-    void testUpdateTraineeProfileSavesUpdatedTrainee() {
+    void testUpdateTraineeProfileSavesTrainee() {
         traineeService.updateTraineeProfile(trainee);
 
         verify(traineeRepository).save(trainee);
     }
 
     @Test
-    void testDeleteTraineeProfileDeletesTraineeFromDAO() {
-        traineeService.deleteTraineeProfile(1L);
+    void testUpdateTraineeProfileDoesNotDelete() {
+        traineeService.updateTraineeProfile(trainee);
+
+        verify(traineeRepository, never()).deleteById(any());
+    }
+
+    @Test
+    void testUpdateTraineeListOfTrainersClearsAndSetsNewTrainers() {
+        List<Trainer> newTrainers = List.of(new Trainer(), new Trainer());
+        List<String> usernames = List.of("trainer1", "trainer2");
+        trainee.setTrainers(new java.util.ArrayList<>());
+        when(traineeRepository.findById(1L)).thenReturn(Optional.of(trainee));
+        when(trainerRepository.findByUserUsernameIn(usernames)).thenReturn(newTrainers);
+
+        traineeService.updateTraineeListOfTrainers(1L, usernames);
+
+        assertEquals(2, trainee.getTrainers().size());
+    }
+
+    @Test
+    void testUpdateTraineeListOfTrainersThrowsWhenTraineeNotFound() {
+        when(traineeRepository.findById(99L)).thenReturn(Optional.empty());
+
+        assertThrows(IllegalArgumentException.class,
+                () -> traineeService.updateTraineeListOfTrainers(99L, List.of("trainer1")));
+    }
+
+    @Test
+    void testDeleteTraineeProfileByIdDeletesTrainee() {
+        traineeService.deleteTraineeProfileById(1L);
 
         verify(traineeRepository).deleteById(1L);
     }
 
     @Test
-    void testDeleteTraineeProfileDoesNotInteractWithSave() {
-        traineeService.deleteTraineeProfile(1L);
+    void testDeleteTraineeProfileByIdDoesNotSave() {
+        traineeService.deleteTraineeProfileById(1L);
 
         verify(traineeRepository, never()).save(any());
+    }
+
+    @Test
+    void testDeleteTraineeProfileByUsernameDeletesTrainee() {
+        traineeService.deleteTraineeProfileByUsername("John.Doe");
+
+        verify(traineeRepository).deleteByUserUsername("John.Doe");
+    }
+
+    @Test
+    void testChangeTraineeProfilePasswordUpdatesPassword() {
+        user.setPassword("oldPass");
+        when(traineeRepository.findByUserUsername("John.Doe")).thenReturn(trainee);
+
+        traineeService.changeTraineeProfilePassword("John.Doe", "oldPass", "newPass");
+
+        assertEquals("newPass", user.getPassword());
+    }
+
+    @Test
+    void testChangeTraineeProfilePasswordThrowsOnWrongCredentials() {
+        user.setPassword("correctPass");
+        when(traineeRepository.findByUserUsername("John.Doe")).thenReturn(trainee);
+
+        assertThrows(IllegalArgumentException.class,
+                () -> traineeService.changeTraineeProfilePassword("John.Doe", "wrongPass", "newPass"));
+    }
+
+    @Test
+    void testActivateTraineeProfileSetsActiveTrue() {
+        user.setActive(false);
+        when(traineeRepository.findById(1L)).thenReturn(Optional.of(trainee));
+
+        traineeService.activateTraineeProfile(1L);
+
+        assertTrue(user.isActive());
+    }
+
+    @Test
+    void testActivateTraineeProfileThrowsWhenNotFound() {
+        when(traineeRepository.findById(99L)).thenReturn(Optional.empty());
+
+        assertThrows(EntityNotFoundException.class,
+                () -> traineeService.activateTraineeProfile(99L));
+    }
+
+    @Test
+    void testDeactivateTraineeProfileSetsActiveFalse() {
+        user.setActive(true);
+        when(traineeRepository.findById(1L)).thenReturn(Optional.of(trainee));
+
+        traineeService.deactivateTraineeProfile(1L);
+
+        assertFalse(user.isActive());
+    }
+
+    @Test
+    void testDeactivateTraineeProfileThrowsWhenNotFound() {
+        when(traineeRepository.findById(99L)).thenReturn(Optional.empty());
+
+        assertThrows(EntityNotFoundException.class,
+                () -> traineeService.deactivateTraineeProfile(99L));
+    }
+
+    @Test
+    void testGetTrainingsForTraineeDelegatesToRepository() {
+        LocalDate from = LocalDate.of(2024, 1, 1);
+        LocalDate to = LocalDate.of(2024, 6, 1);
+        List<Training> expected = List.of(new Training());
+        when(trainingRepository.findTrainingsByTraineeCriteria("John.Doe", from, to, "trainerName", "yoga"))
+                .thenReturn(expected);
+
+        List<Training> result = traineeService.getTrainingsForTrainee("John.Doe", from, to, "trainerName", "yoga");
+
+        assertSame(expected, result);
+    }
+
+    @Test
+    void testGetTrainersNotAssignedToTraineeDelegatesToRepository() {
+        List<Trainer> expected = List.of(new Trainer());
+        when(trainerRepository.findTrainersNotAssignedToTrainee("John.Doe")).thenReturn(expected);
+
+        List<Trainer> result = traineeService.getTrainersNotAssignedToTrainee("John.Doe");
+
+        assertSame(expected, result);
+    }
+
+    @Test
+    void testValidateTraineeProfileReturnsTrueForCorrectCredentials() {
+        user.setPassword("correctPass");
+        when(traineeRepository.findByUserUsername("John.Doe")).thenReturn(trainee);
+
+        assertTrue(traineeService.validateTraineeProfile("John.Doe", "correctPass"));
+    }
+
+    @Test
+    void testValidateTraineeProfileReturnsFalseForWrongPassword() {
+        user.setPassword("correctPass");
+        when(traineeRepository.findByUserUsername("John.Doe")).thenReturn(trainee);
+
+        assertFalse(traineeService.validateTraineeProfile("John.Doe", "wrongPass"));
+    }
+
+    @Test
+    void testValidateTraineeProfileReturnsFalseWhenTraineeNotFound() {
+        when(traineeRepository.findByUserUsername("unknown")).thenReturn(null);
+
+        assertFalse(traineeService.validateTraineeProfile("unknown", "anyPass"));
     }
 }

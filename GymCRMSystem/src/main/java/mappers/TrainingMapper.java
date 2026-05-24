@@ -4,7 +4,7 @@ import dto.TrainingDTO;
 import entities.Training;
 import org.springframework.stereotype.Component;
 
-@Component("TrainingMapper")
+@Component("mappers.TrainingMapper")
 public class TrainingMapper implements Mapper<TrainingDTO, Training> {
 
     private final TrainingTypeMapper trainingTypeMapper;
