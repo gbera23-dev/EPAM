@@ -23,13 +23,12 @@ public class Main {
 
         GymFacade gymFacade = applicationContext.getBean(GymFacade.class);
 
-        User user = new User(null, "Mary", "Jones", null, null, false,
+        User user = new User(null, "James", "Davis", null, null, false,
                 null, null);
 
-        Trainee trainee = new Trainee(null, LocalDate.now(), "zestafoni", user, null, null);
+        Trainee trainee = new Trainee(null, LocalDate.now(), "tokutoku", user, null, null);
 
         gymFacade.createTrainee(trainee);
-
     }
 
 

@@ -20,10 +20,11 @@ public class TraineeServiceImpl implements TraineeService {
 
     public void createTraineeProfile(Trainee trainee) {
         User currentUser = trainee.getUser();
-        List<User> users = traineeRepository.findAll().
-                stream().
-                map(Trainee::getUser).
-                toList();
+
+        List<User> users = traineeRepository.getUsernameWithMaxNumberSuffix(trainee);
+
+        users.forEach(u -> System.out.println(u.getUsername()));
+
         UserUtils.generateUserCredentials(currentUser, users);
 
         traineeRepository.save(trainee);
