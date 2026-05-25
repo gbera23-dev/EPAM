@@ -25,9 +25,6 @@ public interface TraineeService {
 
     void deleteTraineeProfileByUsername(String username);
 
-    void changeTraineeProfilePassword(String username,
-                                      String oldPassword, String newPassword);
-
     void activateTraineeProfile(long traineeId);
 
     void deactivateTraineeProfile(long traineeId);
@@ -39,8 +36,5 @@ public interface TraineeService {
                                 String trainingTypeName);
 
     List<Trainer> getTrainersNotAssignedToTrainee(String username);
-
-
-    boolean validateTraineeProfile(String username, String password);
 
 }

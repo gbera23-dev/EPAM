@@ -18,10 +18,6 @@ public interface TrainerService {
 
     Trainer selectTrainerProfileByUsername(String username);
 
-    void changeTrainerProfilePassword(String username,
-                                      String oldPassword,
-                                      String newPassword);
-
     void activateTrainerProfile(long trainerId);
 
     void deactivateTrainerProfile(long trainerId);
@@ -30,7 +26,4 @@ public interface TrainerService {
                                 LocalDate fromDate,
                                 LocalDate toDate,
                                 String traineeName);
-
-    boolean validateTrainerProfile(String username, String password);
-
 }

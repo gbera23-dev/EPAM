@@ -56,17 +56,6 @@ public class TrainerServiceImpl implements TrainerService {
 
     @Override
     @Transactional
-    public void changeTrainerProfilePassword(String username, String oldPassword, String newPassword) {
-        if(!validateTrainerProfile(username, oldPassword))
-            throw new IllegalArgumentException("Username or password is incorrect!");
-
-        Trainer trainer = trainerRepository.findByUserUsername(username);
-
-        trainer.getUser().setPassword(newPassword);
-    }
-
-    @Override
-    @Transactional
     public void activateTrainerProfile(long trainerId) {
         Trainer trainer = trainerRepository.findById(trainerId).orElseThrow(() ->
                 new EntityNotFoundException("Trainer not found!"));
@@ -96,10 +85,4 @@ public class TrainerServiceImpl implements TrainerService {
         return trainingRepository.findTrainingsByTrainerCriteria(username, fromDate, toDate, traineeName);
     }
 
-    @Override
-    public boolean validateTrainerProfile(String username, String password) {
-        Trainer trainer = trainerRepository.findByUserUsername(username);
-
-        return trainer != null && trainer.getUser().getPassword().equals(password);
-    }
 }

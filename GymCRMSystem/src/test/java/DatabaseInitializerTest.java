@@ -5,7 +5,7 @@ import dto.TrainingDTO;
 import entities.Trainee;
 import entities.Trainer;
 import entities.Training;
-import mappers.Mapper;
+import mappers.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -29,13 +29,13 @@ import static org.mockito.Mockito.*;
 class DatabaseInitializerTest {
 
     @Mock
-    private Mapper<TraineeDTO, Trainee> traineeMapper;
+    private TraineeMapper traineeMapper;
 
     @Mock
-    private Mapper<TrainerDTO, Trainer> trainerMapper;
+    private TrainerMapper trainerMapper;
 
     @Mock
-    private Mapper<TrainingDTO, Training> trainingMapper;
+    private TrainingMapper trainingMapper;
 
     @Mock
     private JpaRepository<Trainee, Long> traineeRepository;
@@ -59,7 +59,7 @@ class DatabaseInitializerTest {
     private DatabaseInitializer databaseInitializer;
 
     private Map<String, JpaRepository<?, Long>> repositories;
-    private Map<String, Mapper<?, ?>> mappers;
+    private GymMapper mappers;
     private Map<String, Map<Long, ?>> storages;
 
     private Map<Long, TraineeDTO> traineeStorage;
@@ -73,10 +73,7 @@ class DatabaseInitializerTest {
         repositories.put("TrainerRepository", trainerRepository);
         repositories.put("TrainingRepository", trainingRepository);
 
-        mappers = new HashMap<>();
-        mappers.put("TraineeMapper", traineeMapper);
-        mappers.put("TrainerMapper", trainerMapper);
-        mappers.put("TrainingMapper", trainingMapper);
+        mappers = new GymMapper(traineeMapper, trainerMapper, trainingMapper, null, null);
 
         traineeStorage = new HashMap<>();
         trainerStorage = new HashMap<>();
@@ -182,7 +179,7 @@ class DatabaseInitializerTest {
         traineeStorage.put(1L, traineeDTO);
         trainerStorage.put(1L, trainerDTO);
 
-        databaseInitializer = new DatabaseInitializer(repositories, fullMappers, storages);
+        databaseInitializer = new DatabaseInitializer(repositories, mappers, storages);
 
         Trainee trainee = new Trainee();
         Trainer trainer = new Trainer();
@@ -227,7 +224,7 @@ class DatabaseInitializerTest {
         trainerStorage.put(1L, trainerDTO);
         trainingStorage.put(1L, trainingDTO);
 
-        databaseInitializer = new DatabaseInitializer(repositories, fullMappers, storages);
+        databaseInitializer = new DatabaseInitializer(repositories, mappers, storages);
 
         Trainee trainee = new Trainee();
         Trainer trainer = new Trainer();

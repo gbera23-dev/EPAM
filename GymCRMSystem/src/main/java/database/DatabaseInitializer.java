@@ -2,6 +2,7 @@ package database;
 
 import dto.*;
 import entities.*;
+import mappers.GymMapper;
 import mappers.Mapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationListener;
@@ -17,14 +18,14 @@ import java.util.stream.Collectors;
 public class DatabaseInitializer implements ApplicationListener<ContextRefreshedEvent> {
 
     private final Map<String, JpaRepository<?, Long>> repositories;
-    private final Map<String, Mapper<?, ?>> mappers;
+    private final GymMapper mappers;
     private final Map<String, Map<Long, ?>> storages;
 
     @Value("${database.initialize}")
     private boolean databaseInit;
 
     public DatabaseInitializer(Map<String, JpaRepository<?, Long>> repositories,
-                               Map<String, Mapper<?, ?>> mappers,
+                               GymMapper mappers,
                                Map<String, Map<Long, ?>> storages) {
         this.repositories = repositories;
         this.mappers = mappers;
@@ -39,21 +40,15 @@ public class DatabaseInitializer implements ApplicationListener<ContextRefreshed
             return;
         }
 
-        Mapper<TraineeDTO, Trainee> traineeMapper =
-                (Mapper<TraineeDTO, Trainee>) mappers.get("mappers.TraineeMapper");
-
-        Mapper<TrainerDTO, Trainer> trainerMapper =
-                (Mapper<TrainerDTO, Trainer>) mappers.get("mappers.TrainerMapper");
-
         Map<Long, TraineeDTO> traineeStorage =
                 (Map<Long, TraineeDTO>) storages.get("TraineeStorage");
 
         Map<Long, TrainerDTO> trainerStorage =
                 (Map<Long, TrainerDTO>) storages.get("TrainerStorage");
 
-        Map<Long, Trainee> traineeMap = convertStorageToEntityMap(traineeStorage, traineeMapper);
+        Map<Long, Trainee> traineeMap = convertStorageToEntityMap(traineeStorage, mappers.getTraineeMapper());
 
-        Map<Long, Trainer> trainerMap = convertStorageToEntityMap(trainerStorage, trainerMapper);
+        Map<Long, Trainer> trainerMap = convertStorageToEntityMap(trainerStorage, mappers.getTrainerMapper());
 
         Map<Long, Training> trainingMap = convertTrainingStorageToTrainingMap(traineeMap, trainerMap);
 
@@ -82,14 +77,12 @@ public class DatabaseInitializer implements ApplicationListener<ContextRefreshed
                                                              Map<Long, Trainer> trainerMap) {
         Map<Long, TrainingDTO> trainingStorage =
                 (Map<Long, TrainingDTO>) storages.get("TrainingStorage");
-        Mapper<TrainingDTO, Training> trainingMapper =
-                (Mapper<TrainingDTO, Training>) mappers.get("mappers.TrainingMapper");
 
         return trainingStorage.entrySet().stream()
                 .collect(Collectors.toMap(
                         Map.Entry::getKey,
                         e -> {
-                            Training training = trainingMapper.toEntity(e.getValue());
+                            Training training = mappers.getTrainingMapper().toEntity(e.getValue());
                             training.setTrainee(traineeMap.get(e.getValue().getTraineeId()));
                             training.setTrainer(trainerMap.get(e.getValue().getTrainerId()));
                             return training;

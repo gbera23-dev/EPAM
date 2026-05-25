@@ -1,10 +1,10 @@
-import entities.Trainee;
-import entities.User;
+import config.ApplicationConfig;
+import config.DataConfig;
+import dto.TraineeDTO;
 import facade.GymFacade;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
-import java.time.LocalDate;
 
 public class Main {
 
@@ -20,12 +20,28 @@ public class Main {
 
         GymFacade gymFacade = applicationContext.getBean(GymFacade.class);
 
-        User user = new User(null, "John", "Nolan", null, null, false,
-                null, null);
+        String username="mary.jones43", password="kDuAgxTAX5";
 
-        Trainee trainee = new Trainee(null, LocalDate.now(), "tokutoku", user, null, null);
 
-        gymFacade.createTrainee(trainee);
+        gymFacade.loginUser(
+            username, password
+        );
+
+        gymFacade.getTrainingsForTrainee("mary.jones43",
+                        null, null, null, null)
+                .forEach(System.out::println);
+
+        gymFacade.logoutUser();
+
+
+        gymFacade.loginUser("james.rodriguez89", "sm5sUUHYog");
+
+
+        TraineeDTO traineeDTO = gymFacade.getTraineeById(10);
+
+        System.out.println(traineeDTO);
+
+        gymFacade.logoutUser();
     }
 
 

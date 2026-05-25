@@ -140,25 +140,6 @@ class TrainerServiceTest {
     }
 
     @Test
-    void testChangeTrainerProfilePasswordUpdatesPassword() {
-        user.setPassword("oldPass");
-        when(trainerRepository.findByUserUsername("John.Doe")).thenReturn(trainer);
-
-        trainerService.changeTrainerProfilePassword("John.Doe", "oldPass", "newPass");
-
-        assertEquals("newPass", user.getPassword());
-    }
-
-    @Test
-    void testChangeTrainerProfilePasswordThrowsOnWrongCredentials() {
-        user.setPassword("correctPass");
-        when(trainerRepository.findByUserUsername("John.Doe")).thenReturn(trainer);
-
-        assertThrows(IllegalArgumentException.class,
-                () -> trainerService.changeTrainerProfilePassword("John.Doe", "wrongPass", "newPass"));
-    }
-
-    @Test
     void testActivateTrainerProfileSetsActiveTrue() {
         user.setActive(false);
         when(trainerRepository.findById(1L)).thenReturn(Optional.of(trainer));
@@ -205,28 +186,5 @@ class TrainerServiceTest {
         List<Training> result = trainerService.getTrainingsForTrainer("John.Doe", from, to, "traineeName");
 
         assertSame(expected, result);
-    }
-
-    @Test
-    void testValidateTrainerProfileReturnsTrueForCorrectCredentials() {
-        user.setPassword("correctPass");
-        when(trainerRepository.findByUserUsername("John.Doe")).thenReturn(trainer);
-
-        assertTrue(trainerService.validateTrainerProfile("John.Doe", "correctPass"));
-    }
-
-    @Test
-    void testValidateTrainerProfileReturnsFalseForWrongPassword() {
-        user.setPassword("correctPass");
-        when(trainerRepository.findByUserUsername("John.Doe")).thenReturn(trainer);
-
-        assertFalse(trainerService.validateTrainerProfile("John.Doe", "wrongPass"));
-    }
-
-    @Test
-    void testValidateTrainerProfileReturnsFalseWhenTrainerNotFound() {
-        when(trainerRepository.findByUserUsername("unknown")).thenReturn(null);
-
-        assertFalse(trainerService.validateTrainerProfile("unknown", "anyPass"));
     }
 }

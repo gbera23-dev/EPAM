@@ -105,7 +105,7 @@ class TraineeServiceTest {
 
     @Test
     void testSelectTraineeProfileByIdReturnsTrainee() {
-        when(traineeRepository.getReferenceById(1L)).thenReturn(trainee);
+        when(traineeRepository.findById(1L)).thenReturn(Optional.of(trainee));
 
         Trainee result = traineeService.selectTraineeProfileById(1L);
 
@@ -187,25 +187,6 @@ class TraineeServiceTest {
     }
 
     @Test
-    void testChangeTraineeProfilePasswordUpdatesPassword() {
-        user.setPassword("oldPass");
-        when(traineeRepository.findByUserUsername("John.Doe")).thenReturn(trainee);
-
-        traineeService.changeTraineeProfilePassword("John.Doe", "oldPass", "newPass");
-
-        assertEquals("newPass", user.getPassword());
-    }
-
-    @Test
-    void testChangeTraineeProfilePasswordThrowsOnWrongCredentials() {
-        user.setPassword("correctPass");
-        when(traineeRepository.findByUserUsername("John.Doe")).thenReturn(trainee);
-
-        assertThrows(IllegalArgumentException.class,
-                () -> traineeService.changeTraineeProfilePassword("John.Doe", "wrongPass", "newPass"));
-    }
-
-    @Test
     void testActivateTraineeProfileSetsActiveTrue() {
         user.setActive(false);
         when(traineeRepository.findById(1L)).thenReturn(Optional.of(trainee));
@@ -262,28 +243,5 @@ class TraineeServiceTest {
         List<Trainer> result = traineeService.getTrainersNotAssignedToTrainee("John.Doe");
 
         assertSame(expected, result);
-    }
-
-    @Test
-    void testValidateTraineeProfileReturnsTrueForCorrectCredentials() {
-        user.setPassword("correctPass");
-        when(traineeRepository.findByUserUsername("John.Doe")).thenReturn(trainee);
-
-        assertTrue(traineeService.validateTraineeProfile("John.Doe", "correctPass"));
-    }
-
-    @Test
-    void testValidateTraineeProfileReturnsFalseForWrongPassword() {
-        user.setPassword("correctPass");
-        when(traineeRepository.findByUserUsername("John.Doe")).thenReturn(trainee);
-
-        assertFalse(traineeService.validateTraineeProfile("John.Doe", "wrongPass"));
-    }
-
-    @Test
-    void testValidateTraineeProfileReturnsFalseWhenTraineeNotFound() {
-        when(traineeRepository.findByUserUsername("unknown")).thenReturn(null);
-
-        assertFalse(traineeService.validateTraineeProfile("unknown", "anyPass"));
     }
 }

@@ -42,7 +42,9 @@ public class TraineeServiceImpl implements TraineeService {
 
     @Override
     public Trainee selectTraineeProfileById(long traineeId) {
-        return traineeRepository.getReferenceById(traineeId);
+        return traineeRepository.findById(traineeId).orElseThrow(() ->
+                new EntityNotFoundException("Could not find Trainee!")
+        );
     }
 
     @Override
@@ -97,17 +99,6 @@ public class TraineeServiceImpl implements TraineeService {
 
     @Override
     @Transactional
-    public void changeTraineeProfilePassword(String username, String oldPassword, String newPassword) {
-        if(!validateTraineeProfile(username, oldPassword))
-            throw new IllegalArgumentException("Username or password is incorrect!");
-
-        Trainee trainee = traineeRepository.findByUserUsername(username);
-
-        trainee.getUser().setPassword(newPassword);
-    }
-
-    @Override
-    @Transactional
     public void activateTraineeProfile(long traineeId) {
         Trainee trainee = traineeRepository.findById(traineeId).orElseThrow(() ->
                  new EntityNotFoundException("Trainee not found!"));
@@ -144,12 +135,4 @@ public class TraineeServiceImpl implements TraineeService {
     public List<Trainer> getTrainersNotAssignedToTrainee(String username) {
         return trainerRepository.findTrainersNotAssignedToTrainee(username);
     }
-
-    @Override
-    public boolean validateTraineeProfile(String username, String password) {
-        Trainee trainee = traineeRepository.findByUserUsername(username);
-
-        return trainee != null && trainee.getUser().getPassword().equals(password);
-    }
-
 }
