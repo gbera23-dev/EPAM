@@ -22,7 +22,6 @@ public class Main {
 
         String username="mary.jones43", password="kDuAgxTAX5";
 
-
         gymFacade.loginUser(
             username, password
         );

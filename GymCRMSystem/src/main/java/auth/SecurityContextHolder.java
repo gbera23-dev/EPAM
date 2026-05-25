@@ -1,5 +1,8 @@
 package auth;
 
+/**
+ * Wrapper class around ThreadLocal object that allows us to set, get and clear session of the current user
+ */
 public class SecurityContextHolder {
     private static final ThreadLocal<String> currentUser = new ThreadLocal<>();
 

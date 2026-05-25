@@ -8,10 +8,12 @@ import dto.TrainingDTO;
 import entities.Trainee;
 import entities.Trainer;
 import entities.Training;
+import jakarta.validation.Valid;
 import mappers.GymMapper;
 import mappers.Mapper;
 import mappers.TraineeMapper;
 import org.springframework.stereotype.Component;
+import org.springframework.validation.annotation.Validated;
 import services.AuthService;
 import services.TraineeService;
 import services.TrainerService;
@@ -22,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 @Component
+@Validated
 public class GymFacade {
 
     private final TraineeService traineeService;
@@ -77,12 +80,12 @@ public class GymFacade {
         authService.changeUserProfilePassword(currentUser, newPassword);
     }
 
-    public void createTrainee(TraineeDTO trainee) {
+    public void createTrainee(@Valid TraineeDTO trainee) {
         traineeService.createTraineeProfile(mapper.getTraineeMapper().toEntity(trainee));
     }
 
     @AuthRequired
-    public void updateTrainee(TraineeDTO trainee) {
+    public void updateTrainee(@Valid TraineeDTO trainee) {
         traineeService.updateTraineeProfile(mapper.getTraineeMapper().toEntity(trainee));
     }
 
@@ -140,12 +143,12 @@ public class GymFacade {
         traineeService.updateTraineeListOfTrainers(traineeId, trainerUsernames);
     }
 
-    public void createTrainer(TrainerDTO trainer) {
+    public void createTrainer(@Valid TrainerDTO trainer) {
         trainerService.createTrainerProfile(mapper.getTrainerMapper().toEntity(trainer));
     }
 
     @AuthRequired
-    public void updateTrainer(TrainerDTO trainer) {
+    public void updateTrainer(@Valid TrainerDTO trainer) {
         trainerService.updateTrainerProfile(mapper.getTrainerMapper().toEntity(trainer));
     }
 

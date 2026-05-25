@@ -10,12 +10,15 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.event.ContextRefreshedEvent;
-import org.springframework.data.jpa.repository.JpaRepository;
+import persistence.GymRepository;
+import persistence.TraineeRepository;
+import persistence.TrainerRepository;
+import persistence.TrainingRepository;
+import persistence.UserRepository;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -38,13 +41,16 @@ class DatabaseInitializerTest {
     private TrainingMapper trainingMapper;
 
     @Mock
-    private JpaRepository<Trainee, Long> traineeRepository;
+    private TraineeRepository traineeRepository;
 
     @Mock
-    private JpaRepository<Trainer, Long> trainerRepository;
+    private TrainerRepository trainerRepository;
 
     @Mock
-    private JpaRepository<Training, Long> trainingRepository;
+    private TrainingRepository trainingRepository;
+
+    @Mock
+    private UserRepository userRepository;
 
     @Mock
     private ContextRefreshedEvent event;
@@ -55,12 +61,7 @@ class DatabaseInitializerTest {
     @Mock
     private ApplicationContext parentContext;
 
-    @InjectMocks
     private DatabaseInitializer databaseInitializer;
-
-    private Map<String, JpaRepository<?, Long>> repositories;
-    private GymMapper mappers;
-    private Map<String, Map<Long, ?>> storages;
 
     private Map<Long, TraineeDTO> traineeStorage;
     private Map<Long, TrainerDTO> trainerStorage;
@@ -68,18 +69,14 @@ class DatabaseInitializerTest {
 
     @BeforeEach
     void setUp() {
-        repositories = new HashMap<>();
-        repositories.put("TraineeRepository", traineeRepository);
-        repositories.put("TrainerRepository", trainerRepository);
-        repositories.put("TrainingRepository", trainingRepository);
-
-        mappers = new GymMapper(traineeMapper, trainerMapper, trainingMapper, null, null);
+        GymRepository repositories = new GymRepository(traineeRepository, trainerRepository, trainingRepository, userRepository);
+        GymMapper mappers = new GymMapper(traineeMapper, trainerMapper, trainingMapper, null, null);
 
         traineeStorage = new HashMap<>();
         trainerStorage = new HashMap<>();
         trainingStorage = new HashMap<>();
 
-        storages = new HashMap<>();
+        Map<String, Map<Long, ?>> storages = new HashMap<>();
         storages.put("TraineeStorage", traineeStorage);
         storages.put("TrainerStorage", trainerStorage);
         storages.put("TrainingStorage", trainingStorage);
@@ -89,22 +86,9 @@ class DatabaseInitializerTest {
         when(event.getApplicationContext()).thenReturn(applicationContext);
     }
 
-    private void enableDatabaseInit() throws NoSuchFieldException, IllegalAccessException {
-        java.lang.reflect.Field field = DatabaseInitializer.class.getDeclaredField("databaseInit");
-        field.setAccessible(true);
-        field.set(databaseInitializer, true);
-    }
-
-    private void disableDatabaseInit() throws NoSuchFieldException, IllegalAccessException {
-        java.lang.reflect.Field field = DatabaseInitializer.class.getDeclaredField("databaseInit");
-        field.setAccessible(true);
-        field.set(databaseInitializer, true);
-    }
-
     @Test
-    void testOnApplicationEventSkipsAllProcessingWhenParentContextExists() throws NoSuchFieldException, IllegalAccessException {
+    void testOnApplicationEventSkipsAllProcessingWhenParentContextExists() {
         when(applicationContext.getParent()).thenReturn(parentContext);
-        enableDatabaseInit();
 
         databaseInitializer.onApplicationEvent(event);
 
@@ -112,9 +96,8 @@ class DatabaseInitializerTest {
     }
 
     @Test
-    void testOnApplicationEventDoesNotInvokeAnyMapperWhenParentContextExists() throws NoSuchFieldException, IllegalAccessException {
+    void testOnApplicationEventDoesNotInvokeAnyMapperWhenParentContextExists() {
         when(applicationContext.getParent()).thenReturn(parentContext);
-        enableDatabaseInit();
 
         databaseInitializer.onApplicationEvent(event);
 
@@ -122,9 +105,9 @@ class DatabaseInitializerTest {
     }
 
     @Test
-    void testOnApplicationEventDoesNotInvokeAnyMapperWhenDatabaseInitIsFalse() throws NoSuchFieldException, IllegalAccessException {
+    void testOnApplicationEventDoesNotInvokeAnyMapperWhenDatabaseIsAlreadyInitialized() {
         when(applicationContext.getParent()).thenReturn(null);
-        disableDatabaseInit();
+        when(userRepository.count()).thenReturn(1L);
 
         databaseInitializer.onApplicationEvent(event);
 
@@ -132,9 +115,9 @@ class DatabaseInitializerTest {
     }
 
     @Test
-    void testOnApplicationEventSavesEmptyCollectionsWhenStoragesAreEmpty() throws NoSuchFieldException, IllegalAccessException {
+    void testOnApplicationEventSavesEmptyCollectionsWhenStoragesAreEmpty() {
         when(applicationContext.getParent()).thenReturn(null);
-        enableDatabaseInit();
+        when(userRepository.count()).thenReturn(0L);
 
         databaseInitializer.onApplicationEvent(event);
 
@@ -155,9 +138,9 @@ class DatabaseInitializerTest {
     }
 
     @Test
-    void testOnApplicationEventInvokesSaveAllOncePerRepository() throws NoSuchFieldException, IllegalAccessException {
+    void testOnApplicationEventInvokesSaveAllOncePerRepository() {
         when(applicationContext.getParent()).thenReturn(null);
-        enableDatabaseInit();
+        when(userRepository.count()).thenReturn(0L);
 
         databaseInitializer.onApplicationEvent(event);
 
@@ -167,31 +150,20 @@ class DatabaseInitializerTest {
     }
 
     @Test
-    void testSavesEntities() throws NoSuchFieldException, IllegalAccessException {
-        Map<String, Mapper<?, ?>> fullMappers = new HashMap<>();
-        fullMappers.put("mappers.TraineeMapper", traineeMapper);
-        fullMappers.put("mappers.TrainerMapper", trainerMapper);
-        fullMappers.put("mappers.TrainingMapper", trainingMapper);
-
+    void testSavesEntities() {
         TraineeDTO traineeDTO = new TraineeDTO();
         TrainerDTO trainerDTO = new TrainerDTO();
 
         traineeStorage.put(1L, traineeDTO);
         trainerStorage.put(1L, trainerDTO);
 
-        databaseInitializer = new DatabaseInitializer(repositories, mappers, storages);
-
         Trainee trainee = new Trainee();
         Trainer trainer = new Trainer();
 
         when(traineeMapper.toEntity(traineeDTO)).thenReturn(trainee);
         when(trainerMapper.toEntity(trainerDTO)).thenReturn(trainer);
-        when(event.getApplicationContext()).thenReturn(applicationContext);
         when(applicationContext.getParent()).thenReturn(null);
-
-        java.lang.reflect.Field field = DatabaseInitializer.class.getDeclaredField("databaseInit");
-        field.setAccessible(true);
-        field.set(databaseInitializer, true);
+        when(userRepository.count()).thenReturn(0L);
 
         databaseInitializer.onApplicationEvent(event);
 
@@ -208,12 +180,7 @@ class DatabaseInitializerTest {
     }
 
     @Test
-    void testSavesTrainings() throws NoSuchFieldException, IllegalAccessException {
-        Map<String, Mapper<?, ?>> fullMappers = new HashMap<>();
-        fullMappers.put("mappers.TraineeMapper", traineeMapper);
-        fullMappers.put("mappers.TrainerMapper", trainerMapper);
-        fullMappers.put("mappers.TrainingMapper", trainingMapper);
-
+    void testSavesTrainings() {
         TraineeDTO traineeDTO = new TraineeDTO();
         TrainerDTO trainerDTO = new TrainerDTO();
         TrainingDTO trainingDTO = new TrainingDTO();
@@ -224,8 +191,6 @@ class DatabaseInitializerTest {
         trainerStorage.put(1L, trainerDTO);
         trainingStorage.put(1L, trainingDTO);
 
-        databaseInitializer = new DatabaseInitializer(repositories, mappers, storages);
-
         Trainee trainee = new Trainee();
         Trainer trainer = new Trainer();
         Training training = new Training();
@@ -233,12 +198,8 @@ class DatabaseInitializerTest {
         when(traineeMapper.toEntity(traineeDTO)).thenReturn(trainee);
         when(trainerMapper.toEntity(trainerDTO)).thenReturn(trainer);
         when(trainingMapper.toEntity(trainingDTO)).thenReturn(training);
-        when(event.getApplicationContext()).thenReturn(applicationContext);
         when(applicationContext.getParent()).thenReturn(null);
-
-        java.lang.reflect.Field field = DatabaseInitializer.class.getDeclaredField("databaseInit");
-        field.setAccessible(true);
-        field.set(databaseInitializer, true);
+        when(userRepository.count()).thenReturn(0L);
 
         databaseInitializer.onApplicationEvent(event);
 
