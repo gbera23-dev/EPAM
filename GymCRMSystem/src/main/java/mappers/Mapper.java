@@ -1,13 +1,16 @@
 package mappers;
 
-import dto.GymDTO;
-import entities.GymEntity;
-
+/**
+ * Bidirectional mapper between a DTO and its corresponding entity.
+ *
+ * @param <D> DTO type
+ * @param <E> entity type
+ */
 public interface Mapper<D, E> {
 
-    D toDTO(E gymEntity);
+    /** @return DTO representation of the given entity */
+    D toDTO(E entity);
 
-    E toEntity(D gymDTO);
-
-
+    /** @return entity representation of the given DTO */
+    E toEntity(D dto);
 }

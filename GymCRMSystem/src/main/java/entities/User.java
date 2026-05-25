@@ -32,9 +32,9 @@ public class User {
     @JsonProperty("isActive")
     private boolean active;
 
-    @OneToOne(mappedBy = "user")
+    @OneToOne(mappedBy = "user", cascade=CascadeType.PERSIST)
     private Trainee trainee;
 
-    @OneToOne(mappedBy = "user")
+    @OneToOne(mappedBy = "user", cascade=CascadeType.PERSIST)
     private Trainer trainer;
 }

@@ -76,8 +76,14 @@ public class TraineeServiceImpl implements TraineeService {
         Trainee trainee = traineeRepository.findById(traineeId)
                 .orElseThrow(() -> new EntityNotFoundException("Trainee not found"));
 
-        trainee.getTrainers().clear();
-        traineeRepository.save(trainee);
+        for (Trainer trainer : trainee.getTrainers()) {
+            trainer.getTrainees().remove(trainee);
+        }
+
+        if(trainee.getTrainings() != null)
+            trainee.getTrainings().clear();
+
+        trainee.getUser().setTrainee(null);
 
         traineeRepository.delete(trainee);
     }
@@ -91,8 +97,14 @@ public class TraineeServiceImpl implements TraineeService {
             throw new EntityNotFoundException("Trainee not found with username: " + username);
         }
 
-        trainee.getTrainers().clear();
-        traineeRepository.save(trainee);
+        for (Trainer trainer : trainee.getTrainers()) {
+            trainer.getTrainees().remove(trainee);
+        }
+
+        if(trainee.getTrainings() != null)
+            trainee.getTrainings().clear();
+
+        trainee.getUser().setTrainee(null);
 
         traineeRepository.delete(trainee);
     }

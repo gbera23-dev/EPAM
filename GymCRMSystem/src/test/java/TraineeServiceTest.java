@@ -169,7 +169,6 @@ class TraineeServiceTest {
 
         traineeService.deleteTraineeProfileById(1L);
 
-        verify(traineeRepository).save(trainee);
         verify(traineeRepository).delete(trainee);
     }
 
@@ -182,7 +181,6 @@ class TraineeServiceTest {
         traineeService.deleteTraineeProfileByUsername(name);
 
         verify(traineeRepository).findByUserUsername(name);
-        verify(traineeRepository).save(trainee);
         verify(traineeRepository).delete(trainee);
     }
 

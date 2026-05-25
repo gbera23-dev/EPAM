@@ -23,8 +23,6 @@ public interface TrainerRepository extends JpaRepository<Trainer, Long> {
 
     List<Trainer> findByUserUsernameIn(List<String> usernames);
 
-    void deleteByUserUsername(String username);
-
     @Query("SELECT DISTINCT t FROM Trainer t " +
             "LEFT JOIN t.trainees tr WITH tr.user.username = :username " +
             "WHERE tr.id IS NULL")

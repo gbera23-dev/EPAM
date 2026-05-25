@@ -19,10 +19,5 @@ public interface TraineeRepository extends JpaRepository<Trainee, Long>{
     List<User> getUsernameWithMaxNumberSuffix(@Param("trainee") Trainee trainee);
 
     Trainee findByUserUsername(String username);
-
-    List<Trainee> findByUserUsernameIn(List<String> usernames);
-
-    void deleteByUserUsername(String username);
-
 }
 

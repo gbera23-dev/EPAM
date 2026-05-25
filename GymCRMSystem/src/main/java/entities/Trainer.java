@@ -35,7 +35,7 @@ public class Trainer implements GymEntity {
     @JoinTable(
             name="trainer_trainee",
             joinColumns = @JoinColumn(name="Trainer_id"),
-            inverseJoinColumns = @JoinColumn(name="trainee_id")
+            inverseJoinColumns = @JoinColumn(name="Trainee_id")
     )
     private List<Trainee> trainees;
 
