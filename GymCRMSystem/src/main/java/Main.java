@@ -1,6 +1,13 @@
+import config.ApplicationConfig;
+import config.DataConfig;
+import dto.TraineeDTO;
 import facade.GymFacade;
+import org.springframework.cglib.core.Local;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+
+import java.time.LocalDate;
+
 
 public class Main {
 
@@ -11,19 +18,33 @@ public class Main {
      */
     public static void main(String[] args) {
     ApplicationContext applicationContext =
-            new AnnotationConfigApplicationContext(ApplicationConfig.class);
+            new AnnotationConfigApplicationContext(ApplicationConfig.class, DataConfig.class);
 
 
-    GymFacade gymFacade = applicationContext.getBean(GymFacade.class);
+        GymFacade gymFacade = applicationContext.getBean(GymFacade.class);
 
-    System.out.println(gymFacade.getTrainer(53L));
+        String username="mary.jones43", password="kDuAgxTAX5";
 
-    System.out.println(gymFacade.getTrainee(43L));
+        gymFacade.loginUser(
+            username, password
+        );
+
+        gymFacade.getTrainingsForTrainee("linda.garcia42",
+                        null, null, null, null)
+                .forEach(System.out::println);
+
+        gymFacade.logoutUser();
 
 
-    System.out.println(gymFacade.getTraining(12L));
+        gymFacade.loginUser("james.rodriguez89", "sm5sUUHYog");
 
-}
+
+        TraineeDTO traineeDTO = gymFacade.getTraineeById(10);
+
+        System.out.println(traineeDTO);
+
+        gymFacade.logoutUser();
+    }
 
 
 }

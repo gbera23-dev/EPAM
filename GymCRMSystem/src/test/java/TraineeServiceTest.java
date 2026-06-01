@@ -1,16 +1,24 @@
 import entities.Trainee;
+import entities.Trainer;
+import entities.Training;
 import entities.User;
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import persistence.TraineeDAO;
+import persistence.TraineeRepository;
+import persistence.TrainerRepository;
+import persistence.TrainingRepository;
 import services.TraineeServiceImpl;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -19,7 +27,13 @@ import static org.mockito.Mockito.*;
 class TraineeServiceTest {
 
     @Mock
-    private TraineeDAO traineeDAO;
+    private TraineeRepository traineeRepository;
+
+    @Mock
+    private TrainerRepository trainerRepository;
+
+    @Mock
+    private TrainingRepository trainingRepository;
 
     @InjectMocks
     private TraineeServiceImpl traineeService;
@@ -32,14 +46,14 @@ class TraineeServiceTest {
         user = new User();
         user.setFirstName("John");
         user.setLastName("Doe");
-        user.setUsername("");
-        user.setPassword("");
-        trainee = new Trainee(1L, null, "123 Main St", user);
+        trainee = new Trainee();
+        trainee.setTrainers(new ArrayList<>());
+        trainee.setUser(user);
     }
 
     @Test
-    void testCreateTraineeProfilePasswordIsValid() {
-        when(traineeDAO.getAll()).thenReturn(Collections.emptyList());
+    void testCreateTraineeProfileGeneratesNonEmptyPassword() {
+        when(traineeRepository.getUsernameWithMaxNumberSuffix(trainee)).thenReturn(Collections.emptyList());
 
         traineeService.createTraineeProfile(trainee);
 
@@ -48,12 +62,19 @@ class TraineeServiceTest {
     }
 
     @Test
-    void testCreateTraineeProfileUsernameIsSerialized() {
+    void testCreateTraineeProfileGeneratesBaseUsername() {
+        when(traineeRepository.getUsernameWithMaxNumberSuffix(trainee)).thenReturn(Collections.emptyList());
+
+        traineeService.createTraineeProfile(trainee);
+
+        assertEquals("John.Doe", user.getUsername());
+    }
+
+    @Test
+    void testCreateTraineeProfileAppendsCounterWhenUsernameExists() {
         User existingUser = new User();
         existingUser.setUsername("John.Doe");
-        Trainee existingTrainee = new Trainee(2L, null, "456 Other St", existingUser);
-
-        when(traineeDAO.getAll()).thenReturn(List.of(existingTrainee));
+        when(traineeRepository.getUsernameWithMaxNumberSuffix(trainee)).thenReturn(List.of(existingUser));
 
         traineeService.createTraineeProfile(trainee);
 
@@ -61,50 +82,164 @@ class TraineeServiceTest {
     }
 
     @Test
-    void testCreateTraineeProfileSavesTraineeToDAO() {
-        when(traineeDAO.getAll()).thenReturn(Collections.emptyList());
+    void testCreateTraineeProfileAppendsCorrectCountWhenMultipleExist() {
+        User u1 = new User();
+        u1.setUsername("John.Doe");
+        User u2 = new User();
+        u2.setUsername("John.Doe1");
+        when(traineeRepository.getUsernameWithMaxNumberSuffix(trainee)).thenReturn(List.of(u1, u2));
 
         traineeService.createTraineeProfile(trainee);
 
-        verify(traineeDAO).save(1L, trainee);
+        assertEquals("John.Doe2", user.getUsername());
     }
 
+    @Test
+    void testCreateTraineeProfileSavesTrainee() {
+        when(traineeRepository.getUsernameWithMaxNumberSuffix(trainee)).thenReturn(Collections.emptyList());
+
+        traineeService.createTraineeProfile(trainee);
+
+        verify(traineeRepository).save(trainee);
+    }
 
     @Test
-    void testSelectTraineeProfileReturnsTraineeWhenExists() {
-        when(traineeDAO.getEntity(1L)).thenReturn(trainee);
+    void testSelectTraineeProfileByIdReturnsTrainee() {
+        when(traineeRepository.findById(1L)).thenReturn(Optional.of(trainee));
 
-        Trainee result = traineeService.selectTraineeProfile(1L);
+        Trainee result = traineeService.selectTraineeProfileById(1L);
 
         assertSame(trainee, result);
     }
 
     @Test
-    void testSelectTraineeProfileReturnsNullWhenNotExists() {
-        when(traineeDAO.getEntity(99L)).thenReturn(null);
+    void testSelectTraineeProfileByUsernameReturnsTrainee() {
+        when(traineeRepository.findByUserUsername("John.Doe")).thenReturn(trainee);
 
-        assertNull(traineeService.selectTraineeProfile(99L));
+        Trainee result = traineeService.selectTraineeProfileByUsername("John.Doe");
+
+        assertSame(trainee, result);
     }
 
+    @Test
+    void testSelectTraineeProfileByUsernameReturnsNullWhenNotFound() {
+        when(traineeRepository.findByUserUsername("unknown")).thenReturn(null);
+
+        assertNull(traineeService.selectTraineeProfileByUsername("unknown"));
+    }
 
     @Test
-    void testUpdateTraineeProfileSavesUpdatedTrainee() {
+    void testUpdateTraineeProfileSavesTrainee() {
         traineeService.updateTraineeProfile(trainee);
 
-        verify(traineeDAO).save(1L, trainee);
+        verify(traineeRepository).save(trainee);
     }
 
     @Test
-    void testDeleteTraineeProfileDeletesTraineeFromDAO() {
-        traineeService.deleteTraineeProfile(1L);
+    void testUpdateTraineeProfileDoesNotDelete() {
+        traineeService.updateTraineeProfile(trainee);
 
-        verify(traineeDAO).delete(1L);
+        verify(traineeRepository, never()).deleteById(any());
     }
 
     @Test
-    void testDeleteTraineeProfileDoesNotInteractWithSave() {
-        traineeService.deleteTraineeProfile(1L);
+    void testUpdateTraineeListOfTrainersClearsAndSetsNewTrainers() {
+        List<Trainer> newTrainers = List.of(new Trainer(), new Trainer());
+        List<String> usernames = List.of("trainer1", "trainer2");
+        trainee.setTrainers(new java.util.ArrayList<>());
+        when(traineeRepository.findById(1L)).thenReturn(Optional.of(trainee));
+        when(trainerRepository.findByUserUsernameIn(usernames)).thenReturn(newTrainers);
 
-        verify(traineeDAO, never()).save(anyLong(), any());
+        traineeService.updateTraineeListOfTrainers(1L, usernames);
+
+        assertEquals(2, trainee.getTrainers().size());
+    }
+
+    @Test
+    void testUpdateTraineeListOfTrainersThrowsWhenTraineeNotFound() {
+        when(traineeRepository.findById(99L)).thenReturn(Optional.empty());
+
+        assertThrows(IllegalArgumentException.class,
+                () -> traineeService.updateTraineeListOfTrainers(99L, List.of("trainer1")));
+    }
+
+    @Test
+    void testDeleteTraineeProfileByIdDeletesTrainee() {
+        when(traineeRepository.findById(1L)).thenReturn(Optional.of(trainee));
+
+        traineeService.deleteTraineeProfileById(1L);
+
+        verify(traineeRepository).delete(trainee);
+    }
+
+    @Test
+    void testDeleteTraineeProfileByUsernameDeletesTrainee() {
+        String name = "John.Doe";
+
+        when(traineeRepository.findByUserUsername(name)).thenReturn(trainee);
+
+        traineeService.deleteTraineeProfileByUsername(name);
+
+        verify(traineeRepository).findByUserUsername(name);
+        verify(traineeRepository).delete(trainee);
+    }
+
+    @Test
+    void testActivateTraineeProfileSetsActiveTrue() {
+        user.setActive(false);
+        when(traineeRepository.findById(1L)).thenReturn(Optional.of(trainee));
+
+        traineeService.activateTraineeProfile(1L);
+
+        assertTrue(user.isActive());
+    }
+
+    @Test
+    void testActivateTraineeProfileThrowsWhenNotFound() {
+        when(traineeRepository.findById(99L)).thenReturn(Optional.empty());
+
+        assertThrows(EntityNotFoundException.class,
+                () -> traineeService.activateTraineeProfile(99L));
+    }
+
+    @Test
+    void testDeactivateTraineeProfileSetsActiveFalse() {
+        user.setActive(true);
+        when(traineeRepository.findById(1L)).thenReturn(Optional.of(trainee));
+
+        traineeService.deactivateTraineeProfile(1L);
+
+        assertFalse(user.isActive());
+    }
+
+    @Test
+    void testDeactivateTraineeProfileThrowsWhenNotFound() {
+        when(traineeRepository.findById(99L)).thenReturn(Optional.empty());
+
+        assertThrows(EntityNotFoundException.class,
+                () -> traineeService.deactivateTraineeProfile(99L));
+    }
+
+    @Test
+    void testGetTrainingsForTraineeDelegatesToRepository() {
+        LocalDate from = LocalDate.of(2024, 1, 1);
+        LocalDate to = LocalDate.of(2024, 6, 1);
+        List<Training> expected = List.of(new Training());
+        when(trainingRepository.findTrainingsByTraineeCriteria("John.Doe", from, to, "trainerName", "yoga"))
+                .thenReturn(expected);
+
+        List<Training> result = traineeService.getTrainingsForTrainee("John.Doe", from, to, "trainerName", "yoga");
+
+        assertSame(expected, result);
+    }
+
+    @Test
+    void testGetTrainersNotAssignedToTraineeDelegatesToRepository() {
+        List<Trainer> expected = List.of(new Trainer());
+        when(trainerRepository.findTrainersNotAssignedToTrainee("John.Doe")).thenReturn(expected);
+
+        List<Trainer> result = traineeService.getTrainersNotAssignedToTrainee("John.Doe");
+
+        assertSame(expected, result);
     }
 }

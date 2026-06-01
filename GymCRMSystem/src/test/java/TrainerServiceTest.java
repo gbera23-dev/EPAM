@@ -1,16 +1,22 @@
 import entities.Trainer;
+import entities.Training;
+import entities.TrainingType;
 import entities.User;
+import jakarta.persistence.EntityNotFoundException;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import persistence.TrainerDAO;
+import persistence.TrainerRepository;
+import persistence.TrainingRepository;
 import services.TrainerServiceImpl;
 
-import java.util.Arrays;
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -19,95 +25,166 @@ import static org.mockito.Mockito.*;
 class TrainerServiceTest {
 
     @Mock
-    private TrainerDAO trainerDAO;
+    private TrainerRepository trainerRepository;
+
+    @Mock
+    private TrainingRepository trainingRepository;
 
     @InjectMocks
     private TrainerServiceImpl trainerService;
 
-    private Trainer createTrainer(long pk, String firstName, String lastName, String username) {
-        User user = new User(pk, firstName, lastName, username, "pass", true);
-        return new Trainer(pk, "Yoga", user);
+    private Trainer trainer;
+    private User user;
+
+    @BeforeEach
+    void setUp() {
+        user = new User();
+        user.setFirstName("John");
+        user.setLastName("Doe");
+        trainer = new Trainer();
+        trainer.setUser(user);
+        TrainingType trainingType = new TrainingType();
+        trainingType.setName("yoga");
+        trainer.setTrainingType(trainingType);
     }
 
     @Test
-    void testCreateTrainerProfileSavesTrainer() {
-        Trainer trainer = createTrainer(1L, "John", "Doe", null);
-        when(trainerDAO.getAll()).thenReturn(Collections.emptyList());
+    void testCreateTrainerProfileGeneratesBaseUsername() {
+        when(trainerRepository.getUsernameWithMaxNumberSuffix(trainer)).thenReturn(Collections.emptyList());
 
         trainerService.createTrainerProfile(trainer);
 
-        verify(trainerDAO).save(1L, trainer);
+        assertEquals("John.Doe", user.getUsername());
     }
 
     @Test
-    void testCreateTrainerProfileSetsGeneratedUsername() {
-        Trainer trainer = createTrainer(1L, "John", "Doe", null);
-        when(trainerDAO.getAll()).thenReturn(Collections.emptyList());
+    void testCreateTrainerProfileGeneratesNonEmptyPassword() {
+        when(trainerRepository.getUsernameWithMaxNumberSuffix(trainer)).thenReturn(Collections.emptyList());
 
         trainerService.createTrainerProfile(trainer);
 
-        assertEquals("John.Doe", trainer.getUser().getUsername());
-    }
-
-    @Test
-    void testCreateTrainerProfileSetsPassword() {
-        Trainer trainer = createTrainer(1L, "Alice", "Smith", null);
-        when(trainerDAO.getAll()).thenReturn(Collections.emptyList());
-
-        trainerService.createTrainerProfile(trainer);
-
-        assertNotNull(trainer.getUser().getPassword());
-        assertFalse(trainer.getUser().getPassword().isEmpty());
+        assertNotNull(user.getPassword());
+        assertFalse(user.getPassword().isEmpty());
     }
 
     @Test
     void testCreateTrainerProfileAppendsCounterWhenUsernameExists() {
-        Trainer existing = createTrainer(2L, "Jane", "Doe", "Jane.Doe");
-        when(trainerDAO.getAll()).thenReturn(List.of(existing));
+        User existingUser = new User();
+        existingUser.setUsername("John.Doe");
+        when(trainerRepository.getUsernameWithMaxNumberSuffix(trainer)).thenReturn(List.of(existingUser));
 
-        Trainer newTrainer = createTrainer(3L, "Jane", "Doe", null);
-        trainerService.createTrainerProfile(newTrainer);
+        trainerService.createTrainerProfile(trainer);
 
-        assertEquals("Jane.Doe1", newTrainer.getUser().getUsername());
+        assertEquals("John.Doe1", user.getUsername());
     }
 
     @Test
     void testCreateTrainerProfileAppendsCorrectCountWhenMultipleExist() {
-        Trainer t1 = createTrainer(1L, "Sam", "Lee", "Sam.Lee");
-        Trainer t2 = createTrainer(2L, "Sam", "Lee", "Sam.Lee1");
-        when(trainerDAO.getAll()).thenReturn(Arrays.asList(t1, t2));
+        User u1 = new User();
+        u1.setUsername("John.Doe");
+        User u2 = new User();
+        u2.setUsername("John.Doe1");
+        when(trainerRepository.getUsernameWithMaxNumberSuffix(trainer)).thenReturn(List.of(u1, u2));
 
-        Trainer newTrainer = createTrainer(3L, "Sam", "Lee", null);
-        trainerService.createTrainerProfile(newTrainer);
+        trainerService.createTrainerProfile(trainer);
 
-        assertEquals("Sam.Lee2", newTrainer.getUser().getUsername());
+        assertEquals("John.Doe2", user.getUsername());
+    }
+
+    @Test
+    void testCreateTrainerProfileSavesTrainer() {
+        when(trainerRepository.getUsernameWithMaxNumberSuffix(trainer)).thenReturn(Collections.emptyList());
+
+        trainerService.createTrainerProfile(trainer);
+
+        verify(trainerRepository).save(trainer);
     }
 
     @Test
     void testUpdateTrainerProfileSavesTrainer() {
-        Trainer trainer = createTrainer(10L, "Bob", "Brown", "bob.brown");
-
         trainerService.updateTrainerProfile(trainer);
 
-        verify(trainerDAO).save(10L, trainer);
+        verify(trainerRepository).save(trainer);
     }
 
     @Test
-    void testSelectTrainerProfileReturnsTrainer() {
-        Trainer trainer = createTrainer(5L, "Eve", "White", "eve.white");
-        when(trainerDAO.getEntity(5L)).thenReturn(trainer);
+    void testUpdateTrainerProfileDoesNotDelete() {
+        trainerService.updateTrainerProfile(trainer);
 
-        Trainer result = trainerService.selectTrainerProfile(5L);
-
-        assertEquals(trainer, result);
+        verify(trainerRepository, never()).deleteById(any());
     }
 
     @Test
-    void testSelectTrainerProfileReturnsNullWhenNotFound() {
-        when(trainerDAO.getEntity(99L)).thenReturn(null);
+    void testSelectTrainerProfileByIdReturnsTrainer() {
+        when(trainerRepository.getReferenceById(5L)).thenReturn(trainer);
 
-        Trainer result = trainerService.selectTrainerProfile(99L);
+        Trainer result = trainerService.selectTrainerProfileById(5L);
 
-        assertNull(result);
+        assertSame(trainer, result);
+    }
+
+    @Test
+    void testSelectTrainerProfileByUsernameReturnsTrainer() {
+        when(trainerRepository.findByUserUsername("John.Doe")).thenReturn(trainer);
+
+        Trainer result = trainerService.selectTrainerProfileByUsername("John.Doe");
+
+        assertSame(trainer, result);
+    }
+
+    @Test
+    void testSelectTrainerProfileByUsernameReturnsNullWhenNotFound() {
+        when(trainerRepository.findByUserUsername("unknown")).thenReturn(null);
+
+        assertNull(trainerService.selectTrainerProfileByUsername("unknown"));
+    }
+
+    @Test
+    void testActivateTrainerProfileSetsActiveTrue() {
+        user.setActive(false);
+        when(trainerRepository.findById(1L)).thenReturn(Optional.of(trainer));
+
+        trainerService.activateTrainerProfile(1L);
+
+        assertTrue(user.isActive());
+    }
+
+    @Test
+    void testActivateTrainerProfileThrowsWhenNotFound() {
+        when(trainerRepository.findById(99L)).thenReturn(Optional.empty());
+
+        assertThrows(EntityNotFoundException.class,
+                () -> trainerService.activateTrainerProfile(99L));
+    }
+
+    @Test
+    void testDeactivateTrainerProfileSetsActiveFalse() {
+        user.setActive(true);
+        when(trainerRepository.findById(1L)).thenReturn(Optional.of(trainer));
+
+        trainerService.deactivateTrainerProfile(1L);
+
+        assertFalse(user.isActive());
+    }
+
+    @Test
+    void testDeactivateTrainerProfileThrowsWhenNotFound() {
+        when(trainerRepository.findById(99L)).thenReturn(Optional.empty());
+
+        assertThrows(EntityNotFoundException.class,
+                () -> trainerService.deactivateTrainerProfile(99L));
+    }
+
+    @Test
+    void testGetTrainingsForTrainerDelegatesToRepository() {
+        LocalDate from = LocalDate.of(2024, 1, 1);
+        LocalDate to = LocalDate.of(2024, 6, 1);
+        List<Training> expected = List.of(new Training());
+        when(trainingRepository.findTrainingsByTrainerCriteria("John.Doe", from, to, "traineeName"))
+                .thenReturn(expected);
+
+        List<Training> result = trainerService.getTrainingsForTrainer("John.Doe", from, to, "traineeName");
+
+        assertSame(expected, result);
     }
 }

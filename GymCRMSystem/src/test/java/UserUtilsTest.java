@@ -15,13 +15,13 @@ public class UserUtilsTest {
 
     @BeforeEach
     public void setUp() {
-        newUser = new User(1L, "John", "Doe", null, null, true);
+        newUser = new User(1L, "John", "Doe", null, null, true, null, null);
         existingUsers = new ArrayList<>();
     }
 
     @Test
     public void testGenerateUserCredentialsForNewUser() {
-        existingUsers.add(new User(2L, "Jane", "Smith", "jane.smith", "pass123", true));
+        existingUsers.add(new User(2L, "Jane", "Smith", "jane.smith", "pass123", true, null, null));
 
         UserUtils.generateUserCredentials(newUser, existingUsers);
 
@@ -32,8 +32,8 @@ public class UserUtilsTest {
 
     @Test
     public void testGenerateUserCredentialsWhenUsernameExists() {
-        existingUsers.add(new User(2L, "Existing", "User", "John.Doe", "pass1", true));
-        existingUsers.add(new User(3L, "Existing", "User", "John.Doe1", "pass2", true));
+        existingUsers.add(new User(2L, "Existing", "User", "John.Doe", "pass1", true, null, null));
+        existingUsers.add(new User(3L, "Existing", "User", "John.Doe1", "pass2", true,null, null));
 
         UserUtils.generateUserCredentials(newUser, existingUsers);
 
@@ -42,7 +42,7 @@ public class UserUtilsTest {
 
     @Test
     public void testGenerateUserCredentialsCollisionWithSimilarNames() {
-        existingUsers.add(new User(2L, "John", "Doer", "John.Doer", "pass1", true));
+        existingUsers.add(new User(2L, "John", "Doer", "John.Doer", "pass1", true, null, null));
 
         UserUtils.generateUserCredentials(newUser, existingUsers);
 
@@ -51,8 +51,8 @@ public class UserUtilsTest {
 
     @Test
     public void testGenerateUserCredentialsHandlesGaps() {
-        existingUsers.add(new User(2L, "Old", "User", "John.Doe", "pass1", true));
-        existingUsers.add(new User(3L, "Old", "User", "John.Doe5", "pass2", true));
+        existingUsers.add(new User(2L, "Old", "User", "John.Doe", "pass1", true, null, null));
+        existingUsers.add(new User(3L, "Old", "User", "John.Doe5", "pass2", true, null, null));
 
         UserUtils.generateUserCredentials(newUser, existingUsers);
 
@@ -66,12 +66,12 @@ public class UserUtilsTest {
         assertNotNull(newUser.getUsername());
         assertNotNull(newUser.getPassword());
         assertTrue(newUser.isActive());
-        assertEquals(1L, newUser.getUserId());
+        assertEquals(1L, newUser.getId());
     }
 
     @Test
     public void testThrowsExceptionWhenFirstNameContainsDigit() {
-        User invalidUser = new User(4L, "J0hn", "Doe", null, null, true);
+        User invalidUser = new User(4L, "J0hn", "Doe", null, null, true, null, null);
 
         assertThrows(IllegalArgumentException.class, () -> {
             UserUtils.generateUserCredentials(invalidUser, existingUsers);
@@ -80,7 +80,7 @@ public class UserUtilsTest {
 
     @Test
     public void testThrowsExceptionWhenLastNameContainsDigit() {
-        User invalidUser = new User(5L, "John", "D0e", null, null, true);
+        User invalidUser = new User(5L, "John", "D0e", null, null, true, null, null);
 
         assertThrows(IllegalArgumentException.class, () -> {
             UserUtils.generateUserCredentials(invalidUser, existingUsers);

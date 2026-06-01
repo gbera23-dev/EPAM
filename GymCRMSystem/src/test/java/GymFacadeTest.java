@@ -1,19 +1,30 @@
+import auth.SecurityContextHolder;
+import dto.TraineeDTO;
+import dto.TrainerDTO;
+import dto.TrainingDTO;
 import entities.Trainee;
 import entities.Trainer;
 import entities.Training;
-import entities.TrainingType;
-import entities.User;
 import facade.GymFacade;
+import mappers.GymMapper;
+import mappers.TraineeMapper;
+import mappers.TrainerMapper;
+import mappers.TrainingMapper;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
-import services.TraineeServiceImpl;
-import services.TrainerServiceImpl;
-import services.TrainingServiceImpl;
+import services.AuthService;
+import services.TraineeService;
+import services.TrainerService;
+import services.TrainingService;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -22,135 +33,316 @@ import static org.mockito.Mockito.*;
 class GymFacadeTest {
 
     @Mock
-    private TraineeServiceImpl traineeService;
+    private TraineeService traineeService;
 
     @Mock
-    private TrainerServiceImpl trainerService;
+    private TrainerService trainerService;
 
     @Mock
-    private TrainingServiceImpl trainingService;
+    private TrainingService trainingService;
+
+    @Mock
+    private AuthService authService;
+
+    @Mock
+    private GymMapper mapper;
+
+    @Mock
+    private TraineeMapper traineeMapper;
+
+    @Mock
+    private TrainerMapper trainerMapper;
+
+    @Mock
+    private TrainingMapper trainingMapper;
 
     @InjectMocks
     private GymFacade gymFacade;
 
-    private Trainee createTrainee(long pk) {
-        return new Trainee(pk, null, "Address", new User(pk, "F", "L", "f.l", "pw", true));
+    private TraineeDTO traineeDTO;
+    private TrainerDTO trainerDTO;
+    private TrainingDTO trainingDTO;
+    private Trainee traineeEntity;
+    private Trainer trainerEntity;
+    private Training trainingEntity;
+
+    private MockedStatic<SecurityContextHolder> securityContextHolder;
+
+    @BeforeEach
+    void setUp() {
+        traineeDTO = new TraineeDTO();
+        trainerDTO = new TrainerDTO();
+        trainingDTO = new TrainingDTO();
+        traineeEntity = new Trainee();
+        trainerEntity = new Trainer();
+        trainingEntity = new Training();
+
+        lenient().when(mapper.getTraineeMapper()).thenReturn(traineeMapper);
+        lenient().when(mapper.getTrainerMapper()).thenReturn(trainerMapper);
+        lenient().when(mapper.getTrainingMapper()).thenReturn(trainingMapper);
+
+        securityContextHolder = mockStatic(SecurityContextHolder.class);
     }
 
-    private Trainer createTrainer(long pk) {
-        return new Trainer(pk, "Yoga", new User(pk, "T", "R", "t.r", "pw", true));
+    @AfterEach
+    void tearDown() {
+        securityContextHolder.close();
     }
 
-    private Training createTraining(long pk) {
-        return new Training(pk, 1L, 2L, "Session", new TrainingType(), LocalDate.now(), 30);
+    @Test
+    void testLoginUserSuccess() {
+        securityContextHolder.when(SecurityContextHolder::getCurrentUser).thenReturn(null);
+        when(authService.validateUserProfile("john.doe", "pass")).thenReturn(true);
+
+        gymFacade.loginUser("john.doe", "pass");
+
+        securityContextHolder.verify(() -> SecurityContextHolder.setCurrentUser("john.doe"));
+        verify(authService).loginUserProfile("john.doe", "pass");
+    }
+
+    @Test
+    void testLoginUserAlreadyLoggedIn() {
+        securityContextHolder.when(SecurityContextHolder::getCurrentUser).thenReturn("john.doe");
+
+        assertThrows(IllegalStateException.class, () -> gymFacade.loginUser("john.doe", "pass"));
+
+        verify(authService, never()).validateUserProfile(any(), any());
+    }
+
+    @Test
+    void testLoginUserInvalidCredentials() {
+        securityContextHolder.when(SecurityContextHolder::getCurrentUser).thenReturn(null);
+        when(authService.validateUserProfile("john.doe", "wrong")).thenReturn(false);
+
+        assertThrows(IllegalArgumentException.class, () -> gymFacade.loginUser("john.doe", "wrong"));
+
+        verify(authService, never()).loginUserProfile(any(), any());
+    }
+
+    @Test
+    void testLogoutUserSuccess() {
+        securityContextHolder.when(SecurityContextHolder::getCurrentUser).thenReturn("john.doe");
+
+        gymFacade.logoutUser();
+
+        verify(authService).logoutUserProfile("john.doe");
+        securityContextHolder.verify(SecurityContextHolder::clear);
+    }
+
+    @Test
+    void testLogoutUserNotLoggedIn() {
+        securityContextHolder.when(SecurityContextHolder::getCurrentUser).thenReturn(null);
+
+        assertThrows(IllegalStateException.class, () -> gymFacade.logoutUser());
+
+        verify(authService, never()).logoutUserProfile(any());
+    }
+
+    @Test
+    void testChangeUserPasswordSuccess() {
+        securityContextHolder.when(SecurityContextHolder::getCurrentUser).thenReturn("john.doe");
+
+        gymFacade.changeUserPassword("newPass123");
+
+        verify(authService).changeUserProfilePassword("john.doe", "newPass123");
+    }
+
+    @Test
+    void testChangeUserPasswordNotLoggedIn() {
+        securityContextHolder.when(SecurityContextHolder::getCurrentUser).thenReturn(null);
+
+        assertThrows(IllegalStateException.class, () -> gymFacade.changeUserPassword("newPass123"));
+
+        verify(authService, never()).changeUserProfilePassword(any(), any());
     }
 
     @Test
     void testCreateTraineeDelegatesToTraineeService() {
-        Trainee trainee = createTrainee(1L);
+        when(traineeMapper.toEntity(traineeDTO)).thenReturn(traineeEntity);
 
-        gymFacade.createTrainee(trainee);
+        gymFacade.createTrainee(traineeDTO);
 
-        verify(traineeService).createTraineeProfile(trainee);
+        verify(traineeMapper).toEntity(traineeDTO);
+        verify(traineeService).createTraineeProfile(traineeEntity);
     }
 
     @Test
     void testUpdateTraineeDelegatesToTraineeService() {
-        Trainee trainee = createTrainee(2L);
+        when(traineeMapper.toEntity(traineeDTO)).thenReturn(traineeEntity);
 
-        gymFacade.updateTrainee(trainee);
+        gymFacade.updateTrainee(traineeDTO);
 
-        verify(traineeService).updateTraineeProfile(trainee);
+        verify(traineeMapper).toEntity(traineeDTO);
+        verify(traineeService).updateTraineeProfile(traineeEntity);
     }
 
     @Test
-    void testDeleteTraineeDelegatesToTraineeService() {
-        gymFacade.deleteTrainee(3L);
+    void testDeleteTraineeByIdDelegatesToTraineeService() {
+        gymFacade.deleteTraineeById(1L);
 
-        verify(traineeService).deleteTraineeProfile(3L);
+        verify(traineeService).deleteTraineeProfileById(1L);
     }
 
     @Test
-    void testGetTraineeReturnsCorrectTrainee() {
-        Trainee trainee = createTrainee(4L);
-        when(traineeService.selectTraineeProfile(4L)).thenReturn(trainee);
+    void testDeleteTraineeByUsernameDelegatesToTraineeService() {
+        gymFacade.deleteTraineeByUsername("john.doe");
 
-        Trainee result = gymFacade.getTrainee(4L);
-
-        assertEquals(trainee, result);
+        verify(traineeService).deleteTraineeProfileByUsername("john.doe");
     }
 
     @Test
-    void testGetTraineeReturnsNullWhenNotFound() {
-        when(traineeService.selectTraineeProfile(99L)).thenReturn(null);
+    void testGetTraineeByIdReturnsTraineeFromService() {
+        when(traineeService.selectTraineeProfileById(1L)).thenReturn(traineeEntity);
+        when(traineeMapper.toDTO(traineeEntity)).thenReturn(traineeDTO);
 
-        Trainee result = gymFacade.getTrainee(99L);
+        TraineeDTO result = gymFacade.getTraineeById(1L);
 
-        assertNull(result);
+        assertSame(traineeDTO, result);
+    }
+
+    @Test
+    void testGetTraineeByUsernameReturnsTraineeFromService() {
+        when(traineeService.selectTraineeProfileByUsername("john.doe")).thenReturn(traineeEntity);
+        when(traineeMapper.toDTO(traineeEntity)).thenReturn(traineeDTO);
+
+        TraineeDTO result = gymFacade.getTraineeByUsername("john.doe");
+
+        assertSame(traineeDTO, result);
+    }
+
+    @Test
+    void testActivateTraineeDelegatesToTraineeService() {
+        gymFacade.activateTrainee(1L);
+
+        verify(traineeService).activateTraineeProfile(1L);
+    }
+
+    @Test
+    void testDeactivateTraineeDelegatesToTraineeService() {
+        gymFacade.deactivateTrainee(1L);
+
+        verify(traineeService).deactivateTraineeProfile(1L);
+    }
+
+    @Test
+    void testGetTrainingsForTraineeDelegatesToTraineeService() {
+        LocalDate from = LocalDate.of(2024, 1, 1);
+        LocalDate to = LocalDate.of(2024, 6, 1);
+        List<Training> entities = List.of(trainingEntity);
+        when(traineeService.getTrainingsForTrainee("john.doe", from, to, "trainer", "yoga")).thenReturn(entities);
+        when(trainingMapper.toDTO(trainingEntity)).thenReturn(trainingDTO);
+
+        List<TrainingDTO> result = gymFacade.getTrainingsForTrainee("john.doe", from, to, "trainer", "yoga");
+
+        assertEquals(1, result.size());
+        assertSame(trainingDTO, result.get(0));
+    }
+
+    @Test
+    void testGetTrainersNotAssignedToTraineeDelegatesToTraineeService() {
+        List<Trainer> entities = List.of(trainerEntity);
+        when(traineeService.getTrainersNotAssignedToTrainee("john.doe")).thenReturn(entities);
+        when(trainerMapper.toDTO(trainerEntity)).thenReturn(trainerDTO);
+
+        List<TrainerDTO> result = gymFacade.getTrainersNotAssignedToTrainee("john.doe");
+
+        assertEquals(1, result.size());
+        assertSame(trainerDTO, result.get(0));
+    }
+
+    @Test
+    void testUpdateTraineeListOfTrainersDelegatesToTraineeService() {
+        List<String> usernames = List.of("trainer1", "trainer2");
+
+        gymFacade.updateTraineeListOfTrainers(1L, usernames);
+
+        verify(traineeService).updateTraineeListOfTrainers(1L, usernames);
     }
 
     @Test
     void testCreateTrainerDelegatesToTrainerService() {
-        Trainer trainer = createTrainer(1L);
+        when(trainerMapper.toEntity(trainerDTO)).thenReturn(trainerEntity);
 
-        gymFacade.createTrainer(trainer);
+        gymFacade.createTrainer(trainerDTO);
 
-        verify(trainerService).createTrainerProfile(trainer);
+        verify(trainerMapper).toEntity(trainerDTO);
+        verify(trainerService).createTrainerProfile(trainerEntity);
     }
 
     @Test
     void testUpdateTrainerDelegatesToTrainerService() {
-        Trainer trainer = createTrainer(2L);
+        when(trainerMapper.toEntity(trainerDTO)).thenReturn(trainerEntity);
 
-        gymFacade.updateTrainer(trainer);
+        gymFacade.updateTrainer(trainerDTO);
 
-        verify(trainerService).updateTrainerProfile(trainer);
+        verify(trainerMapper).toEntity(trainerDTO);
+        verify(trainerService).updateTrainerProfile(trainerEntity);
     }
 
     @Test
-    void testGetTrainerReturnsCorrectTrainer() {
-        Trainer trainer = createTrainer(5L);
-        when(trainerService.selectTrainerProfile(5L)).thenReturn(trainer);
+    void testGetTrainerByIdReturnsTrainerFromService() {
+        when(trainerService.selectTrainerProfileById(2L)).thenReturn(trainerEntity);
+        when(trainerMapper.toDTO(trainerEntity)).thenReturn(trainerDTO);
 
-        Trainer result = gymFacade.getTrainer(5L);
+        TrainerDTO result = gymFacade.getTrainerById(2L);
 
-        assertEquals(trainer, result);
+        assertSame(trainerDTO, result);
     }
 
     @Test
-    void testGetTrainerReturnsNullWhenNotFound() {
-        when(trainerService.selectTrainerProfile(88L)).thenReturn(null);
+    void testGetTrainerByUsernameReturnsTrainerFromService() {
+        when(trainerService.selectTrainerProfileByUsername("jane.doe")).thenReturn(trainerEntity);
+        when(trainerMapper.toDTO(trainerEntity)).thenReturn(trainerDTO);
 
-        Trainer result = gymFacade.getTrainer(88L);
+        TrainerDTO result = gymFacade.getTrainerByUsername("jane.doe");
 
-        assertNull(result);
+        assertSame(trainerDTO, result);
+    }
+
+    @Test
+    void testActivateTrainerDelegatesToTrainerService() {
+        gymFacade.activateTrainer(2L);
+
+        verify(trainerService).activateTrainerProfile(2L);
+    }
+
+    @Test
+    void testDeactivateTrainerDelegatesToTrainerService() {
+        gymFacade.deactivateTrainer(2L);
+
+        verify(trainerService).deactivateTrainerProfile(2L);
+    }
+
+    @Test
+    void testGetTrainingsForTrainerDelegatesToTrainerService() {
+        LocalDate from = LocalDate.of(2024, 1, 1);
+        LocalDate to = LocalDate.of(2024, 6, 1);
+        List<Training> entities = List.of(trainingEntity);
+        when(trainerService.getTrainingsForTrainer("jane.doe", from, to, "trainee")).thenReturn(entities);
+        when(trainingMapper.toDTO(trainingEntity)).thenReturn(trainingDTO);
+
+        List<TrainingDTO> result = gymFacade.getTrainingsForTrainer("jane.doe", from, to, "trainee");
+
+        assertEquals(1, result.size());
+        assertSame(trainingDTO, result.getFirst());
+    }
+
+    @Test
+    void testGetTrainingReturnsTrainingFromService() {
+        when(trainingService.selectTraining(3L)).thenReturn(trainingEntity);
+        when(trainingMapper.toDTO(trainingEntity)).thenReturn(trainingDTO);
+
+        TrainingDTO result = gymFacade.getTraining(3L);
+
+        assertSame(trainingDTO, result);
     }
 
     @Test
     void testAddTrainingDelegatesToTrainingService() {
-        Training training = createTraining(1L);
+        LocalDate date = LocalDate.of(2024, 3, 15);
 
-        gymFacade.addTraining(training);
+        gymFacade.addTraining("john.doe", "jane.doe", "Session 1", date, 60);
 
-        verify(trainingService).createTrainingProfile(training);
-    }
-
-    @Test
-    void testGetTrainingReturnsCorrectTraining() {
-        Training training = createTraining(6L);
-        when(trainingService.selectTrainingProfile(6L)).thenReturn(training);
-
-        Training result = gymFacade.getTraining(6L);
-
-        assertEquals(training, result);
-    }
-
-    @Test
-    void testGetTrainingReturnsNullWhenNotFound() {
-        when(trainingService.selectTrainingProfile(77L)).thenReturn(null);
-
-        Training result = gymFacade.getTraining(77L);
-
-        assertNull(result);
+        verify(trainingService).addTraining("john.doe", "jane.doe", "Session 1", date, 60);
     }
 }

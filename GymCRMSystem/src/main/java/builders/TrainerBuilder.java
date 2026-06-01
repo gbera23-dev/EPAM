@@ -1,8 +1,8 @@
 package builders;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import entities.Trainer;
-import entities.User;
+import dto.TrainerDTO;
+import dto.UserDTO;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
@@ -17,11 +17,11 @@ public class TrainerBuilder implements Builder {
     }
 
     @Override
-    public Trainer build(Map<String, Object> entry) {
-        return new Trainer(
+    public TrainerDTO build(Map<String, Object> entry) {
+        return new TrainerDTO(
                 ((Number) entry.get("trainerPK")).longValue(),
                 (String)entry.get("specialization"),
-                objectMapper.convertValue(entry.get("user"), User.class)
+                objectMapper.convertValue(entry.get("user"), UserDTO.class)
         );
     }
 

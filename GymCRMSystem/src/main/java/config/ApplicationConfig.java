@@ -1,11 +1,17 @@
+package config;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import entities.*;
+import dto.TraineeDTO;
+import dto.TrainerDTO;
+import dto.TrainingDTO;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.*;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.validation.beanvalidation.MethodValidationPostProcessor;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -20,25 +26,29 @@ import java.util.concurrent.ConcurrentHashMap;
         "facade",
         "beanPostProcessor",
         "builders",
-        "logging"
+        "logging",
+        "mappers",
+        "database",
+        "auth"
         })
 @EnableAspectJAutoProxy
+@EnableJpaRepositories(basePackages = "persistence")
 @Configuration
 public class ApplicationConfig {
 
 
     @Bean(name="TraineeStorage")
-    public Map<Long, Trainee> createTraineeDB() {
+    public Map<Long, TraineeDTO> createTraineeDB() {
         return new ConcurrentHashMap<>();
     }
 
     @Bean(name="TrainerStorage")
-    public Map<Long, Trainer> createTrainerDB() {
+    public Map<Long, TrainerDTO> createTrainerDB() {
         return new ConcurrentHashMap<>();
     }
 
     @Bean(name="TrainingStorage")
-    public Map<Long, Training> createTrainingDB() {
+    public Map<Long, TrainingDTO> createTrainingDB() {
         return new ConcurrentHashMap<>();
     }
 
@@ -70,6 +80,11 @@ public class ApplicationConfig {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
         return objectMapper;
+    }
+
+    @Bean
+    public MethodValidationPostProcessor methodValidationPostProcessor() {
+        return new MethodValidationPostProcessor();
     }
 
 }

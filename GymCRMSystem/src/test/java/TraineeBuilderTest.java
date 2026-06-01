@@ -1,6 +1,6 @@
 import builders.TraineeBuilder;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import entities.Trainee;
+import dto.TraineeDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -28,7 +28,7 @@ class TraineeBuilderTest {
         entry.put("address", "123 Main St");
         entry.put("user", null);
 
-        Trainee result = traineeBuilder.build(entry);
+        TraineeDTO result = traineeBuilder.build(entry);
 
         assertEquals(1L, result.getTraineePk());
     }
@@ -41,7 +41,7 @@ class TraineeBuilderTest {
         entry.put("address", "456 Elm St");
         entry.put("user", null);
 
-        Trainee result = traineeBuilder.build(entry);
+        TraineeDTO result = traineeBuilder.build(entry);
 
         assertEquals("456 Elm St", result.getAddress());
     }
@@ -62,7 +62,7 @@ class TraineeBuilderTest {
         entry.put("address", "789 Oak Ave");
         entry.put("user", userMap);
 
-        Trainee result = traineeBuilder.build(entry);
+        TraineeDTO result = traineeBuilder.build(entry);
 
         assertNotNull(result.getUser());
         assertEquals("John", result.getUser().getFirstName());
@@ -76,7 +76,7 @@ class TraineeBuilderTest {
         entry.put("address", "Test");
         entry.put("user", null);
 
-        Trainee result = traineeBuilder.build(entry);
+        TraineeDTO result = traineeBuilder.build(entry);
 
         assertEquals(999999999L, result.getTraineePk());
     }
