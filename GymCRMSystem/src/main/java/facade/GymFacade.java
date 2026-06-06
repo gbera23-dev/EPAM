@@ -2,16 +2,13 @@ package facade;
 
 import annotations.AuthRequired;
 import auth.SecurityContextHolder;
-import dto.TraineeDTO;
-import dto.TrainerDTO;
-import dto.TrainingDTO;
-import entities.Trainee;
+import dto.internal.TraineeDTO;
+import dto.internal.TrainerDTO;
+import dto.internal.TrainingDTO;
 import entities.Trainer;
 import entities.Training;
 import jakarta.validation.Valid;
-import mappers.GymMapper;
-import mappers.Mapper;
-import mappers.TraineeMapper;
+import mappers.internal.GymMapper;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 import services.AuthService;
@@ -21,7 +18,6 @@ import services.TrainingService;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
 
 @Component
 @Validated

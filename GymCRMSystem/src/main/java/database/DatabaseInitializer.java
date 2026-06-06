@@ -1,13 +1,13 @@
 package database;
 
-import dto.*;
+import dto.internal.TraineeDTO;
+import dto.internal.TrainerDTO;
+import dto.internal.TrainingDTO;
 import entities.*;
-import mappers.GymMapper;
-import mappers.Mapper;
-import org.springframework.beans.factory.annotation.Value;
+import mappers.internal.GymMapper;
+import mappers.internal.Mapper;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import persistence.GymRepository;

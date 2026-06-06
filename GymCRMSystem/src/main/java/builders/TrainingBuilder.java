@@ -1,8 +1,8 @@
 package builders;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import dto.TrainingDTO;
-import dto.TrainingTypeDTO;
+import dto.internal.TrainingDTO;
+import dto.internal.TrainingTypeDTO;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;

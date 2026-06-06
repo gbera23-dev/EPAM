@@ -1,7 +1,7 @@
 package builders;
 
 
-import dto.GymDTO;
+import dto.internal.GymDTO;
 
 import java.util.Map;
 

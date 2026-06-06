@@ -1,4 +1,4 @@
-package mappers;
+package mappers.internal;
 
 
 import lombok.AllArgsConstructor;

@@ -1,6 +1,6 @@
 import builders.TrainingBuilder;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import dto.TrainingDTO;
+import dto.internal.TrainingDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

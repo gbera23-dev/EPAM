@@ -1,12 +1,9 @@
 import config.ApplicationConfig;
 import config.DataConfig;
-import dto.TraineeDTO;
+import dto.internal.TraineeDTO;
 import facade.GymFacade;
-import org.springframework.cglib.core.Local;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-
-import java.time.LocalDate;
 
 
 public class Main {

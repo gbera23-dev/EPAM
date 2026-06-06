@@ -2,9 +2,9 @@ package config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import dto.TraineeDTO;
-import dto.TrainerDTO;
-import dto.TrainingDTO;
+import dto.internal.TraineeDTO;
+import dto.internal.TrainerDTO;
+import dto.internal.TrainingDTO;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.*;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;

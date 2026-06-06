@@ -1,8 +1,8 @@
 package builders;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import dto.TrainerDTO;
-import dto.UserDTO;
+import dto.internal.TrainerDTO;
+import dto.internal.UserDTO;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;

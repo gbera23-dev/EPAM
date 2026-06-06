@@ -1,4 +1,4 @@
-package dto;
+package dto.internal;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;

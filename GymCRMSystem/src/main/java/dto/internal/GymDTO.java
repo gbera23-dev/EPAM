@@ -1,4 +1,4 @@
-package dto;
+package dto.internal;
 
 /** Marker interface for all gym Data Transfer Objects. */
 public interface GymDTO {

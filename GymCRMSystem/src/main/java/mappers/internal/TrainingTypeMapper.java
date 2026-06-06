@@ -1,6 +1,6 @@
-package mappers;
+package mappers.internal;
 
-import dto.TrainingTypeDTO;
+import dto.internal.TrainingTypeDTO;
 import entities.TrainingType;
 import org.springframework.stereotype.Component;
 

@@ -1,4 +1,4 @@
-package mappers;
+package mappers.internal;
 
 /**
  * Bidirectional mapper between a DTO and its corresponding entity.

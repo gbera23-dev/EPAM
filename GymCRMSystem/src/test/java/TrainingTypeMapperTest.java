@@ -1,6 +1,6 @@
-import dto.TrainingTypeDTO;
+import dto.internal.TrainingTypeDTO;
 import entities.TrainingType;
-import mappers.TrainingTypeMapper;
+import mappers.internal.TrainingTypeMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

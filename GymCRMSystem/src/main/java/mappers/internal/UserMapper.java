@@ -1,6 +1,6 @@
-package mappers;
+package mappers.internal;
 
-import dto.UserDTO;
+import dto.internal.UserDTO;
 import entities.User;
 import org.springframework.stereotype.Component;
 
