@@ -1,11 +1,16 @@
 package logging;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.*;
+import org.aspectj.lang.reflect.MethodSignature;
+import org.hibernate.mapping.Join;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 /**
  * Class utilizes AOP to provide Logging for the whole application
@@ -23,6 +28,37 @@ public class LoggingAspect {
 
     @Pointcut("execution(* persistence.*.*(..))")
     public void persistenceLayer() {}
+
+
+    @Pointcut("execution(* restcontroller.*.*(..))")
+    public void restControllerLayer() {}
+
+
+
+//    Specific rest call details (which endpoint was called, which request came and the
+//            service response - 200 or error and response message)
+    @Around("restControllerLayer()")
+    public Object logRestControllerExecution(ProceedingJoinPoint joinPoint) throws Throwable {
+
+        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+
+
+        if(attributes != null) {
+            HttpServletRequest request = attributes.getRequest();
+
+            String runtimeUrl = request.getRequestURI();
+
+            String httpMethod = request.getMethod();
+
+            logger.info("runtimeUrl: {}, httpMethod: {}", runtimeUrl, httpMethod);
+        }
+
+        MethodSignature methodSignature = (MethodSignature)joinPoint.getSignature();
+        Object result = joinPoint.proceed();
+
+        return result;
+    }
+
 
     @Around("serviceLayer()")
     public Object logServiceExecution(ProceedingJoinPoint pjp) throws Throwable {
