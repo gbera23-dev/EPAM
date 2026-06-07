@@ -31,7 +31,7 @@ public class TrainerServiceImpl implements TrainerService {
     public void createTrainerProfile(Trainer trainer) {
         User currentUser = trainer.getUser();
 
-        List<User> users = trainerRepository.getUsernameWithMaxNumberSuffix(trainer);
+        List<User> users = trainerRepository.getUsersWithFirstAndLastName(trainer);
 
         UserUtils.generateUserCredentials(currentUser, users);
 

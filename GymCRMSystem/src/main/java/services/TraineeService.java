@@ -43,4 +43,7 @@ public interface TraineeService {
 
     /** @return trainers not yet assigned to the given trainee */
     List<Trainer> getTrainersNotAssignedToTrainee(String username);
+
+
+    List<Trainer> getTrainersAssignedToTrainee(String username);
 }

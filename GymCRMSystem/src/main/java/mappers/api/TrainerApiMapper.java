@@ -5,19 +5,20 @@ import dto.api.response.TrainerProfileResponse;
 import dto.api.response.TrainerSummaryResponse;
 import dto.api.response.TrainingTypeResponse;
 import entities.Trainer;
+import entities.TrainingType;
 import entities.User;
 import org.springframework.stereotype.Component;
 
 @Component
 public class TrainerApiMapper {
 
-    public Trainer toTrainer(TrainerRegistrationRequest trainerRegistrationRequest) {
+    public Trainer toTrainer(TrainerRegistrationRequest trainerRegistrationRequest, TrainingType trainingType) {
         User user = new User();
         user.setFirstName(trainerRegistrationRequest.getFirstName());
         user.setLastName(trainerRegistrationRequest.getLastName());
         Trainer trainer = new Trainer();
         trainer.setUser(user);
-        trainer.setTrainingType(trainerRegistrationRequest.getSpecialization());
+        trainer.setTrainingType(trainingType);
         return trainer;
     }
 

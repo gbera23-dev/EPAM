@@ -1,10 +1,15 @@
 package auth;
 
 import annotations.AuthRequired;
+import exceptions.UserNotLoggedInException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import services.AuthService;
 
 import java.util.concurrent.atomic.AtomicInteger;
@@ -29,13 +34,19 @@ public class AuthAspect {
 
     @Around("@annotation(authRequired)")
     public Object validateUser(ProceedingJoinPoint pjp, AuthRequired authRequired) throws Throwable {
-        String username = SecurityContextHolder.getCurrentUser();
 
-        if(username == null || !authService.validateUserSession(username))
-            throw new IllegalArgumentException("Please, log in before using this service!");
+        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
 
-        if (callCounter.incrementAndGet() % CHECK_TIME == 0) {
-            authService.cleanUpExpiredSessions();
+        if(attributes == null) {
+            return pjp.proceed();
+        }
+
+        HttpServletRequest httpServletRequest = attributes.getRequest();
+
+        String userToken = httpServletRequest.getHeader("user-session");
+
+        if(userToken == null || !authService.validateUserSession(userToken)) {
+            throw new UserNotLoggedInException("Please, log in before using this service!");
         }
 
         return pjp.proceed();

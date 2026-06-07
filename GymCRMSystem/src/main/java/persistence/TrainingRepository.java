@@ -29,12 +29,12 @@ public interface TrainingRepository extends JpaRepository<Training, Long> {
     @Query("SELECT t FROM Training t WHERE t.trainer.user.username = :username " +
             "AND (:fromDate IS NULL OR t.date >= :fromDate) " +
             "AND (:toDate IS NULL OR t.date <= :toDate) " +
-            "AND (:trainerName IS NULL OR t.trainee.user.username = :traineeName) ")
+            "AND (:traineeName IS NULL OR t.trainee.user.username = :traineeName) ")
     List<Training> findTrainingsByTrainerCriteria(
             @Param("username") String username,
             @Param("fromDate") LocalDate fromDate,
             @Param("toDate") LocalDate toDate,
-            @Param("trainerName") String traineeName
+            @Param("traineeName") String traineeName
     );
 
 

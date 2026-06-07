@@ -61,14 +61,24 @@ public class TraineeServiceImpl implements TraineeService {
     @Override
     @Transactional
     public void updateTraineeListOfTrainers(long traineeId, List<String> trainerUsernames) {
-        Trainee trainee = traineeRepository.findById(traineeId).orElseThrow(() -> new
-                IllegalArgumentException("Trainee not found"));
+        Trainee managedTrainee = traineeRepository.findById(traineeId)
+                .orElseThrow(() -> new EntityNotFoundException("Trainee not found"));
 
-        List<Trainer> trainers =  trainerRepository.findByUserUsernameIn(trainerUsernames);
+        List<Trainer> incomingTrainers = trainerRepository.findByUserUsernameIn(trainerUsernames);
 
-        trainee.getTrainers().clear();
-        trainee.getTrainers().addAll(trainers);
+        for (Trainer oldTrainer : managedTrainee.getTrainers()) {
+            oldTrainer.getTrainees().remove(managedTrainee);
+        }
+        managedTrainee.getTrainers().clear();
+
+        for (Trainer newTrainer : incomingTrainers) {
+            newTrainer.getTrainees().add(managedTrainee);
+            managedTrainee.getTrainers().add(newTrainer);
+        }
+
+        traineeRepository.saveAndFlush(managedTrainee);
     }
+
 
     @Override
     @Transactional
@@ -146,5 +156,10 @@ public class TraineeServiceImpl implements TraineeService {
     @Override
     public List<Trainer> getTrainersNotAssignedToTrainee(String username) {
         return trainerRepository.findTrainersNotAssignedToTrainee(username);
+    }
+
+    @Override
+    public List<Trainer> getTrainersAssignedToTrainee(String username) {
+        return trainerRepository.findTrainersAssignedToTrainee(username);
     }
 }

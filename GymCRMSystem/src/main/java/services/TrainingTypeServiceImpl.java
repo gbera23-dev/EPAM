@@ -21,4 +21,9 @@ public class TrainingTypeServiceImpl implements TrainingTypeService {
         return trainingTypeRepository.findAll();
     }
 
+    @Override
+    public TrainingType getTrainingTypeById(long id) {
+        return trainingTypeRepository.findById(id);
+    }
+
 }

@@ -1,5 +1,6 @@
 package restcontroller;
 
+import annotations.AuthRequired;
 import dto.api.response.TrainingTypeResponse;
 import entities.TrainingType;
 import mappers.api.TrainingTypeApiMapper;
@@ -25,6 +26,8 @@ public class TrainingTypeRestController {
         this.trainingTypeApiMapper = trainingTypeApiMapper;
     }
 
+
+    @AuthRequired
     @GetMapping
     public ResponseEntity<List<TrainingTypeResponse>> getTrainingTypes() {
 

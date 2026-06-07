@@ -8,4 +8,5 @@ public interface TrainingTypeService {
 
     List<TrainingType> getTrainingTypes();
 
+    TrainingType getTrainingTypeById(long id);
 }

@@ -1,13 +1,15 @@
 package restcontroller;
 
+import annotations.AuthRequired;
 import dto.api.request.LoginRequest;
 import dto.api.request.PasswordChangeRequest;
 import exceptions.PasswordDoesNotMatchException;
-import jakarta.transaction.UserTransaction;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import services.AuthService;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("api/user")
@@ -22,14 +24,19 @@ public class UserRestController {
 
 
     @GetMapping("/login")
-    public ResponseEntity<String> loginUser(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<Map<String, String>> loginUser(@RequestBody LoginRequest loginRequest) {
 
         authService.loginUserProfile(loginRequest.getUsername(), loginRequest.getPassword());
 
-        return ResponseEntity.ok().body("User was successfully logged in!");
+        Map<String, String> output = new HashMap<>();
+
+        output.put("session-token", loginRequest.getUsername());
+        output.put("message", "Log in was successful!");
+
+        return ResponseEntity.ok().body(output);
     }
 
-
+    @AuthRequired
     @PutMapping("/password-change")
     public ResponseEntity<String> changeUserPassword
             (@RequestBody PasswordChangeRequest passwordChangeRequest) {

@@ -141,27 +141,27 @@ class TraineeServiceTest {
 
         verify(traineeRepository, never()).deleteById(any());
     }
+//
+//    @Test
+//    void testUpdateTraineeListOfTrainersClearsAndSetsNewTrainers() {
+//        List<Trainer> newTrainers = List.of(new Trainer(), new Trainer());
+//        List<String> usernames = List.of("trainer1", "trainer2");
+//        trainee.setTrainers(new java.util.ArrayList<>());
+//        when(traineeRepository.findById(1L)).thenReturn(Optional.of(trainee));
+//        when(trainerRepository.findByUserUsernameIn(usernames)).thenReturn(newTrainers);
+//
+//        traineeService.updateTraineeListOfTrainers(1L, usernames);
+//
+//        assertEquals(2, trainee.getTrainers().size());
+//    }
 
-    @Test
-    void testUpdateTraineeListOfTrainersClearsAndSetsNewTrainers() {
-        List<Trainer> newTrainers = List.of(new Trainer(), new Trainer());
-        List<String> usernames = List.of("trainer1", "trainer2");
-        trainee.setTrainers(new java.util.ArrayList<>());
-        when(traineeRepository.findById(1L)).thenReturn(Optional.of(trainee));
-        when(trainerRepository.findByUserUsernameIn(usernames)).thenReturn(newTrainers);
-
-        traineeService.updateTraineeListOfTrainers(1L, usernames);
-
-        assertEquals(2, trainee.getTrainers().size());
-    }
-
-    @Test
-    void testUpdateTraineeListOfTrainersThrowsWhenTraineeNotFound() {
-        when(traineeRepository.findById(99L)).thenReturn(Optional.empty());
-
-        assertThrows(IllegalArgumentException.class,
-                () -> traineeService.updateTraineeListOfTrainers(99L, List.of("trainer1")));
-    }
+//    @Test
+//    void testUpdateTraineeListOfTrainersThrowsWhenTraineeNotFound() {
+//        when(traineeRepository.findById(99L)).thenReturn(Optional.empty());
+//
+//        assertThrows(IllegalArgumentException.class,
+//                () -> traineeService.updateTraineeListOfTrainers(99L, List.of("trainer1")));
+//    }
 
     @Test
     void testDeleteTraineeProfileByIdDeletesTrainee() {

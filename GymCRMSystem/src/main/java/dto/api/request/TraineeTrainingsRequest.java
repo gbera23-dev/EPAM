@@ -19,5 +19,5 @@ public class TraineeTrainingsRequest {
 
     private String trainerName;
 
-    private TrainingType trainingType;
+    private TrainingTypeRequest trainingTypeRequest;
 }

@@ -16,7 +16,7 @@ public class TrainerUpdateRequest {
     @NotBlank(message="last name is required!")
     private String lastName;
 
-    private TrainingType specialization;
+    private TrainingTypeRequest specialization;
     @NotNull(message="is active value is required!")
     private Boolean isActive;
 }

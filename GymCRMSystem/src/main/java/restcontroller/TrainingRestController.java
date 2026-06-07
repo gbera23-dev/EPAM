@@ -1,5 +1,6 @@
 package restcontroller;
 
+import annotations.AuthRequired;
 import dto.api.request.TrainingRequest;
 import dto.api.response.TrainingTypeResponse;
 import entities.TrainingType;
@@ -18,7 +19,9 @@ public class TrainingRestController {
         this.trainingService = trainingService;
     }
 
-    @PostMapping("")
+
+    @AuthRequired
+    @PostMapping
     public ResponseEntity<String> addTraining(@Valid @RequestBody TrainingRequest trainingRequest) {
 
         trainingService.addTraining(

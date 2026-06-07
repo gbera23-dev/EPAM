@@ -1,13 +1,9 @@
 package restcontroller;
 
-import dto.api.request.TraineeRegistrationRequest;
-import dto.api.request.TraineeTrainersUpdateRequest;
-import dto.api.request.TraineeTrainingsRequest;
-import dto.api.request.TraineeUpdateRequest;
+import annotations.AuthRequired;
+import dto.api.request.*;
 import dto.api.response.*;
-import entities.Trainee;
-import entities.Trainer;
-import entities.Training;
+import entities.*;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -53,14 +49,16 @@ public class TraineeRestController {
                 .body(new UserCredentialsResponse(trainee.getUser().getUsername(), trainee.getUser().getPassword()));
     }
 
+    @AuthRequired
     @GetMapping
     public ResponseEntity<TraineeProfileResponse> getTrainee(@NotBlank @RequestParam("username") String username) {
+
         Trainee trainee = traineeService.selectTraineeProfileByUsername(username);
 
         return ResponseEntity.ok().body(traineeApiMapper.toTraineeProfileResponse(trainee));
     }
 
-
+    @AuthRequired
     @PutMapping("/update")
     public ResponseEntity<TraineeProfileResponse> updateTrainee
             (@Valid @RequestBody TraineeUpdateRequest traineeUpdateRequest) {
@@ -69,20 +67,24 @@ public class TraineeRestController {
                 traineeUpdateRequest.getUsername()
         );
 
+        updateTrainerData(trainee, traineeUpdateRequest);
+
         traineeService.updateTraineeProfile(trainee);
 
         return ResponseEntity.ok()
                 .body(traineeApiMapper.toTraineeProfileResponse(trainee));
     }
 
+    @AuthRequired
     @DeleteMapping
-    public ResponseEntity<String> deleteTrainee(@NotBlank @RequestParam String username) {
+    public ResponseEntity<String> deleteTrainee(@NotBlank @RequestParam("username") String username) {
 
         traineeService.deleteTraineeProfileByUsername(username);
 
         return ResponseEntity.ok("Trainee was deleted successfully!");
     }
 
+    @AuthRequired
     @GetMapping("/not-assigned-trainers")
     public ResponseEntity<List<TrainerSummaryResponse>> getNotAssignedActiveTrainers
             (@NotBlank @RequestParam("username") String username) {
@@ -91,11 +93,11 @@ public class TraineeRestController {
 
         return ResponseEntity.ok().body(
                 trainerList.stream()
-                        .filter(tr -> tr.getUser().isActive())
                         .map(trainerApiMapper::toTrainerSummaryResponse)
                         .toList());
     }
 
+    @AuthRequired
     @PutMapping("/update-trainers")
     public ResponseEntity<List<TrainerSummaryResponse>> updateTraineeTrainersList
             (@Valid @RequestBody TraineeTrainersUpdateRequest traineeTrainersUpdateRequest) {
@@ -105,11 +107,16 @@ public class TraineeRestController {
 
         traineeService.updateTraineeListOfTrainers(trainee.getId(), traineeTrainersUpdateRequest.getTrainerUsernames());
 
-        return ResponseEntity.ok().body(trainee.getTrainers().stream().
+
+        return ResponseEntity.ok().body(traineeService.
+                getTrainersAssignedToTrainee(traineeTrainersUpdateRequest.getTraineeUsername())
+                .stream().
                 map(trainerApiMapper::toTrainerSummaryResponse)
                 .toList());
     }
 
+
+    @AuthRequired
     @GetMapping("/trainings")
     public ResponseEntity<List<TrainingResponse>> getTraineeTrainingsList
             (@Valid @RequestBody TraineeTrainingsRequest traineeTrainingsRequest) {
@@ -119,16 +126,17 @@ public class TraineeRestController {
                 traineeTrainingsRequest.getFrom(),
                 traineeTrainingsRequest.getTo(),
                 traineeTrainingsRequest.getTrainerName(),
-                traineeTrainingsRequest.getTrainingType().getName()
+                traineeTrainingsRequest.getTrainingTypeRequest().getTrainingTypeName()
         );
 
         return ResponseEntity.ok().body(trainings.stream().map(trainingApiMapper::toTrainingResponse).toList());
     }
 
+    @AuthRequired
     @PatchMapping("/{username}/status")
     public ResponseEntity<String> changeTraineeActiveStatus
-            (@PathVariable @NotBlank String username,
-             @RequestParam @NotNull Boolean isActive) {
+            (@NotBlank @PathVariable("username") String username,
+             @NotNull @RequestParam("active") Boolean isActive) {
 
         Trainee trainee = traineeService.
                 selectTraineeProfileByUsername(username);
@@ -140,6 +148,23 @@ public class TraineeRestController {
 
         traineeService.deactivateTraineeProfile(trainee.getId());
         return ResponseEntity.ok("trainee has been successfully deactivated!");
+    }
+
+    private void updateTrainerData(Trainee trainee, TraineeUpdateRequest traineeUpdateRequest) {
+        User user = trainee.getUser();
+
+        user.setFirstName(traineeUpdateRequest.getFirstName());
+        user.setLastName(traineeUpdateRequest.getLastName());
+
+
+        if(traineeUpdateRequest.getDateOfBirth() != null)
+            trainee.setDateOfBirth(traineeUpdateRequest.getDateOfBirth());
+
+        if(traineeUpdateRequest.getAddress() != null)
+            trainee.setAddress(traineeUpdateRequest.getAddress());
+
+        if(traineeUpdateRequest.getIsActive() != null)
+            user.setActive(traineeUpdateRequest.getIsActive());
     }
 
 }

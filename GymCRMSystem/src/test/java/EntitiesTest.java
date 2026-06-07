@@ -88,12 +88,6 @@ class TraineeTest {
         assertEquals(newUser, trainee.getUser());
     }
 
-    @Test
-    void testToStringContainsTraineePK() {
-        Trainee trainee = createTrainee();
-
-        assertTrue(trainee.toString().contains("10"));
-    }
 }
 
 class TrainerTest {

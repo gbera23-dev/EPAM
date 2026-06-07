@@ -1,13 +1,15 @@
 package dto.api.request;
 
 import jakarta.validation.constraints.NotBlank;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString
 public class TraineeUpdateRequest {
 
     @NotBlank(message="username is required!")
@@ -21,5 +23,5 @@ public class TraineeUpdateRequest {
 
     private String address;
 
-    private boolean isActive;
+    private Boolean isActive;
 }

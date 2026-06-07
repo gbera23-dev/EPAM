@@ -20,7 +20,7 @@ public class Trainer implements GymEntity {
     @Column(name="Trainer_id")
     private Long id;
 
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToOne
     @JoinColumn(name="Specialization")
     private TrainingType trainingType;
 

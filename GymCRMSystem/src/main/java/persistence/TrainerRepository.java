@@ -17,7 +17,7 @@ public interface TrainerRepository extends JpaRepository<Trainer, Long> {
 
     @Query("SELECT u AS user FROM Trainee t JOIN t.user u " +
             "WHERE u.firstName = :#{#trainer.user.firstName} AND u.lastName = :#{#trainer.user.lastName}")
-    List<User> getUsernameWithMaxNumberSuffix(@Param("trainer") Trainer trainer);
+    List<User> getUsersWithFirstAndLastName(@Param("trainer") Trainer trainer);
 
 
     @Query("SELECT t FROM Trainer t " +
@@ -28,8 +28,18 @@ public interface TrainerRepository extends JpaRepository<Trainer, Long> {
 
     List<Trainer> findByUserUsernameIn(List<String> usernames);
 
-    @Query("SELECT DISTINCT t FROM Trainer t " +
-            "LEFT JOIN t.trainees tr WITH tr.user.username = :username " +
-            "WHERE tr.id IS NULL")
+    @Query("SELECT t FROM Trainer t " +
+            "WHERE t.user.active = true " +
+            "AND NOT EXISTS (" +
+            "    SELECT tr FROM t.trainees tr " +
+            "    WHERE tr.user.username = :username" +
+            ")")
     List<Trainer> findTrainersNotAssignedToTrainee(@Param("username")String username);
+
+    @Query("SELECT t FROM Trainer t " +
+            " WHERE EXISTS (" +
+            "    SELECT tr FROM t.trainees tr " +
+            "    WHERE tr.user.username = :username" +
+            ")")
+    List<Trainer> findTrainersAssignedToTrainee(@Param("username")String username);
 }

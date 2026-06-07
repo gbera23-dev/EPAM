@@ -1,5 +1,6 @@
 package restcontroller;
 
+import annotations.AuthRequired;
 import dto.api.request.TrainerRegistrationRequest;
 import dto.api.request.TrainerTrainingsRequest;
 import dto.api.request.TrainerUpdateRequest;
@@ -9,6 +10,7 @@ import dto.api.response.UserCredentialsResponse;
 import entities.Trainee;
 import entities.Trainer;
 import entities.Training;
+import entities.TrainingType;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -18,6 +20,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import services.TrainerService;
+import services.TrainingTypeService;
 
 import java.util.List;
 
@@ -28,17 +31,24 @@ public class TrainerRestController {
     private final TrainerService trainerService;
     private final TrainerApiMapper trainerApiMapper;
     private final TrainingApiMapper trainingApiMapper;
+    private final TrainingTypeService trainingTypeService;
 
-    public TrainerRestController(TrainerService trainerService, TrainerApiMapper trainerApiMapper, TrainingApiMapper trainingApiMapper) {
+    public TrainerRestController(TrainerService trainerService, TrainerApiMapper trainerApiMapper, TrainingApiMapper trainingApiMapper,
+                                 TrainingTypeService trainingTypeService) {
         this.trainerService = trainerService;
         this.trainerApiMapper = trainerApiMapper;
         this.trainingApiMapper = trainingApiMapper;
+        this.trainingTypeService = trainingTypeService;
     }
 
     @PostMapping("/register")
     public ResponseEntity<UserCredentialsResponse> registerTrainer
             (@RequestBody TrainerRegistrationRequest trainerRegistrationRequest) {
-        Trainer trainer = trainerApiMapper.toTrainer(trainerRegistrationRequest);
+
+        TrainingType trainingType = this.trainingTypeService.getTrainingTypeById(trainerRegistrationRequest.
+                getSpecialization().getTrainingTypeId());
+
+        Trainer trainer = trainerApiMapper.toTrainer(trainerRegistrationRequest, trainingType);
 
         trainerService.createTrainerProfile(trainer);
 
@@ -46,6 +56,7 @@ public class TrainerRestController {
                 body(new UserCredentialsResponse(trainer.getUser().getUsername(), trainer.getUser().getPassword()));
     }
 
+    @AuthRequired
     @GetMapping
     public ResponseEntity<TrainerProfileResponse> getTrainer
             (@NotBlank @RequestParam("username") String username) {
@@ -57,11 +68,14 @@ public class TrainerRestController {
                 trainerApiMapper.toTrainerProfileResponse(trainer));
     }
 
+    @AuthRequired
     @PutMapping("/update")
     public ResponseEntity<TrainerProfileResponse> updateTrainer
             (@Valid @RequestBody TrainerUpdateRequest trainerUpdateRequest) {
 
         Trainer trainer = trainerService.selectTrainerProfileByUsername(trainerUpdateRequest.getUsername());
+
+        updateTrainerData(trainer, trainerUpdateRequest);
 
         trainerService.updateTrainerProfile(trainer);
 
@@ -69,6 +83,7 @@ public class TrainerRestController {
                 trainerApiMapper.toTrainerProfileResponse(trainer));
     }
 
+    @AuthRequired
     @GetMapping("/trainings")
     public ResponseEntity<List<TrainingResponse>> getTrainerTrainingsList
             (@Valid @RequestBody TrainerTrainingsRequest trainerTrainingsRequest) {
@@ -87,10 +102,12 @@ public class TrainerRestController {
         );
     }
 
+
+    @AuthRequired
     @PatchMapping("/{username}/status")
     public ResponseEntity<String> changeTrainerActiveStatus
-            (@PathVariable @NotBlank String username,
-             @RequestParam @NotNull Boolean isActive) {
+            (@NotBlank @PathVariable("username") String username,
+             @NotNull @RequestParam("active") Boolean isActive) {
 
         Trainer trainer = trainerService.
                 selectTrainerProfileByUsername(username);
@@ -103,5 +120,19 @@ public class TrainerRestController {
         trainerService.deactivateTrainerProfile(trainer.getId());
         return ResponseEntity.ok("trainer has been successfully deactivated!");
     }
+
+
+    private void updateTrainerData(Trainer trainer, TrainerUpdateRequest trainerUpdateRequest) {
+        trainer.getUser().setFirstName(trainerUpdateRequest.getFirstName());
+        trainer.getUser().setLastName(trainerUpdateRequest.getLastName());
+        trainer.getUser().setActive(trainerUpdateRequest.getIsActive());
+
+        if(trainerUpdateRequest.getSpecialization() != null) {
+            TrainingType trainingType = trainingTypeService.getTrainingTypeById
+                    (trainerUpdateRequest.getSpecialization().getTrainingTypeId());
+            trainer.setTrainingType(trainingType);
+        }
+    }
+
 
 }
