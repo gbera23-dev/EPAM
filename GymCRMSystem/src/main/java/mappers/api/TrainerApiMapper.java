@@ -3,6 +3,7 @@ import dto.api.request.TrainerRegistrationRequest;
 import dto.api.response.TraineeSummaryResponse;
 import dto.api.response.TrainerProfileResponse;
 import dto.api.response.TrainerSummaryResponse;
+import dto.api.response.TrainingTypeResponse;
 import entities.Trainer;
 import entities.User;
 import org.springframework.stereotype.Component;
@@ -24,7 +25,7 @@ public class TrainerApiMapper {
         return new TrainerProfileResponse(
                 trainer.getUser().getFirstName(),
                 trainer.getUser().getLastName(),
-                trainer.getTrainingType(),
+                new TrainingTypeResponse(trainer.getTrainingType().getName(), trainer.getTrainingType().getId()),
                 trainer.getUser().isActive(),
                 trainer.getTrainees().stream().map(tr ->
                         new TraineeSummaryResponse(tr.getUser().getUsername(),
@@ -34,5 +35,12 @@ public class TrainerApiMapper {
     }
 
 
+    public TrainerSummaryResponse toTrainerSummaryResponse(Trainer trainer) {
+        return new TrainerSummaryResponse(
+                trainer.getUser().getUsername(), trainer.getUser().getFirstName(),
+                trainer.getUser().getLastName(), new TrainingTypeResponse(trainer.getTrainingType().getName(),
+                trainer.getTrainingType().getId())
+        );
+    }
 
 }

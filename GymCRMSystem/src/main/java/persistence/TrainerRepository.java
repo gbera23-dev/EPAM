@@ -19,7 +19,12 @@ public interface TrainerRepository extends JpaRepository<Trainer, Long> {
             "WHERE u.firstName = :#{#trainer.user.firstName} AND u.lastName = :#{#trainer.user.lastName}")
     List<User> getUsernameWithMaxNumberSuffix(@Param("trainer") Trainer trainer);
 
-    Trainer findByUserUsername(String username);
+
+    @Query("SELECT t FROM Trainer t " +
+            "JOIN FETCH t.user u " +
+            "LEFT JOIN FETCH t.trainees tr LEFT JOIN FETCH t.trainingType " +
+            "WHERE u.username = :username")
+    Trainer findByUserUsername(@Param("username") String username);
 
     List<Trainer> findByUserUsernameIn(List<String> usernames);
 

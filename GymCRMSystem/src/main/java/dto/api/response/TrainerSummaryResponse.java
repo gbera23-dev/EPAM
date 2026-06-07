@@ -13,5 +13,5 @@ public class TrainerSummaryResponse {
     private String username;
     private String firstName;
     private String lastName;
-    private TrainingType specialization;
+    private TrainingTypeResponse specialization;
 }

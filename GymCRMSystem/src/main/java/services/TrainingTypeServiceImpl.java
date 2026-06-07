@@ -1,0 +1,24 @@
+package services;
+
+import entities.TrainingType;
+import org.springframework.stereotype.Service;
+import persistence.TrainingTypeRepository;
+
+import java.util.List;
+
+@Service
+public class TrainingTypeServiceImpl implements TrainingTypeService {
+
+
+    private final TrainingTypeRepository trainingTypeRepository;
+
+    public TrainingTypeServiceImpl(TrainingTypeRepository trainingTypeRepository) {
+        this.trainingTypeRepository = trainingTypeRepository;
+    }
+
+    @Override
+    public List<TrainingType> getTrainingTypes() {
+        return trainingTypeRepository.findAll();
+    }
+
+}

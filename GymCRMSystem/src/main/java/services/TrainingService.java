@@ -1,8 +1,10 @@
 package services;
 
 import entities.Training;
+import entities.TrainingType;
 
 import java.time.LocalDate;
+import java.util.List;
 
 /**
  * Operations for creating and retrieving {@link entities.Training} records.

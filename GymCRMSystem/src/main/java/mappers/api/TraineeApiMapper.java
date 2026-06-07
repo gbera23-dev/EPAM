@@ -3,13 +3,24 @@ package mappers.api;
 import dto.api.request.TraineeRegistrationRequest;
 import dto.api.request.TraineeUpdateRequest;
 import dto.api.response.TraineeProfileResponse;
+import dto.api.response.TraineeSummaryResponse;
 import dto.api.response.TrainerSummaryResponse;
 import entities.Trainee;
+import entities.Trainer;
 import entities.User;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 public class TraineeApiMapper {
+
+    private final TrainerApiMapper trainerApiMapper;
+
+
+    public TraineeApiMapper(TrainerApiMapper trainerApiMapper) {
+        this.trainerApiMapper = trainerApiMapper;
+    }
 
      public Trainee toTrainee(TraineeRegistrationRequest traineeRegistrationRequest) {
          User user = new User();
@@ -29,9 +40,8 @@ public class TraineeApiMapper {
                 trainee.getDateOfBirth(),
                 trainee.getAddress(),
                 trainee.getUser().isActive(),
-                trainee.getTrainers().stream().map(t -> new TrainerSummaryResponse(
-                        t.getUser().getUsername(), t.getUser().getFirstName(), t.getUser().getLastName(), t.getTrainingType()
-                )).toList()
+                trainee.getTrainers().stream().map(trainerApiMapper::toTrainerSummaryResponse)
+                        .toList()
         );
      }
 

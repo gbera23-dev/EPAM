@@ -14,7 +14,7 @@ public class TrainerProfileResponse {
 
     private String firstName;
     private String lastName;
-    private TrainingType specialization;
+    private TrainingTypeResponse specialization;
     private boolean isActive;
     private List<TraineeSummaryResponse> traineeSummaryResponseList;
 }

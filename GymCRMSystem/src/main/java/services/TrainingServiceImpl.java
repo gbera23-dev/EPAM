@@ -12,6 +12,7 @@ import persistence.TrainerRepository;
 import persistence.TrainingRepository;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Service
 public class TrainingServiceImpl implements TrainingService{
