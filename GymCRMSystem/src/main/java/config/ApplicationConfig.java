@@ -29,6 +29,7 @@ import java.util.concurrent.ConcurrentHashMap;
         "logging",
         "mappers",
         "database",
+        "filters",
         "auth"
         })
 @EnableAspectJAutoProxy
