@@ -1,14 +1,12 @@
-import database.DatabaseInitializer;
-import dto.internal.TraineeDTO;
-import dto.internal.TrainerDTO;
-import dto.internal.TrainingDTO;
-import entities.Trainee;
-import entities.Trainer;
-import entities.Training;
-import mappers.internal.GymMapper;
-import mappers.internal.TraineeMapper;
-import mappers.internal.TrainerMapper;
-import mappers.internal.TrainingMapper;
+import app. database.DatabaseInitializer;
+import app.dto.internal.*;
+import app.entities.Trainee;
+import app.entities.Trainer;
+import app.entities.Training;
+import app.mappers.internal.GymMapper;
+import app.mappers.internal.TraineeMapper;
+import app.mappers.internal.TrainerMapper;
+import app.mappers.internal.TrainingMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,17 +15,14 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.event.ContextRefreshedEvent;
-import persistence.GymRepository;
-import persistence.TraineeRepository;
-import persistence.TrainerRepository;
-import persistence.TrainingRepository;
-import persistence.UserRepository;
+import app. persistence.*;
 
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
 

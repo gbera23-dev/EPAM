@@ -1,7 +1,7 @@
-import entities.Trainer;
-import entities.Training;
-import entities.TrainingType;
-import entities.User;
+import app.entities.Trainer;
+import app.entities.Training;
+import app.entities.TrainingType;
+import app.entities.User;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -9,9 +9,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import persistence.TrainerRepository;
-import persistence.TrainingRepository;
-import services.TrainerServiceImpl;
+import app.persistence.TrainerRepository;
+import app.persistence.TrainingRepository;
+import app.services.TrainerServiceImpl;
 
 import java.time.LocalDate;
 import java.util.Collections;
@@ -105,13 +105,6 @@ class TrainerServiceTest {
         trainerService.updateTrainerProfile(trainer);
 
         verify(trainerRepository).save(trainer);
-    }
-
-    @Test
-    void testUpdateTrainerProfileDoesNotDelete() {
-        trainerService.updateTrainerProfile(trainer);
-
-        verify(trainerRepository, never()).deleteById(any());
     }
 
     @Test

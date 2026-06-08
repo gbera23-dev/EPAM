@@ -1,7 +1,7 @@
-import entities.Trainee;
-import entities.Trainer;
-import entities.Training;
-import entities.User;
+import app.entities.Trainee;
+import app.entities.Trainer;
+import app.entities.Training;
+import app.entities.User;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -9,10 +9,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import persistence.TraineeRepository;
-import persistence.TrainerRepository;
-import persistence.TrainingRepository;
-import services.TraineeServiceImpl;
+import app.persistence.TraineeRepository;
+import app.persistence.TrainerRepository;
+import app.persistence.TrainingRepository;
+import app.services.TraineeServiceImpl;
 
 import java.time.LocalDate;
 import java.util.ArrayList;

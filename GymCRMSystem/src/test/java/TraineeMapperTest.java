@@ -1,9 +1,9 @@
-import dto.internal.TraineeDTO;
-import dto.internal.UserDTO;
-import entities.Trainee;
-import entities.User;
-import mappers.internal.TraineeMapper;
-import mappers.internal.UserMapper;
+import app.dto.internal.TraineeDTO;
+import app.dto.internal.UserDTO;
+import app.entities.Trainee;
+import app.entities.User;
+import app.mappers.internal.TraineeMapper;
+import app.mappers.internal.UserMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

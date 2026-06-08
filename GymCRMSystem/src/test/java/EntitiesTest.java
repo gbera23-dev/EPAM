@@ -1,4 +1,4 @@
-import entities.*;
+import app.entities.*;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;

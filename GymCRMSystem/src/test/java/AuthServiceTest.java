@@ -1,21 +1,23 @@
-import entities.User;
-import jakarta.persistence.EntityNotFoundException;
+import app. entities.User;
+import app. exceptions.PasswordDoesNotMatchException;
+import app. exceptions.SessionNotFoundException;
+import app. exceptions.UserAlreadyLoggedInException;
+import app. exceptions.UserNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import persistence.UserRepository;
-import services.AuthServiceImpl;
+import app. persistence.UserRepository;
+import app. services.AuthServiceImpl;
 
 import java.lang.reflect.Field;
 import java.time.LocalDateTime;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class AuthServiceImplTest {
@@ -63,7 +65,7 @@ class AuthServiceImplTest {
     void testValidateUserProfileThrowsWhenUserNotFound() {
         when(userRepository.findByUsername("ghost")).thenReturn(null);
 
-        assertThrows(EntityNotFoundException.class, () -> authService.validateUserProfile("ghost", "pass"));
+        assertThrows(UserNotFoundException.class, () -> authService.validateUserProfile("ghost", "pass"));
     }
 
     @Test
@@ -91,14 +93,14 @@ class AuthServiceImplTest {
     void testLoginUserProfileThrowsWhenUserNotFound() {
         when(userRepository.findByUsername("ghost")).thenReturn(null);
 
-        assertThrows(EntityNotFoundException.class, () -> authService.loginUserProfile("ghost", "pass123"));
+        assertThrows(UserNotFoundException.class, () -> authService.loginUserProfile("ghost", "pass123"));
     }
 
     @Test
     void testLoginUserProfileThrowsOnWrongPassword() {
         when(userRepository.findByUsername("john.doe")).thenReturn(user);
 
-        assertThrows(IllegalArgumentException.class, () -> authService.loginUserProfile("john.doe", "wrong"));
+        assertThrows(PasswordDoesNotMatchException.class, () -> authService.loginUserProfile("john.doe", "wrong"));
     }
 
     @Test
@@ -106,7 +108,7 @@ class AuthServiceImplTest {
         when(userRepository.findByUsername("john.doe")).thenReturn(user);
         putSession("john.doe", LocalDateTime.now());
 
-        assertThrows(IllegalArgumentException.class, () -> authService.loginUserProfile("john.doe", "pass123"));
+        assertThrows(UserAlreadyLoggedInException.class, () -> authService.loginUserProfile("john.doe", "pass123"));
     }
 
     @Test
@@ -120,7 +122,7 @@ class AuthServiceImplTest {
 
     @Test
     void testLogoutUserProfileThrowsWhenNoSession() {
-        assertThrows(EntityNotFoundException.class, () -> authService.logoutUserProfile("john.doe"));
+        assertThrows(SessionNotFoundException.class, () -> authService.logoutUserProfile("john.doe"));
     }
 
     @Test
@@ -137,14 +139,14 @@ class AuthServiceImplTest {
     void testChangeUserProfilePasswordThrowsWhenUserNotFound() {
         when(userRepository.findByUsername("ghost")).thenReturn(null);
 
-        assertThrows(EntityNotFoundException.class, () -> authService.changeUserProfilePassword("ghost", "newPass"));
+        assertThrows(UserNotFoundException.class, () -> authService.changeUserProfilePassword("ghost", "newPass"));
     }
 
     @Test
     void testChangeUserProfilePasswordThrowsWhenNoSession() {
         when(userRepository.findByUsername("john.doe")).thenReturn(user);
 
-        assertThrows(EntityNotFoundException.class, () -> authService.changeUserProfilePassword("john.doe", "newPass"));
+        assertThrows(SessionNotFoundException.class, () -> authService.changeUserProfilePassword("john.doe", "newPass"));
     }
 
     @Test
