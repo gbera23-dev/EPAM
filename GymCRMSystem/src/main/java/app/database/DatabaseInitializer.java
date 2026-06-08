@@ -82,7 +82,6 @@ public class DatabaseInitializer implements ApplicationListener<ContextRefreshed
      * @param traineeMap  map of trainee entities keyed by their storage ID
      * @param trainingMap map of training entities keyed by their storage ID
      */
-    @SuppressWarnings("unchecked")
     private void persistData(Map<Long, Trainer> trainerMap, Map<Long, Trainee> traineeMap,
                              Map<Long, Training> trainingMap) {
         repositories.getTraineeRepository().saveAll(traineeMap.values());

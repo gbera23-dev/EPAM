@@ -1,6 +1,7 @@
 package app.services;
 
 import app.entities.*;
+import app.exceptions.UserNotFoundException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -62,7 +63,7 @@ public class TraineeServiceImpl implements TraineeService {
     @Transactional
     public void updateTraineeListOfTrainers(long traineeId, List<String> trainerUsernames) {
         Trainee managedTrainee = traineeRepository.findById(traineeId)
-                .orElseThrow(() -> new EntityNotFoundException("Trainee not found"));
+                .orElseThrow(() -> new UserNotFoundException("Trainee not found"));
 
         List<Trainer> incomingTrainers = trainerRepository.findByUserUsernameIn(trainerUsernames);
 

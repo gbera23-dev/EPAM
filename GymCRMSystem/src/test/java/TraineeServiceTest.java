@@ -2,6 +2,7 @@ import app.entities.Trainee;
 import app.entities.Trainer;
 import app.entities.Training;
 import app.entities.User;
+import app.exceptions.UserNotFoundException;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -141,27 +142,34 @@ class TraineeServiceTest {
 
         verify(traineeRepository, never()).deleteById(any());
     }
-//
-//    @Test
-//    void testUpdateTraineeListOfTrainersClearsAndSetsNewTrainers() {
-//        List<Trainer> newTrainers = List.of(new Trainer(), new Trainer());
-//        List<String> usernames = List.of("trainer1", "trainer2");
-//        trainee.setTrainers(new java.util.ArrayList<>());
-//        when(traineeRepository.findById(1L)).thenReturn(Optional.of(trainee));
-//        when(trainerRepository.findByUserUsernameIn(usernames)).thenReturn(newTrainers);
-//
-//        traineeService.updateTraineeListOfTrainers(1L, usernames);
-//
-//        assertEquals(2, trainee.getTrainers().size());
-//    }
 
-//    @Test
-//    void testUpdateTraineeListOfTrainersThrowsWhenTraineeNotFound() {
-//        when(traineeRepository.findById(99L)).thenReturn(Optional.empty());
-//
-//        assertThrows(IllegalArgumentException.class,
-//                () -> traineeService.updateTraineeListOfTrainers(99L, List.of("trainer1")));
-//    }
+    @Test
+    void testUpdateTraineeListOfTrainersClearsAndSetsNewTrainers() {
+        List<Trainer> newTrainers = List.of(new Trainer(), new Trainer());
+
+        newTrainers.get(0).setTrainees(new ArrayList<>());
+        newTrainers.get(1).setTrainees(new ArrayList<>());
+
+        List<String> usernames = List.of("trainer1", "trainer2");
+        trainee.setTrainers(new java.util.ArrayList<>());
+        when(traineeRepository.findById(1L)).thenReturn(Optional.of(trainee));
+
+        trainee.getTrainers().clear();
+
+        when(trainerRepository.findByUserUsernameIn(usernames)).thenReturn(newTrainers);
+
+        traineeService.updateTraineeListOfTrainers(1L, usernames);
+
+        assertEquals(2, trainee.getTrainers().size());
+    }
+
+    @Test
+    void testUpdateTraineeListOfTrainersThrowsWhenTraineeNotFound() {
+        when(traineeRepository.findById(99L)).thenReturn(Optional.empty());
+
+        assertThrows(UserNotFoundException.class,
+                () -> traineeService.updateTraineeListOfTrainers(99L, List.of("trainer1")));
+    }
 
     @Test
     void testDeleteTraineeProfileByIdDeletesTrainee() {
