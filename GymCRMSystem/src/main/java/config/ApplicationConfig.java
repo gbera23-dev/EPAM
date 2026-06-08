@@ -23,7 +23,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @ComponentScan(basePackages = {
         "persistence",
         "services",
-        "facade",
+        "errorHandler",
         "beanPostProcessor",
         "builders",
         "logging",

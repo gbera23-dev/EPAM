@@ -1,6 +1,7 @@
 package logging;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.*;
@@ -8,6 +9,7 @@ import org.aspectj.lang.reflect.MethodSignature;
 import org.hibernate.mapping.Join;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -35,26 +37,47 @@ public class LoggingAspect {
 
 
 
-//    Specific rest call details (which endpoint was called, which request came and the
-//            service response - 200 or error and response message)
     @Around("restControllerLayer()")
     public Object logRestControllerExecution(ProceedingJoinPoint joinPoint) throws Throwable {
-
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
 
-
-        if(attributes != null) {
-            HttpServletRequest request = attributes.getRequest();
-
-            String runtimeUrl = request.getRequestURI();
-
-            String httpMethod = request.getMethod();
-
-            logger.info("runtimeUrl: {}, httpMethod: {}", runtimeUrl, httpMethod);
+        if(attributes == null) {
+            logger.error("Something went wrong!");
+            return joinPoint.proceed();
         }
 
-        MethodSignature methodSignature = (MethodSignature)joinPoint.getSignature();
-        Object result = joinPoint.proceed();
+        HttpServletRequest request = attributes.getRequest();
+
+        String runtimeUri = request.getRequestURI();
+        String httpMethod = request.getMethod();
+
+        logger.info("Request with uri {} has been received by API. HTTP method type {}", runtimeUri, httpMethod);
+
+        Object result = null;
+
+        try {
+             result = joinPoint.proceed();
+        } catch(Throwable throwable) {
+            logger.error("Request with uri {} and HTTP method type {} ran into problems!", runtimeUri, httpMethod);
+
+            logger.error("Exception {} was thrown with message: {}",
+                    throwable.getClass(), throwable.getMessage());
+
+            throw throwable;
+        }
+
+        HttpServletResponse httpServletResponse = attributes.getResponse();
+
+        if(httpServletResponse == null) {
+            logger.error("Something went wrong!");
+            return joinPoint.proceed();
+        }
+
+        String responseStatusCode = HttpStatus.valueOf(httpServletResponse.getStatus()).name();
+        int status = httpServletResponse.getStatus();
+
+        logger.info("Request with uri {} and HTTP method type {} has been resolved with status {} {} ",
+                runtimeUri, httpMethod, status, responseStatusCode);
 
         return result;
     }

@@ -1,6 +1,7 @@
 package services;
 
 import entities.User;
+import exceptions.*;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,7 +32,7 @@ public class AuthServiceImpl implements AuthService {
         User user = userRepository.findByUsername(username);
 
         if(user == null)
-            throw new EntityNotFoundException("User could not be found!");
+            throw new UserNotFoundException("User could not be found!");
 
         return user.getPassword().equals(password);
     }
@@ -48,10 +49,10 @@ public class AuthServiceImpl implements AuthService {
         User user = userRepository.findByUsername(username);
 
         if(user == null)
-            throw new EntityNotFoundException("User could not be found!");
+            throw new UserNotFoundException("User could not be found!");
 
         if(!sessions.containsKey(username)) {
-            throw new EntityNotFoundException("No sessions exist for user, please login first!");
+            throw new SessionNotFoundException("No sessions exist for user, please login first!");
         }
 
         user.setPassword(newPassword);
@@ -62,13 +63,13 @@ public class AuthServiceImpl implements AuthService {
         User user = userRepository.findByUsername(username);
 
         if(user == null)
-            throw new EntityNotFoundException("User could not be found!");
+            throw new UserNotFoundException("User could not be found!");
 
         if(!user.getPassword().equals(password))
-            throw new IllegalArgumentException("Password is incorrect!");
+            throw new PasswordDoesNotMatchException("Password is incorrect!");
 
         if(sessions.containsKey(username))
-            throw new IllegalArgumentException("User is already logged in!");
+            throw new UserAlreadyLoggedInException("User is already logged in!");
 
         sessions.put(username, LocalDateTime.now());
     }
@@ -77,7 +78,7 @@ public class AuthServiceImpl implements AuthService {
     public void logoutUserProfile(String username) {
 
         if(!sessions.containsKey(username)) {
-            throw new EntityNotFoundException("No such session exists, cannot logout!");
+            throw new SessionNotFoundException("No such session exists, cannot logout!");
         }
 
         sessions.remove(username);
