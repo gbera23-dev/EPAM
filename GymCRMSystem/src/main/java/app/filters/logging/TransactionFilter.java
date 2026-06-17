@@ -10,7 +10,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.UUID;
-@Component
+
 public class TransactionFilter extends OncePerRequestFilter {
 
     private final String TRANSACTION_HEADER_NAME = "X-Transaction-ID";

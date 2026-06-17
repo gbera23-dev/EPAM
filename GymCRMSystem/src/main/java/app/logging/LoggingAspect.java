@@ -18,7 +18,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 @Component
 @Slf4j
 public class LoggingAspect {
-    
+
     private static final long SLOW_EXECUTION_THRESHOLD_MS = 1000;
 
     @Pointcut("execution(* app.services.*.*(..))")

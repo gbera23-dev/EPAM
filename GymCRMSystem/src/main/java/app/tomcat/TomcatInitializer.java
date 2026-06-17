@@ -1,9 +1,12 @@
 package app.tomcat;
 
 
+import app.filters.logging.TransactionFilter;
 import org.apache.catalina.Context;
 import org.apache.catalina.Wrapper;
 import org.apache.catalina.startup.Tomcat;
+import org.apache.tomcat.util.descriptor.web.FilterDef;
+import org.apache.tomcat.util.descriptor.web.FilterMap;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 import org.springframework.web.servlet.DispatcherServlet;
@@ -39,9 +42,19 @@ public class TomcatInitializer {
 
         context.addServletMappingDecoded("/", "dispatcherServlet");
 
+        TransactionFilter transactionFilter = new TransactionFilter();
+
+        FilterDef filterDef = new FilterDef();
+        filterDef.setFilterName("transactionFilter");
+        filterDef.setFilter(transactionFilter);
+        context.addFilterDef(filterDef);
+
+        FilterMap filterMap = new FilterMap();
+        filterMap.setFilterName("transactionFilter");
+        filterMap.addURLPattern("/*");
+        context.addFilterMap(filterMap);
+
         return tomcat;
     }
-
-
 
 }
