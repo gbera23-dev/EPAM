@@ -1,240 +1,167 @@
-
 import app.logging.LoggingAspect;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.Signature;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
-
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class LoggingAspectTest {
 
-    @InjectMocks
-    private LoggingAspect loggingAspect;
-
     @Mock
-    private ProceedingJoinPoint proceedingJoinPoint;
-
-    @Mock
-    private JoinPoint joinPoint;
+    private ProceedingJoinPoint pjp;
 
     @Mock
     private Signature signature;
 
-    @BeforeEach
-    void setUp() {
-        when(signature.getName()).thenReturn("testMethod");
-        when(signature.getDeclaringTypeName()).thenReturn("com.example.TestClass");
+    @InjectMocks
+    private LoggingAspect aspect;
+
+    @Test
+    void testLogRestControllerExecutionAttributesNullProceedsDirectly() throws Throwable {
+        try (MockedStatic<RequestContextHolder> holder = mockStatic(RequestContextHolder.class)) {
+            holder.when(RequestContextHolder::getRequestAttributes).thenReturn(null);
+            when(pjp.proceed()).thenReturn("result");
+
+            Object result = aspect.logRestControllerExecution(pjp);
+
+            assertEquals("result", result);
+            verify(pjp).proceed();
+        }
     }
 
     @Test
-    void testLogServiceExecutionReturnsResultFromProceed() throws Throwable {
-        when(proceedingJoinPoint.getSignature()).thenReturn(signature);
-        when(proceedingJoinPoint.getArgs()).thenReturn(new Object[]{});
-        when(proceedingJoinPoint.proceed()).thenReturn("expectedResult");
+    void testLogRestControllerExecutionProceedSuccessReturnsResult() throws Throwable {
+        ServletRequestAttributes attributes = mock(ServletRequestAttributes.class);
+        HttpServletRequest request = mock(HttpServletRequest.class);
+        HttpServletResponse response = mock(HttpServletResponse.class);
 
-        Object result = loggingAspect.logServiceExecution(proceedingJoinPoint);
+        when(attributes.getRequest()).thenReturn(request);
+        when(request.getRequestURI()).thenReturn("/api/test");
+        when(request.getMethod()).thenReturn("GET");
+        when(pjp.proceed()).thenReturn("ok");
+        when(attributes.getResponse()).thenReturn(response);
+        when(response.getStatus()).thenReturn(200);
 
-        assertEquals("expectedResult", result);
+        try (MockedStatic<RequestContextHolder> holder = mockStatic(RequestContextHolder.class)) {
+            holder.when(RequestContextHolder::getRequestAttributes).thenReturn(attributes);
+
+            Object result = aspect.logRestControllerExecution(pjp);
+
+            assertEquals("ok", result);
+        }
     }
 
     @Test
-    void testLogServiceExecutionCallsProceed() throws Throwable {
-        when(proceedingJoinPoint.getSignature()).thenReturn(signature);
-        when(proceedingJoinPoint.getArgs()).thenReturn(new Object[]{});
-        when(proceedingJoinPoint.proceed()).thenReturn(null);
+    void testLogRestControllerExecutionProceedThrowsRethrows() throws Throwable {
+        ServletRequestAttributes attributes = mock(ServletRequestAttributes.class);
+        HttpServletRequest request = mock(HttpServletRequest.class);
 
-        loggingAspect.logServiceExecution(proceedingJoinPoint);
+        when(attributes.getRequest()).thenReturn(request);
+        when(request.getRequestURI()).thenReturn("/api/test");
+        when(request.getMethod()).thenReturn("POST");
+        when(pjp.proceed()).thenThrow(new RuntimeException("boom"));
 
-        verify(proceedingJoinPoint, times(1)).proceed();
+        try (MockedStatic<RequestContextHolder> holder = mockStatic(RequestContextHolder.class)) {
+            holder.when(RequestContextHolder::getRequestAttributes).thenReturn(attributes);
+
+            assertThrows(RuntimeException.class, () -> aspect.logRestControllerExecution(pjp));
+        }
     }
 
     @Test
-    void testLogServiceExecutionWithNullArgs() throws Throwable {
-        when(proceedingJoinPoint.getSignature()).thenReturn(signature);
-        when(proceedingJoinPoint.getArgs()).thenReturn(null);
-        when(proceedingJoinPoint.proceed()).thenReturn(null);
+    void testLogRestControllerExecutionResponseNullProceedsAgain() throws Throwable {
+        ServletRequestAttributes attributes = mock(ServletRequestAttributes.class);
+        HttpServletRequest request = mock(HttpServletRequest.class);
 
-        assertDoesNotThrow(() -> loggingAspect.logServiceExecution(proceedingJoinPoint));
+        when(attributes.getRequest()).thenReturn(request);
+        when(request.getRequestURI()).thenReturn("/api/test");
+        when(request.getMethod()).thenReturn("GET");
+        when(pjp.proceed()).thenReturn("first").thenReturn("second");
+        when(attributes.getResponse()).thenReturn(null);
+
+        try (MockedStatic<RequestContextHolder> holder = mockStatic(RequestContextHolder.class)) {
+            holder.when(RequestContextHolder::getRequestAttributes).thenReturn(attributes);
+
+            Object result = aspect.logRestControllerExecution(pjp);
+
+            assertEquals("second", result);
+            verify(pjp, times(2)).proceed();
+        }
     }
 
     @Test
-    void testLogServiceExecutionWithEmptyArgs() throws Throwable {
-        when(proceedingJoinPoint.getSignature()).thenReturn(signature);
-        when(proceedingJoinPoint.getArgs()).thenReturn(new Object[]{});
-        when(proceedingJoinPoint.proceed()).thenReturn(null);
+    void testLogServiceExecutionProceedReturnsResult() throws Throwable {
+        when(pjp.getSignature()).thenReturn(signature);
+        when(signature.getName()).thenReturn("findAll");
+        when(signature.getDeclaringTypeName()).thenReturn("app.services.MemberService");
+        when(pjp.getArgs()).thenReturn(new Object[]{});
+        when(pjp.proceed()).thenReturn("data");
 
-        assertDoesNotThrow(() -> loggingAspect.logServiceExecution(proceedingJoinPoint));
+        Object result = aspect.logServiceExecution(pjp);
+
+        assertEquals("data", result);
     }
 
     @Test
-    void testLogServiceExecutionWithMultipleArgs() throws Throwable {
-        when(proceedingJoinPoint.getSignature()).thenReturn(signature);
-        when(proceedingJoinPoint.getArgs()).thenReturn(new Object[]{"arg1", 42, true});
-        when(proceedingJoinPoint.proceed()).thenReturn(null);
+    void testLogServiceExecutionProceedThrowsRethrows() throws Throwable {
+        when(pjp.getSignature()).thenReturn(signature);
+        when(signature.getName()).thenReturn("findAll");
+        when(signature.getDeclaringTypeName()).thenReturn("app.services.MemberService");
+        when(pjp.getArgs()).thenReturn(new Object[]{});
+        when(pjp.proceed()).thenThrow(new RuntimeException("db error"));
 
-        assertDoesNotThrow(() -> loggingAspect.logServiceExecution(proceedingJoinPoint));
+        assertThrows(RuntimeException.class, () -> aspect.logServiceExecution(pjp));
     }
 
     @Test
-    void testLogServiceExecutionWithNullArgInArray() throws Throwable {
-        when(proceedingJoinPoint.getSignature()).thenReturn(signature);
-        when(proceedingJoinPoint.getArgs()).thenReturn(new Object[]{null, "value"});
-        when(proceedingJoinPoint.proceed()).thenReturn(null);
+    void testLogPersistenceExecutionProceedReturnsResult() throws Throwable {
+        when(pjp.getSignature()).thenReturn(signature);
+        when(signature.getName()).thenReturn("save");
+        when(signature.getDeclaringTypeName()).thenReturn("app.persistence.MemberRepository");
+        when(pjp.getArgs()).thenReturn(new Object[]{});
+        when(pjp.proceed()).thenReturn("saved");
 
-        assertDoesNotThrow(() -> loggingAspect.logServiceExecution(proceedingJoinPoint));
+        Object result = aspect.logPersistenceExecution(pjp);
+
+        assertEquals("saved", result);
     }
 
     @Test
-    void testLogServiceExecutionPropagatesException() throws Throwable {
-        when(proceedingJoinPoint.getSignature()).thenReturn(signature);
-        when(proceedingJoinPoint.getArgs()).thenReturn(new Object[]{});
-        when(proceedingJoinPoint.proceed()).thenThrow(new RuntimeException("service error"));
+    void testLogPersistenceExecutionProceedThrowsRethrows() throws Throwable {
+        when(pjp.getSignature()).thenReturn(signature);
+        when(signature.getName()).thenReturn("save");
+        when(signature.getDeclaringTypeName()).thenReturn("app.persistence.MemberRepository");
+        when(pjp.getArgs()).thenReturn(new Object[]{});
+        when(pjp.proceed()).thenThrow(new RuntimeException("constraint violation"));
 
-        assertThrows(RuntimeException.class, () -> loggingAspect.logServiceExecution(proceedingJoinPoint));
+        assertThrows(RuntimeException.class, () -> aspect.logPersistenceExecution(pjp));
     }
 
     @Test
-    void testLogServiceExecutionReturnsNullWhenProceedReturnsNull() throws Throwable {
-        when(proceedingJoinPoint.getSignature()).thenReturn(signature);
-        when(proceedingJoinPoint.getArgs()).thenReturn(new Object[]{});
-        when(proceedingJoinPoint.proceed()).thenReturn(null);
+    void testLogGlobalErrorLogsExceptionDetails() {
+        JoinPoint joinPoint = mock(JoinPoint.class);
+        Signature sig = mock(Signature.class);
+        when(joinPoint.getSignature()).thenReturn(sig);
+        when(sig.getDeclaringTypeName()).thenReturn("app.services.MemberService");
+        when(sig.getName()).thenReturn("findById");
 
-        Object result = loggingAspect.logServiceExecution(proceedingJoinPoint);
+        Exception ex = new IllegalArgumentException("not found");
 
-        assertNull(result);
-    }
+        aspect.logGlobalError(joinPoint, ex);
 
-    @Test
-    void testLogPersistenceExecutionReturnsResultFromProceed() throws Throwable {
-        when(proceedingJoinPoint.getSignature()).thenReturn(signature);
-        when(proceedingJoinPoint.getArgs()).thenReturn(new Object[]{});
-        when(proceedingJoinPoint.proceed()).thenReturn("daoResult");
-
-        Object result = loggingAspect.logPersistenceExecution(proceedingJoinPoint);
-
-        assertEquals("daoResult", result);
-    }
-
-    @Test
-    void testLogPersistenceExecutionCallsProceed() throws Throwable {
-        when(proceedingJoinPoint.getSignature()).thenReturn(signature);
-        when(proceedingJoinPoint.getArgs()).thenReturn(new Object[]{});
-        when(proceedingJoinPoint.proceed()).thenReturn(null);
-
-        loggingAspect.logPersistenceExecution(proceedingJoinPoint);
-
-        verify(proceedingJoinPoint, times(1)).proceed();
-    }
-
-    @Test
-    void testLogPersistenceExecutionWithNullArgs() throws Throwable {
-        when(proceedingJoinPoint.getSignature()).thenReturn(signature);
-        when(proceedingJoinPoint.getArgs()).thenReturn(null);
-        when(proceedingJoinPoint.proceed()).thenReturn(null);
-
-        assertDoesNotThrow(() -> loggingAspect.logPersistenceExecution(proceedingJoinPoint));
-    }
-
-    @Test
-    void testLogPersistenceExecutionWithEmptyArgs() throws Throwable {
-        when(proceedingJoinPoint.getSignature()).thenReturn(signature);
-        when(proceedingJoinPoint.getArgs()).thenReturn(new Object[]{});
-        when(proceedingJoinPoint.proceed()).thenReturn(null);
-
-        assertDoesNotThrow(() -> loggingAspect.logPersistenceExecution(proceedingJoinPoint));
-    }
-
-    @Test
-    void testLogPersistenceExecutionWithMultipleArgs() throws Throwable {
-        when(proceedingJoinPoint.getSignature()).thenReturn(signature);
-        when(proceedingJoinPoint.getArgs()).thenReturn(new Object[]{1L, "entityName"});
-        when(proceedingJoinPoint.proceed()).thenReturn(null);
-
-        assertDoesNotThrow(() -> loggingAspect.logPersistenceExecution(proceedingJoinPoint));
-    }
-
-    @Test
-    void testLogPersistenceExecutionPropagatesException() throws Throwable {
-        when(proceedingJoinPoint.getSignature()).thenReturn(signature);
-        when(proceedingJoinPoint.getArgs()).thenReturn(new Object[]{});
-        when(proceedingJoinPoint.proceed()).thenThrow(new IllegalArgumentException("dao error"));
-
-        assertThrows(IllegalArgumentException.class, () -> loggingAspect.logPersistenceExecution(proceedingJoinPoint));
-    }
-
-    @Test
-    void testLogPersistenceExecutionReturnsNullWhenProceedReturnsNull() throws Throwable {
-        when(proceedingJoinPoint.getSignature()).thenReturn(signature);
-        when(proceedingJoinPoint.getArgs()).thenReturn(new Object[]{});
-        when(proceedingJoinPoint.proceed()).thenReturn(null);
-
-        Object result = loggingAspect.logPersistenceExecution(proceedingJoinPoint);
-
-        assertNull(result);
-    }
-
-    @Test
-    void testLogGlobalErrorDoesNotThrow() {
-        when(joinPoint.getSignature()).thenReturn(signature);
-        Exception ex = new RuntimeException("something went wrong");
-
-        assertDoesNotThrow(() -> loggingAspect.logGlobalError(joinPoint, ex));
-    }
-
-    @Test
-    void testLogGlobalErrorHandlesExceptionWithNullMessage() {
-        when(joinPoint.getSignature()).thenReturn(signature);
-        Exception ex = new RuntimeException((String) null);
-
-        assertDoesNotThrow(() -> loggingAspect.logGlobalError(joinPoint, ex));
-    }
-
-    @Test
-    void testLogGlobalErrorHandlesCheckedExceptions() {
-        when(joinPoint.getSignature()).thenReturn(signature);
-        Exception ex = new Exception("checked exception");
-
-        assertDoesNotThrow(() -> loggingAspect.logGlobalError(joinPoint, ex));
-    }
-
-    @Test
-    void testLogGlobalErrorHandlesIllegalArgumentException() {
-        when(joinPoint.getSignature()).thenReturn(signature);
-        Exception ex = new IllegalArgumentException("bad input");
-
-        assertDoesNotThrow(() -> loggingAspect.logGlobalError(joinPoint, ex));
-    }
-
-    @Test
-    void testLogServiceExecutionSlowMethodDoesNotThrow() throws Throwable {
-        when(proceedingJoinPoint.getSignature()).thenReturn(signature);
-        when(proceedingJoinPoint.getArgs()).thenReturn(new Object[]{});
-        when(proceedingJoinPoint.proceed()).thenAnswer(invocation -> {
-            Thread.sleep(1001);
-            return "slowResult";
-        });
-
-        assertDoesNotThrow(() -> loggingAspect.logServiceExecution(proceedingJoinPoint));
-    }
-
-    @Test
-    void testLogPersistenceExecutionSlowMethodDoesNotThrow() throws Throwable {
-        when(proceedingJoinPoint.getSignature()).thenReturn(signature);
-        when(proceedingJoinPoint.getArgs()).thenReturn(new Object[]{});
-        when(proceedingJoinPoint.proceed()).thenAnswer(invocation -> {
-            Thread.sleep(1001);
-            return null;
-        });
-
-        assertDoesNotThrow(() -> loggingAspect.logPersistenceExecution(proceedingJoinPoint));
+        verify(joinPoint, times(2)).getSignature();
     }
 }

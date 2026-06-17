@@ -22,13 +22,9 @@ public class AuthAspect {
 
     private final AuthService authService;
 
-    private final AtomicInteger callCounter;
-
-    private static int CHECK_TIME = 5;
 
     public AuthAspect(AuthService authService) {
         this.authService = authService;
-        this.callCounter = new AtomicInteger(0);
     }
 
     @Around("@annotation(authRequired)")

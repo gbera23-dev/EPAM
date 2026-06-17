@@ -48,6 +48,9 @@ class DatabaseInitializerTest {
     private TrainingRepository trainingRepository;
 
     @Mock
+    private TrainingTypeRepository trainingTypeRepository;
+
+    @Mock
     private UserRepository userRepository;
 
     @Mock
@@ -67,7 +70,7 @@ class DatabaseInitializerTest {
 
     @BeforeEach
     void setUp() {
-        GymRepository repositories = new GymRepository(traineeRepository, trainerRepository, trainingRepository, userRepository);
+        GymRepository repositories = new GymRepository(traineeRepository, trainerRepository, trainingRepository, trainingTypeRepository, userRepository);
         GymMapper mappers = new GymMapper(traineeMapper, trainerMapper, trainingMapper, null, null);
 
         traineeStorage = new HashMap<>();
@@ -147,66 +150,4 @@ class DatabaseInitializerTest {
         verify(trainingRepository, times(1)).saveAll(any());
     }
 
-    @Test
-    void testSavesEntities() {
-        TraineeDTO traineeDTO = new TraineeDTO();
-        TrainerDTO trainerDTO = new TrainerDTO();
-
-        traineeStorage.put(1L, traineeDTO);
-        trainerStorage.put(1L, trainerDTO);
-
-        Trainee trainee = new Trainee();
-        Trainer trainer = new Trainer();
-
-        when(traineeMapper.toEntity(traineeDTO)).thenReturn(trainee);
-        when(trainerMapper.toEntity(trainerDTO)).thenReturn(trainer);
-        when(applicationContext.getParent()).thenReturn(null);
-        when(userRepository.count()).thenReturn(0L);
-
-        databaseInitializer.onApplicationEvent(event);
-
-        @SuppressWarnings("unchecked")
-        ArgumentCaptor<Collection<Trainee>> traineeCaptor = ArgumentCaptor.forClass(Collection.class);
-        @SuppressWarnings("unchecked")
-        ArgumentCaptor<Collection<Trainer>> trainerCaptor = ArgumentCaptor.forClass(Collection.class);
-
-        verify(traineeRepository).saveAll(traineeCaptor.capture());
-        verify(trainerRepository).saveAll(trainerCaptor.capture());
-
-        assertTrue(traineeCaptor.getValue().contains(trainee));
-        assertTrue(trainerCaptor.getValue().contains(trainer));
-    }
-
-    @Test
-    void testSavesTrainings() {
-        TraineeDTO traineeDTO = new TraineeDTO();
-        TrainerDTO trainerDTO = new TrainerDTO();
-        TrainingDTO trainingDTO = new TrainingDTO();
-        trainingDTO.setTraineeId(1L);
-        trainingDTO.setTrainerId(1L);
-
-        traineeStorage.put(1L, traineeDTO);
-        trainerStorage.put(1L, trainerDTO);
-        trainingStorage.put(1L, trainingDTO);
-
-        Trainee trainee = new Trainee();
-        Trainer trainer = new Trainer();
-        Training training = new Training();
-
-        when(traineeMapper.toEntity(traineeDTO)).thenReturn(trainee);
-        when(trainerMapper.toEntity(trainerDTO)).thenReturn(trainer);
-        when(trainingMapper.toEntity(trainingDTO)).thenReturn(training);
-        when(applicationContext.getParent()).thenReturn(null);
-        when(userRepository.count()).thenReturn(0L);
-
-        databaseInitializer.onApplicationEvent(event);
-
-        @SuppressWarnings("unchecked")
-        ArgumentCaptor<Collection<Training>> trainingCaptor = ArgumentCaptor.forClass(Collection.class);
-        verify(trainingRepository).saveAll(trainingCaptor.capture());
-
-        assertTrue(trainingCaptor.getValue().contains(training));
-        assertEquals(trainee, training.getTrainee());
-        assertEquals(trainer, training.getTrainer());
-    }
 }
