@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import app.persistence.GymRepository;
 
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -84,6 +85,16 @@ public class DatabaseInitializer implements ApplicationListener<ContextRefreshed
      */
     private void persistData(Map<Long, Trainer> trainerMap, Map<Long, Trainee> traineeMap,
                              Map<Long, Training> trainingMap) {
+        repositories.getTrainingTypeRepository().saveAllAndFlush(trainerMap.values().stream().map(Trainer::getTrainingType)
+                .toList());
+
+        List<TrainingType> managedTypes = repositories.getTrainingTypeRepository().findAll();
+
+        Map<Long, TrainingType> typeById = managedTypes.stream()
+                .collect(Collectors.toMap(TrainingType::getId, t -> t));
+
+        trainerMap.values().forEach(t -> t.setTrainingType(typeById.get(t.getTrainingType().getId())));
+
         repositories.getTraineeRepository().saveAll(traineeMap.values());
         repositories.getTrainerRepository().saveAll(trainerMap.values());
         repositories.getTrainingRepository().saveAll(trainingMap.values());

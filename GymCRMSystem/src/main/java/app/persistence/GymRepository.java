@@ -11,5 +11,6 @@ public class GymRepository {
     private final TraineeRepository traineeRepository;
     private final TrainerRepository trainerRepository;
     private final TrainingRepository trainingRepository;
+    private final TrainingTypeRepository trainingTypeRepository;
     private final UserRepository userRepository;
 }
