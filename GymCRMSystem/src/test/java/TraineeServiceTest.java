@@ -1,7 +1,8 @@
-import entities.Trainee;
-import entities.Trainer;
-import entities.Training;
-import entities.User;
+import app.entities.Trainee;
+import app.entities.Trainer;
+import app.entities.Training;
+import app.entities.User;
+import app.exceptions.UserNotFoundException;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -9,10 +10,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import persistence.TraineeRepository;
-import persistence.TrainerRepository;
-import persistence.TrainingRepository;
-import services.TraineeServiceImpl;
+import app.persistence.TraineeRepository;
+import app.persistence.TrainerRepository;
+import app.persistence.TrainingRepository;
+import app.services.TraineeServiceImpl;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -145,9 +146,16 @@ class TraineeServiceTest {
     @Test
     void testUpdateTraineeListOfTrainersClearsAndSetsNewTrainers() {
         List<Trainer> newTrainers = List.of(new Trainer(), new Trainer());
+
+        newTrainers.get(0).setTrainees(new ArrayList<>());
+        newTrainers.get(1).setTrainees(new ArrayList<>());
+
         List<String> usernames = List.of("trainer1", "trainer2");
         trainee.setTrainers(new java.util.ArrayList<>());
         when(traineeRepository.findById(1L)).thenReturn(Optional.of(trainee));
+
+        trainee.getTrainers().clear();
+
         when(trainerRepository.findByUserUsernameIn(usernames)).thenReturn(newTrainers);
 
         traineeService.updateTraineeListOfTrainers(1L, usernames);
@@ -159,7 +167,7 @@ class TraineeServiceTest {
     void testUpdateTraineeListOfTrainersThrowsWhenTraineeNotFound() {
         when(traineeRepository.findById(99L)).thenReturn(Optional.empty());
 
-        assertThrows(IllegalArgumentException.class,
+        assertThrows(UserNotFoundException.class,
                 () -> traineeService.updateTraineeListOfTrainers(99L, List.of("trainer1")));
     }
 

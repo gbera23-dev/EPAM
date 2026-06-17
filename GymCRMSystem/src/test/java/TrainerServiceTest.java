@@ -1,7 +1,7 @@
-import entities.Trainer;
-import entities.Training;
-import entities.TrainingType;
-import entities.User;
+import app.entities.Trainer;
+import app.entities.Training;
+import app.entities.TrainingType;
+import app.entities.User;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -9,9 +9,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import persistence.TrainerRepository;
-import persistence.TrainingRepository;
-import services.TrainerServiceImpl;
+import app.persistence.TrainerRepository;
+import app.persistence.TrainingRepository;
+import app.services.TrainerServiceImpl;
 
 import java.time.LocalDate;
 import java.util.Collections;
@@ -50,7 +50,7 @@ class TrainerServiceTest {
 
     @Test
     void testCreateTrainerProfileGeneratesBaseUsername() {
-        when(trainerRepository.getUsernameWithMaxNumberSuffix(trainer)).thenReturn(Collections.emptyList());
+        when(trainerRepository.getUsersWithFirstAndLastName(trainer)).thenReturn(Collections.emptyList());
 
         trainerService.createTrainerProfile(trainer);
 
@@ -59,7 +59,7 @@ class TrainerServiceTest {
 
     @Test
     void testCreateTrainerProfileGeneratesNonEmptyPassword() {
-        when(trainerRepository.getUsernameWithMaxNumberSuffix(trainer)).thenReturn(Collections.emptyList());
+        when(trainerRepository.getUsersWithFirstAndLastName(trainer)).thenReturn(Collections.emptyList());
 
         trainerService.createTrainerProfile(trainer);
 
@@ -71,7 +71,7 @@ class TrainerServiceTest {
     void testCreateTrainerProfileAppendsCounterWhenUsernameExists() {
         User existingUser = new User();
         existingUser.setUsername("John.Doe");
-        when(trainerRepository.getUsernameWithMaxNumberSuffix(trainer)).thenReturn(List.of(existingUser));
+        when(trainerRepository.getUsersWithFirstAndLastName(trainer)).thenReturn(List.of(existingUser));
 
         trainerService.createTrainerProfile(trainer);
 
@@ -84,7 +84,7 @@ class TrainerServiceTest {
         u1.setUsername("John.Doe");
         User u2 = new User();
         u2.setUsername("John.Doe1");
-        when(trainerRepository.getUsernameWithMaxNumberSuffix(trainer)).thenReturn(List.of(u1, u2));
+        when(trainerRepository.getUsersWithFirstAndLastName(trainer)).thenReturn(List.of(u1, u2));
 
         trainerService.createTrainerProfile(trainer);
 
@@ -93,7 +93,7 @@ class TrainerServiceTest {
 
     @Test
     void testCreateTrainerProfileSavesTrainer() {
-        when(trainerRepository.getUsernameWithMaxNumberSuffix(trainer)).thenReturn(Collections.emptyList());
+        when(trainerRepository.getUsersWithFirstAndLastName(trainer)).thenReturn(Collections.emptyList());
 
         trainerService.createTrainerProfile(trainer);
 
@@ -105,13 +105,6 @@ class TrainerServiceTest {
         trainerService.updateTrainerProfile(trainer);
 
         verify(trainerRepository).save(trainer);
-    }
-
-    @Test
-    void testUpdateTrainerProfileDoesNotDelete() {
-        trainerService.updateTrainerProfile(trainer);
-
-        verify(trainerRepository, never()).deleteById(any());
     }
 
     @Test

@@ -1,10 +1,10 @@
-import dto.TrainerDTO;
-import dto.UserDTO;
-import entities.Trainer;
-import entities.TrainingType;
-import entities.User;
-import mappers.TrainerMapper;
-import mappers.UserMapper;
+import app.dto.internal.TrainerDTO;
+import app.dto.internal.UserDTO;
+import app.entities.Trainer;
+import app.entities.TrainingType;
+import app.entities.User;
+import app.mappers.internal.TrainerMapper;
+import app.mappers.internal.UserMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

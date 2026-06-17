@@ -1,13 +1,14 @@
-import builders.TraineeBuilder;
+import app.builders.TraineeBuilder;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import dto.TraineeDTO;
+import app.dto.internal.TraineeDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class TraineeBuilderTest {
 

@@ -1,11 +1,11 @@
-import dto.TrainingDTO;
-import dto.TrainingTypeDTO;
-import entities.Trainee;
-import entities.Trainer;
-import entities.Training;
-import entities.TrainingType;
-import mappers.TrainingMapper;
-import mappers.TrainingTypeMapper;
+import app.dto.internal.TrainingDTO;
+import app.dto.internal.TrainingTypeDTO;
+import app.entities.Trainee;
+import app.entities.Trainer;
+import app.entities.Training;
+import app.entities.TrainingType;
+import app.mappers.internal.TrainingMapper;
+import app.mappers.internal.TrainingTypeMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,7 +16,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class TrainingMapperTest {

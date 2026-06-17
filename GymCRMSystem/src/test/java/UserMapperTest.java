@@ -1,6 +1,6 @@
-import dto.UserDTO;
-import entities.User;
-import mappers.UserMapper;
+import app.dto.internal.UserDTO;
+import app.entities.User;
+import app.mappers.internal.UserMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

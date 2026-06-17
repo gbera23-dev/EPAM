@@ -1,7 +1,7 @@
-import entities.User;
-import org.junit.jupiter.api.Test;
+import app.entities.User;
 import org.junit.jupiter.api.BeforeEach;
-import utils.UserUtils;
+import org.junit.jupiter.api.Test;
+import app.utils.UserUtils;
 
 import java.util.ArrayList;
 import java.util.List;

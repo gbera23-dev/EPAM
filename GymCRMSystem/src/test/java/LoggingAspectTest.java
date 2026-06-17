@@ -1,5 +1,5 @@
 
-import logging.LoggingAspect;
+import app.logging.LoggingAspect;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.Signature;

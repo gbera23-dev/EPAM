@@ -1,8 +1,8 @@
-import beanPostProcessor.DataPopulator;
-import builders.Builder;
-import builders.TraineeBuilder;
+import app. beanPostProcessor.DataPopulator;
+import app. builders.Builder;
+import app. builders.TraineeBuilder;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import entities.GymEntity;
+import app.entities.GymEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,7 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class DataPopulatorTest {
