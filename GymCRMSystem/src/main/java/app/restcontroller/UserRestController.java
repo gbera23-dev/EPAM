@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-@RequestMapping("api/user")
+@RequestMapping("/api/user")
 @Tag(name = "User information management", description = "Operations for user")
 public class UserRestController {
 

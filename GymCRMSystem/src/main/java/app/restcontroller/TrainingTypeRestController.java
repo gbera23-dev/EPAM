@@ -19,7 +19,7 @@ import app.services.TrainingTypeService;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/training-types")
+@RequestMapping("/api/training-types")
 @Tag(name = "Training type management", description = "Operations for getting training types")
 public class TrainingTypeRestController {
 

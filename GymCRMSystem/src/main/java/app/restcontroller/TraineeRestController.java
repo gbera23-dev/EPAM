@@ -24,7 +24,7 @@ import app.services.TraineeService;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/trainee")
+@RequestMapping("/api/trainee")
 @Tag(name = "Trainee Management", description = "Operations for trainees")
 public class TraineeRestController {
 

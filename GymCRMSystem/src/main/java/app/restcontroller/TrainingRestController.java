@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import app.services.TrainingService;
 
 @RestController
-@RequestMapping("api/trainings")
+@RequestMapping("/api/trainings")
 @Tag(name = "Training Management", description = "Operations for adding new trainings")
 public class TrainingRestController {
 

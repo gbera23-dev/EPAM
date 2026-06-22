@@ -1,4 +1,4 @@
-package app.filters.logging;
+package app.filters;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

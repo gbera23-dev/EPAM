@@ -30,7 +30,7 @@ import app.services.TrainingTypeService;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/trainer")
+@RequestMapping("/api/trainer")
 @Tag(name = "Trainer Management", description = "Operations for trainers")
 public class TrainerRestController {
 
