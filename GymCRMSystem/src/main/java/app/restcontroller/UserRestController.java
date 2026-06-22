@@ -1,6 +1,5 @@
 package app.restcontroller;
 
-import app.annotations.AuthRequired;
 import app.dto.api.request.LoginRequest;
 import app.dto.api.request.PasswordChangeRequest;
 import app.exceptions.PasswordDoesNotMatchException;
@@ -59,7 +58,7 @@ public class UserRestController {
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content),
             @ApiResponse(responseCode = "404", description = "User not found", content = @Content)
     })
-    @AuthRequired
+    
     @PutMapping("/password-change")
     public ResponseEntity<String> changeUserPassword
             (@RequestBody PasswordChangeRequest passwordChangeRequest) {

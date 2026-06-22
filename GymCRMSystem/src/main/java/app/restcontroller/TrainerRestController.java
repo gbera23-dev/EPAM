@@ -1,6 +1,5 @@
 package app.restcontroller;
 
-import app.annotations.AuthRequired;
 import app.dto.api.request.TrainerRegistrationRequest;
 import app.dto.api.request.TrainerTrainingsRequest;
 import app.dto.api.request.TrainerUpdateRequest;
@@ -82,7 +81,7 @@ public class TrainerRestController {
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content),
             @ApiResponse(responseCode = "404", description = "Trainer not found", content = @Content)
     })
-    @AuthRequired
+    
     @GetMapping
     public ResponseEntity<TrainerProfileResponse> getTrainer
             (@NotBlank @RequestParam("username") String username) {
@@ -103,7 +102,7 @@ public class TrainerRestController {
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content),
             @ApiResponse(responseCode = "404", description = "Trainer not found", content = @Content)
     })
-    @AuthRequired
+    
     @PutMapping("/update")
     public ResponseEntity<TrainerProfileResponse> updateTrainer
             (@Valid @RequestBody TrainerUpdateRequest trainerUpdateRequest) {
@@ -126,7 +125,7 @@ public class TrainerRestController {
             @ApiResponse(responseCode = "400", description = "Invalid request body", content = @Content),
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content)
     })
-    @AuthRequired
+    
     @GetMapping("/trainings")
     public ResponseEntity<List<TrainingResponse>> getTrainerTrainingsList
             (@Valid @RequestBody TrainerTrainingsRequest trainerTrainingsRequest) {
@@ -154,7 +153,7 @@ public class TrainerRestController {
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content),
             @ApiResponse(responseCode = "404", description = "Trainer not found", content = @Content)
     })
-    @AuthRequired
+    
     @PatchMapping("/{username}/status")
     public ResponseEntity<String> changeTrainerActiveStatus
             (@NotBlank @PathVariable("username") String username,
