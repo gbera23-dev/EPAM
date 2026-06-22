@@ -2,6 +2,8 @@ package app.services;
 
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.Instant;
+
 /**
  * Service interface defining operations necessary to generate, extract and validate JWT Tokens
  */
@@ -29,4 +31,22 @@ public interface JWTService {
      * @return true, if user is validated, false otherwise
      */
     Boolean tokenIsValid(String jwtToken, UserDetails userDetails);
+
+    /**
+     * Method checks whether jwt token is blacklisted
+     * @param jwtToken to be checked
+     * @return true, if jwt token is black listed, false otherwise
+     */
+    boolean tokenIsBlacklisted(String jwtToken);
+
+    /**
+     * Method looks through blacklist of JWT's and deletes all JWT's that are expired
+     */
+    void cleanUpBlacklist();
+
+    /**
+     * Method adds jwt token of user to blackList
+     * @param jwtToken JWT token to be added to blacklist
+     */
+    void addJWTTokenToBlacklist(String jwtToken);
 }

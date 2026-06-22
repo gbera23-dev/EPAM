@@ -10,11 +10,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import app.persistence.UserRepository;
 
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
 @Component
 public class AuthServiceImpl implements AuthService {
 
@@ -57,10 +52,6 @@ public class AuthServiceImpl implements AuthService {
         }
 
         return jwtService.generateToken(username);
-    }
-
-    @Override
-    public void logoutUserProfile(String username) {
     }
 
 }

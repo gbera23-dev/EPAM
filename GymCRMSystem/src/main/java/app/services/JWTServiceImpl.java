@@ -1,6 +1,8 @@
 package app.services;
 
+import app.entities.BlacklistedJWT;
 import app.exceptions.UserCannotBeAuthorizedException;
+import app.persistence.JWTRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
@@ -8,12 +10,15 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cglib.core.internal.Function;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import javax.crypto.SecretKey;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.util.*;
 
 @Service
 public class JWTServiceImpl implements JWTService {
@@ -24,6 +29,14 @@ public class JWTServiceImpl implements JWTService {
     @Value("${security.jwt_expiration_time}")
     private Long expiration;
 
+
+    private final JWTRepository jwtRepository;
+
+
+    public JWTServiceImpl(JWTRepository jwtRepository) {
+        this.jwtRepository = jwtRepository;
+    }
+
     @Override
     public String generateToken(String username) {
         Map<String, Object> claims = new HashMap<>();
@@ -32,6 +45,7 @@ public class JWTServiceImpl implements JWTService {
             generatedToken = Jwts.builder()
                     .addClaims(claims)
                     .setSubject(username)
+                    .setId(UUID.randomUUID().toString())
                     .setIssuedAt(new Date(System.currentTimeMillis()))
                     .setExpiration(new Date(System.currentTimeMillis() + expiration))
                     .signWith(getKey())
@@ -61,6 +75,29 @@ public class JWTServiceImpl implements JWTService {
 
         return username.equals(userDetails.getUsername())
                 && !isTokenExpired(jwtToken);
+    }
+
+    @Override
+    public boolean tokenIsBlacklisted(String jwtToken) {
+        return jwtRepository.existsByJti(extractJtiFromJWTToken(jwtToken));
+    }
+
+    @Override
+    @Scheduled(fixedRate=60000)
+    @Transactional
+    public void cleanUpBlacklist() {
+        jwtRepository.cleanUpExpiredTokens(Instant.now());
+    }
+
+    @Override
+    public void addJWTTokenToBlacklist(String jwtToken) {
+        String jti = extractJtiFromJWTToken(jwtToken);
+        Instant expirationDate = extractExpirationDateFromJWTToken(jwtToken);
+
+        BlacklistedJWT blacklistedJWT = new BlacklistedJWT(
+                null, jti, expirationDate
+        );
+        jwtRepository.save(blacklistedJWT);
     }
 
     /**
@@ -117,4 +154,26 @@ public class JWTServiceImpl implements JWTService {
         return Keys.hmacShaKeyFor(keyValue);
     }
 
+    /**
+     * Method extracts JWT id (jti) from jwt token
+     * @param jwtToken from which id must be extracted out
+     * @return extracted JWT id as string
+     */
+    private String extractJtiFromJWTToken(String jwtToken) {
+        String jti = extractClaim(jwtToken, Claims::getId);
+
+        if(jti == null) {
+            throw new JwtException("jwt id cannot be null!");
+        }
+
+        return jti;
+    }
+    /**
+     * Method extracts expiration date out of jwt token
+     * @param jwtToken from which expiration date must be extracted out
+     * @return extracted JWT expiration date as Instant
+     */
+    private Instant extractExpirationDateFromJWTToken(String jwtToken) {
+        return extractClaim(jwtToken, Claims::getExpiration).toInstant();
+    }
 }

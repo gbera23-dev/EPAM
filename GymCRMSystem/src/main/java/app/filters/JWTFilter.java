@@ -41,8 +41,11 @@ public class JWTFilter extends OncePerRequestFilter {
             jwtToken = authenticationHeader.substring(JWT_TOKEN_PREFIX.length());
             username = jwtService.extractUsernameFromToken(jwtToken);
         }
-        //Only proceed if we have a username AND no active session exists. Otherwise, skip to the next filter.
-        if(username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+
+        //Only proceed if we have a username AND no active session exists AND token is not blacklisted.
+        // Otherwise, go to the next filter.
+        if(username != null && SecurityContextHolder.getContext().getAuthentication() == null
+        && !jwtService.tokenIsBlacklisted(jwtToken)) {
 
             //load user details
             UserDetails userDetails = userDetailsService.loadUserByUsername(username);

@@ -11,7 +11,4 @@ public interface AuthService {
 
     /** Authenticates the user and opens new JWT session. */
     String authenticateUser(String username, String password);
-
-    /** Terminates the active session for the given user. */
-    void logoutUserProfile(String username);
 }
