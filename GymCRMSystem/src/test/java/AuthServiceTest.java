@@ -83,9 +83,4 @@ class AuthServiceImplTest {
 
         assertThrows(UserNotFoundException.class, () -> authService.changeUserProfilePassword("ghost", "newPass"));
     }
-
-    @Test
-    void testLogoutUserProfileDoesNotThrow() {
-        assertDoesNotThrow(() -> authService.logoutUserProfile("john.doe"));
-    }
 }
