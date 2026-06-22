@@ -32,7 +32,7 @@ class UserRestControllerTest {
 
     @Test
     void testLoginReturns200WithSessionToken() throws Exception {
-        doNothing().when(authService).loginUserProfile("john.doe", "pass123");
+        when(authService.authenticateUser("john.doe", "pass123")).thenReturn("jwt-token");
 
         mockMvc.perform(get("/api/user/login")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -43,15 +43,15 @@ class UserRestControllerTest {
                                 }
                                 """))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.session-token").value("john.doe"))
+                .andExpect(jsonPath("$.jwt-token").value("jwt-token"))
                 .andExpect(jsonPath("$.message").value("Log in was successful!"));
 
-        verify(authService).loginUserProfile("john.doe", "pass123");
+        verify(authService).authenticateUser("john.doe", "pass123");
     }
 
     @Test
     void testLoginDelegatesCredentialsToService() throws Exception {
-        doNothing().when(authService).loginUserProfile("jane.smith", "mypassword");
+        when(authService.authenticateUser("jane.smith", "mypassword")).thenReturn("jwt-token");
 
         mockMvc.perform(get("/api/user/login")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -63,12 +63,11 @@ class UserRestControllerTest {
                                 """))
                 .andExpect(status().isOk());
 
-        verify(authService, times(1)).loginUserProfile("jane.smith", "mypassword");
+        verify(authService, times(1)).authenticateUser("jane.smith", "mypassword");
     }
 
     @Test
     void testChangePasswordReturns200OnSuccess() throws Exception {
-        when(authService.validateUserProfile("john.doe", "oldPass")).thenReturn(true);
         doNothing().when(authService).changeUserProfilePassword("john.doe", "newPass");
 
         mockMvc.perform(put("/api/user/password-change")
@@ -82,7 +81,7 @@ class UserRestControllerTest {
                                 }
                                 """))
                 .andExpect(status().isOk())
-                .andExpect(content().string("Password change was successful"));
+                .andExpect(content().string("Password change was successful!"));
 
         verify(authService).changeUserProfilePassword("john.doe", "newPass");
     }

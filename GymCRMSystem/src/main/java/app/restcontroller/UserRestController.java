@@ -33,18 +33,18 @@ public class UserRestController {
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Login successful",
                     content = @Content(schema = @Schema(type = "object",
-                            example = "{\"session-token\": \"john.doe\", \"message\": \"Log in was successful!\"}"))),
+                            example = "{\"jwt-token\": \"particular-jwt-token\", \"message\": \"Log in was successful!\"}"))),
             @ApiResponse(responseCode = "400", description = "Invalid credentials", content = @Content),
             @ApiResponse(responseCode = "401", description = "Authentication failed", content = @Content)
     })
     @GetMapping("/login")
     public ResponseEntity<Map<String, String>> loginUser(@RequestBody LoginRequest loginRequest) {
 
-        authService.loginUserProfile(loginRequest.getUsername(), loginRequest.getPassword());
+        String jwtToken = authService.authenticateUser(loginRequest.getUsername(), loginRequest.getPassword());
 
         Map<String, String> output = new HashMap<>();
 
-        output.put("session-token", loginRequest.getUsername());
+        output.put("jwt-token", jwtToken);
         output.put("message", "Log in was successful!");
 
         return ResponseEntity.ok().body(output);
@@ -58,19 +58,13 @@ public class UserRestController {
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content),
             @ApiResponse(responseCode = "404", description = "User not found", content = @Content)
     })
-    
     @PutMapping("/password-change")
     public ResponseEntity<String> changeUserPassword
             (@RequestBody PasswordChangeRequest passwordChangeRequest) {
 
-        if(!authService.validateUserProfile(passwordChangeRequest.getUsername(), passwordChangeRequest.getOldPassword())) {
-            throw new PasswordDoesNotMatchException("Given password for the user is not correct, please, provide correct" +
-                    "password!");
-        }
-
         authService.changeUserProfilePassword(passwordChangeRequest.getUsername(), passwordChangeRequest.getNewPassword());
 
-        return ResponseEntity.ok().body("Password change was successful");
+        return ResponseEntity.ok().body("Password change was successful!");
     }
 
 }

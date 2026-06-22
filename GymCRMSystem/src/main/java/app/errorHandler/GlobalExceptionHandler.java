@@ -4,9 +4,11 @@ package app.errorHandler;
 import app.exceptions.*;
 import io.swagger.v3.oas.annotations.Hidden;
 import jakarta.validation.UnexpectedTypeException;
+import org.springframework.boot.actuate.autoconfigure.observation.ObservationProperties;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -70,6 +72,11 @@ public class GlobalExceptionHandler {
         Map<String, Object> response = new HashMap<>();
         response.put("validationMessage",e.getLocalizedMessage());
         return ResponseEntity.badRequest().contentType(MediaType.APPLICATION_JSON).body(response);
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<String> handleBadCredentials(BadCredentialsException e) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
     }
 
     @ExceptionHandler(Exception.class)

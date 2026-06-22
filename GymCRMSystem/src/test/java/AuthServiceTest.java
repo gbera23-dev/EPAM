@@ -1,25 +1,23 @@
-import app. entities.User;
-import app. exceptions.PasswordDoesNotMatchException;
-import app. exceptions.SessionNotFoundException;
-import app. exceptions.UserAlreadyLoggedInException;
-import app. exceptions.UserNotFoundException;
+import app.entities.User;
+import app.exceptions.UserCannotBeAuthorizedException;
+import app.exceptions.UserNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import app. persistence.UserRepository;
-import app. services.AuthServiceImpl;
+import app.persistence.UserRepository;
+import app.services.AuthServiceImpl;
+import app.services.JWTService;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
-import java.lang.reflect.Field;
-import java.time.LocalDateTime;
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class AuthServiceImplTest {
@@ -29,6 +27,12 @@ class AuthServiceImplTest {
 
     @Mock
     private PasswordEncoder passwordEncoder;
+
+    @Mock
+    private AuthenticationManager authenticationManager;
+
+    @Mock
+    private JWTService jwtService;
 
     @InjectMocks
     private AuthServiceImpl authService;
@@ -42,104 +46,35 @@ class AuthServiceImplTest {
         user.setPassword("pass123");
     }
 
-    private Map<String, LocalDateTime> getSessions() throws Exception {
-        Field field = AuthServiceImpl.class.getDeclaredField("sessions");
-        field.setAccessible(true);
-        return (Map<String, LocalDateTime>) field.get(authService);
-    }
+    @Test
+    void testAuthenticateUserReturnsToken() {
+        Authentication authentication = mock(Authentication.class);
+        when(authentication.isAuthenticated()).thenReturn(true);
+        when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class))).thenReturn(authentication);
+        when(jwtService.generateToken("john.doe")).thenReturn("jwt-token");
 
-    private void putSession(String username, LocalDateTime time) throws Exception {
-        getSessions().put(username, time);
+        String token = authService.authenticateUser("john.doe", "pass123");
+
+        assertEquals("jwt-token", token);
     }
 
     @Test
-    void testValidateUserProfileReturnsTrueOnCorrectPassword() {
+    void testAuthenticateUserThrowsWhenNotAuthenticated() {
+        Authentication authentication = mock(Authentication.class);
+        when(authentication.isAuthenticated()).thenReturn(false);
+        when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class))).thenReturn(authentication);
+
+        assertThrows(UserCannotBeAuthorizedException.class, () -> authService.authenticateUser("john.doe", "pass123"));
+    }
+
+    @Test
+    void testChangeUserProfilePasswordUpdatesPassword() {
         when(userRepository.findByUsername("john.doe")).thenReturn(user);
-
-        assertTrue(authService.validateUserProfile("john.doe", "pass123"));
-    }
-
-    @Test
-    void testValidateUserProfileReturnsFalseOnWrongPassword() {
-        when(userRepository.findByUsername("john.doe")).thenReturn(user);
-
-        assertFalse(authService.validateUserProfile("john.doe", "wrong"));
-    }
-
-    @Test
-    void testValidateUserProfileThrowsWhenUserNotFound() {
-        when(userRepository.findByUsername("ghost")).thenReturn(null);
-
-        assertThrows(UserNotFoundException.class, () -> authService.validateUserProfile("ghost", "pass"));
-    }
-
-    @Test
-    void testValidateUserSessionReturnsTrueWhenSessionExists() throws Exception {
-        putSession("john.doe", LocalDateTime.now());
-
-        assertTrue(authService.validateUserSession("john.doe"));
-    }
-
-    @Test
-    void testValidateUserSessionReturnsFalseWhenNoSession() {
-        assertFalse(authService.validateUserSession("john.doe"));
-    }
-
-    @Test
-    void testLoginUserProfileCreatesSession() throws Exception {
-        when(userRepository.findByUsername("john.doe")).thenReturn(user);
-
-        authService.loginUserProfile("john.doe", "pass123");
-
-        assertTrue(getSessions().containsKey("john.doe"));
-    }
-
-    @Test
-    void testLoginUserProfileThrowsWhenUserNotFound() {
-        when(userRepository.findByUsername("ghost")).thenReturn(null);
-
-        assertThrows(UserNotFoundException.class, () -> authService.loginUserProfile("ghost", "pass123"));
-    }
-
-    @Test
-    void testLoginUserProfileThrowsOnWrongPassword() {
-        when(userRepository.findByUsername("john.doe")).thenReturn(user);
-
-        assertThrows(PasswordDoesNotMatchException.class, () -> authService.loginUserProfile("john.doe", "wrong"));
-    }
-
-    @Test
-    void testLoginUserProfileThrowsWhenAlreadyLoggedIn() throws Exception {
-        when(userRepository.findByUsername("john.doe")).thenReturn(user);
-        putSession("john.doe", LocalDateTime.now());
-
-        assertThrows(UserAlreadyLoggedInException.class, () -> authService.loginUserProfile("john.doe", "pass123"));
-    }
-
-    @Test
-    void testLogoutUserProfileRemovesSession() throws Exception {
-        putSession("john.doe", LocalDateTime.now());
-
-        authService.logoutUserProfile("john.doe");
-
-        assertFalse(getSessions().containsKey("john.doe"));
-    }
-
-    @Test
-    void testLogoutUserProfileThrowsWhenNoSession() {
-        assertThrows(SessionNotFoundException.class, () -> authService.logoutUserProfile("john.doe"));
-    }
-
-    @Test
-    void testChangeUserProfilePasswordUpdatesPassword() throws Exception {
-        when(userRepository.findByUsername("john.doe")).thenReturn(user);
-        when(passwordEncoder.encode(any(String.class))).thenReturn("newPass");
-
-        putSession("john.doe", LocalDateTime.now());
+        when(passwordEncoder.encode(any(String.class))).thenReturn("encodedNewPass");
 
         authService.changeUserProfilePassword("john.doe", "newPass");
 
-        assertEquals("newPass", user.getPassword());
+        assertEquals("encodedNewPass", user.getPassword());
     }
 
     @Test
@@ -150,38 +85,7 @@ class AuthServiceImplTest {
     }
 
     @Test
-    void testChangeUserProfilePasswordThrowsWhenNoSession() {
-        when(userRepository.findByUsername("john.doe")).thenReturn(user);
-
-        assertThrows(SessionNotFoundException.class, () -> authService.changeUserProfilePassword("john.doe", "newPass"));
-    }
-
-    @Test
-    void testCleanUpExpiredSessionsRemovesExpiredSession() throws Exception {
-        putSession("john.doe", LocalDateTime.now().minusSeconds(1801));
-
-        authService.cleanUpExpiredSessions();
-
-        assertFalse(getSessions().containsKey("john.doe"));
-    }
-
-    @Test
-    void testCleanUpExpiredSessionsKeepsActiveSession() throws Exception {
-        putSession("john.doe", LocalDateTime.now().minusSeconds(100));
-
-        authService.cleanUpExpiredSessions();
-
-        assertTrue(getSessions().containsKey("john.doe"));
-    }
-
-    @Test
-    void testCleanUpExpiredSessionsRemovesOnlyExpired() throws Exception {
-        putSession("john.doe", LocalDateTime.now().minusSeconds(1801));
-        putSession("jane.doe", LocalDateTime.now().minusSeconds(100));
-
-        authService.cleanUpExpiredSessions();
-
-        assertFalse(getSessions().containsKey("john.doe"));
-        assertTrue(getSessions().containsKey("jane.doe"));
+    void testLogoutUserProfileDoesNotThrow() {
+        assertDoesNotThrow(() -> authService.logoutUserProfile("john.doe"));
     }
 }
