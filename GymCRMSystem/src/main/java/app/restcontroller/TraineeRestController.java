@@ -55,10 +55,10 @@ public class TraineeRestController {
             (@Valid @RequestBody TraineeRegistrationRequest traineeRegistrationRequest) {
         Trainee trainee = traineeApiMapper.toTrainee(traineeRegistrationRequest);
 
-        traineeService.createTraineeProfile(trainee);
+        String rawPassword = traineeService.createTraineeProfile(trainee);
 
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(new UserCredentialsResponse(trainee.getUser().getUsername(), trainee.getUser().getPassword()));
+                .body(new UserCredentialsResponse(trainee.getUser().getUsername(), rawPassword));
     }
 
 

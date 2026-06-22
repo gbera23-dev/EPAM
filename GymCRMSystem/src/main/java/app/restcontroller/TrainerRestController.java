@@ -66,10 +66,10 @@ public class TrainerRestController {
 
         Trainer trainer = trainerApiMapper.toTrainer(trainerRegistrationRequest, trainingType);
 
-        trainerService.createTrainerProfile(trainer);
+        String rawPassword = trainerService.createTrainerProfile(trainer);
 
         return ResponseEntity.status(HttpStatus.CREATED).
-                body(new UserCredentialsResponse(trainer.getUser().getUsername(), trainer.getUser().getPassword()));
+                body(new UserCredentialsResponse(trainer.getUser().getUsername(), rawPassword));
     }
 
 

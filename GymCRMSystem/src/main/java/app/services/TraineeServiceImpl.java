@@ -35,16 +35,20 @@ public class TraineeServiceImpl implements TraineeService {
 
     @Override
     @Transactional
-    public void createTraineeProfile(Trainee trainee) {
+    public String createTraineeProfile(Trainee trainee) {
         User currentUser = trainee.getUser();
 
         List<User> users = traineeRepository.getUsernameWithMaxNumberSuffix(trainee);
 
         UserUtils.generateUserCredentials(currentUser, users);
 
+        String rawPassword = currentUser.getPassword();
+
         currentUser.setPassword(passwordEncoder.encode(currentUser.getPassword()));
 
         traineeRepository.save(trainee);
+
+        return rawPassword;
     }
 
     @Override

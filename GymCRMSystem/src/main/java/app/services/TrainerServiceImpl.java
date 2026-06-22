@@ -32,16 +32,20 @@ public class TrainerServiceImpl implements TrainerService {
 
     @Override
     @Transactional
-    public void createTrainerProfile(Trainer trainer) {
+    public String createTrainerProfile(Trainer trainer) {
         User currentUser = trainer.getUser();
 
         List<User> users = trainerRepository.getUsersWithFirstAndLastName(trainer);
 
         UserUtils.generateUserCredentials(currentUser, users);
 
+        String rawPassword = currentUser.getPassword();
+
         currentUser.setPassword(passwordEncoder.encode(currentUser.getPassword()));
 
         trainerRepository.save(trainer);
+
+        return rawPassword;
     }
 
     @Override

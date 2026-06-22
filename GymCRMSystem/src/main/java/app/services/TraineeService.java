@@ -12,8 +12,8 @@ import java.util.List;
  */
 public interface TraineeService {
 
-    /** Creates a new trainee profile, generating user credentials. */
-    void createTraineeProfile(Trainee trainee);
+    /** Creates a new trainee profile, generating user credentials. Returns generated RAW password to user*/
+    String createTraineeProfile(Trainee trainee);
 
     /** @throws jakarta.persistence.EntityNotFoundException if not found */
     Trainee selectTraineeProfileById(long traineeId);
