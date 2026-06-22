@@ -2,6 +2,7 @@ package app.services;
 
 import app.entities.User;
 import app.exceptions.*;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import app.persistence.UserRepository;
@@ -15,14 +16,16 @@ import java.util.concurrent.ConcurrentHashMap;
 public class AuthServiceImpl implements AuthService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     private final Map<String, LocalDateTime> sessions;
 
     private static final int SESSION_TIMEOUT = 1800;
 
-    public AuthServiceImpl(UserRepository userRepository) {
+    public AuthServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.sessions = new ConcurrentHashMap<>();
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -53,7 +56,7 @@ public class AuthServiceImpl implements AuthService {
             throw new SessionNotFoundException("No sessions exist for user, please login first!");
         }
 
-        user.setPassword(newPassword);
+        user.setPassword(passwordEncoder.encode(newPassword));
     }
 
     @Override

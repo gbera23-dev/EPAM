@@ -14,6 +14,7 @@ import app.persistence.TraineeRepository;
 import app.persistence.TrainerRepository;
 import app.persistence.TrainingRepository;
 import app.services.TraineeServiceImpl;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -36,6 +37,9 @@ class TraineeServiceTest {
     @Mock
     private TrainingRepository trainingRepository;
 
+    @Mock
+    private PasswordEncoder passwordEncoder;
+
     @InjectMocks
     private TraineeServiceImpl traineeService;
 
@@ -55,6 +59,7 @@ class TraineeServiceTest {
     @Test
     void testCreateTraineeProfileGeneratesNonEmptyPassword() {
         when(traineeRepository.getUsernameWithMaxNumberSuffix(trainee)).thenReturn(Collections.emptyList());
+        when(passwordEncoder.encode(any(String.class))).thenReturn("password");
 
         traineeService.createTraineeProfile(trainee);
 
@@ -65,6 +70,7 @@ class TraineeServiceTest {
     @Test
     void testCreateTraineeProfileGeneratesBaseUsername() {
         when(traineeRepository.getUsernameWithMaxNumberSuffix(trainee)).thenReturn(Collections.emptyList());
+        when(passwordEncoder.encode(any(String.class))).thenReturn("password");
 
         traineeService.createTraineeProfile(trainee);
 
@@ -76,6 +82,7 @@ class TraineeServiceTest {
         User existingUser = new User();
         existingUser.setUsername("John.Doe");
         when(traineeRepository.getUsernameWithMaxNumberSuffix(trainee)).thenReturn(List.of(existingUser));
+        when(passwordEncoder.encode(any(String.class))).thenReturn("password");
 
         traineeService.createTraineeProfile(trainee);
 
@@ -89,6 +96,7 @@ class TraineeServiceTest {
         User u2 = new User();
         u2.setUsername("John.Doe1");
         when(traineeRepository.getUsernameWithMaxNumberSuffix(trainee)).thenReturn(List.of(u1, u2));
+        when(passwordEncoder.encode(any(String.class))).thenReturn("password");
 
         traineeService.createTraineeProfile(trainee);
 
@@ -98,6 +106,7 @@ class TraineeServiceTest {
     @Test
     void testCreateTraineeProfileSavesTrainee() {
         when(traineeRepository.getUsernameWithMaxNumberSuffix(trainee)).thenReturn(Collections.emptyList());
+        when(passwordEncoder.encode(any(String.class))).thenReturn("password");
 
         traineeService.createTraineeProfile(trainee);
 

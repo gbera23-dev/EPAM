@@ -11,12 +11,14 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import app. persistence.UserRepository;
 import app. services.AuthServiceImpl;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.lang.reflect.Field;
 import java.time.LocalDateTime;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -24,6 +26,9 @@ class AuthServiceImplTest {
 
     @Mock
     private UserRepository userRepository;
+
+    @Mock
+    private PasswordEncoder passwordEncoder;
 
     @InjectMocks
     private AuthServiceImpl authService;
@@ -128,6 +133,8 @@ class AuthServiceImplTest {
     @Test
     void testChangeUserProfilePasswordUpdatesPassword() throws Exception {
         when(userRepository.findByUsername("john.doe")).thenReturn(user);
+        when(passwordEncoder.encode(any(String.class))).thenReturn("newPass");
+
         putSession("john.doe", LocalDateTime.now());
 
         authService.changeUserProfilePassword("john.doe", "newPass");

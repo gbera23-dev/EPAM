@@ -12,6 +12,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import app.persistence.TrainerRepository;
 import app.persistence.TrainingRepository;
 import app.services.TrainerServiceImpl;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDate;
 import java.util.Collections;
@@ -30,6 +32,9 @@ class TrainerServiceTest {
     @Mock
     private TrainingRepository trainingRepository;
 
+    @Mock
+    private PasswordEncoder passwordEncoder;
+
     @InjectMocks
     private TrainerServiceImpl trainerService;
 
@@ -41,6 +46,7 @@ class TrainerServiceTest {
         user = new User();
         user.setFirstName("John");
         user.setLastName("Doe");
+        user.setPassword("password");
         trainer = new Trainer();
         trainer.setUser(user);
         TrainingType trainingType = new TrainingType();
@@ -51,6 +57,7 @@ class TrainerServiceTest {
     @Test
     void testCreateTrainerProfileGeneratesBaseUsername() {
         when(trainerRepository.getUsersWithFirstAndLastName(trainer)).thenReturn(Collections.emptyList());
+        when(passwordEncoder.encode(any(String.class))).thenReturn("password");
 
         trainerService.createTrainerProfile(trainer);
 
@@ -60,6 +67,7 @@ class TrainerServiceTest {
     @Test
     void testCreateTrainerProfileGeneratesNonEmptyPassword() {
         when(trainerRepository.getUsersWithFirstAndLastName(trainer)).thenReturn(Collections.emptyList());
+        when(passwordEncoder.encode(any(String.class))).thenReturn("password");
 
         trainerService.createTrainerProfile(trainer);
 
@@ -72,6 +80,7 @@ class TrainerServiceTest {
         User existingUser = new User();
         existingUser.setUsername("John.Doe");
         when(trainerRepository.getUsersWithFirstAndLastName(trainer)).thenReturn(List.of(existingUser));
+        when(passwordEncoder.encode(any(String.class))).thenReturn("password");
 
         trainerService.createTrainerProfile(trainer);
 
@@ -85,6 +94,7 @@ class TrainerServiceTest {
         User u2 = new User();
         u2.setUsername("John.Doe1");
         when(trainerRepository.getUsersWithFirstAndLastName(trainer)).thenReturn(List.of(u1, u2));
+        when(passwordEncoder.encode(any(String.class))).thenReturn("password");
 
         trainerService.createTrainerProfile(trainer);
 
@@ -94,6 +104,7 @@ class TrainerServiceTest {
     @Test
     void testCreateTrainerProfileSavesTrainer() {
         when(trainerRepository.getUsersWithFirstAndLastName(trainer)).thenReturn(Collections.emptyList());
+        when(passwordEncoder.encode(any(String.class))).thenReturn("password");
 
         trainerService.createTrainerProfile(trainer);
 
