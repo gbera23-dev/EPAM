@@ -1,6 +1,7 @@
 package app.config;
 
 import app.filters.JWTFilter;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
@@ -32,6 +33,9 @@ public class SecurityConfig {
 
     private final JWTFilter jwtFilter;
 
+    @Value("${spring.h2.console.enabled}")
+    private boolean isH2Active;
+
     public SecurityConfig(JWTFilter jwtFilter) {
         this.jwtFilter = jwtFilter;
     }
@@ -42,11 +46,16 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .headers(headers -> headers
                         .frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin))
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(PathRequest.toH2Console()).permitAll()
-                        .requestMatchers("/api/trainer/register", "/api/trainee/register",
-                                "/api/user/login").permitAll()
-                        .anyRequest().authenticated());
+                .authorizeHttpRequests(auth -> {
+
+                    if (isH2Active) {
+                        auth.requestMatchers(PathRequest.toH2Console()).permitAll();
+                    }
+
+                    auth.requestMatchers("/api/trainer/register", "/api/trainee/register",
+                                    "/api/user/login").permitAll()
+                            .anyRequest().authenticated();
+                });
 
         http.sessionManagement(sessionManagement ->
                 sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS));

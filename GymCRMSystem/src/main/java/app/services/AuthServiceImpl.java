@@ -60,6 +60,8 @@ public class AuthServiceImpl implements AuthService {
         if(!authentication.isAuthenticated()) {
             throw new UserCannotBeAuthorizedException("User cannot be authenticated!");
         }
+
+        ddosProtectionService.reloadUserLoginAttempts(ip);
         return jwtService.generateToken(username);
     }
 

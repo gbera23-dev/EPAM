@@ -93,7 +93,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(DDOSProtectionException.class)
     public ResponseEntity<String> handleDDOSProtection(DDOSProtectionException e) {
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+        return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(e.getMessage());
     }
 
 

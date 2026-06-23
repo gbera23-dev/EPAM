@@ -31,13 +31,19 @@ public class DDOSProtectionServiceImpl implements DDOSProtectionService {
     @Override
     public void recordUserAttempt(String userIdentifier) {
         if(!userAttemptCounts.containsKey(userIdentifier)) {
-            userAttemptCounts.put(userIdentifier, 1);
+            userAttemptCounts.put(userIdentifier, 0);
         }
         userAttemptCounts.put(userIdentifier, userAttemptCounts.get(userIdentifier) + 1);
+        System.out.println("user attempt count: " + userAttemptCounts.get(userIdentifier));
     }
 
     @Override
     public boolean userShouldBeBlocked(String userIdentifier) {
+
+        if(lockedUsers.containsKey(userIdentifier)){
+            return false;
+        }
+
         return numAttemptsExceedLimit(userIdentifier);
     }
 
@@ -59,7 +65,13 @@ public class DDOSProtectionServiceImpl implements DDOSProtectionService {
         return timeLeft;
     }
 
+    @Override
+    public void reloadUserLoginAttempts(String userIdentifier) {
+        userAttemptCounts.remove(userIdentifier);
+    }
+
     private boolean numAttemptsExceedLimit(String userIdentifier) {
+        System.out.println("wtttf user aattemmpt? : " + userAttemptCounts.get(userIdentifier));
         return userAttemptCounts.containsKey(userIdentifier) &&
                 userAttemptCounts.get(userIdentifier) >= NUM_LOGIN_ATTEMPTS;
     }

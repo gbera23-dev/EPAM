@@ -1,6 +1,7 @@
 import app.entities.User;
 import app.exceptions.UserCannotBeAuthorizedException;
 import app.exceptions.UserNotFoundException;
+import app.services.DDOSProtectionService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -33,6 +34,9 @@ class AuthServiceImplTest {
 
     @Mock
     private JWTService jwtService;
+
+    @Mock
+    private DDOSProtectionService ddosProtectionService;
 
     @InjectMocks
     private AuthServiceImpl authService;

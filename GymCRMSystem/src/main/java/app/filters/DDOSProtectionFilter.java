@@ -38,11 +38,6 @@ public class DDOSProtectionFilter extends OncePerRequestFilter {
             //get unique identifier for the user to know he is trying to log in
             String userUniqueIdentifier = request.getRemoteAddr();
 
-            //if number of failed attempts exceed limit, user will be blocked
-            if(ddosProtectionService.userShouldBeBlocked(userUniqueIdentifier)) {
-                ddosProtectionService.blockUser(userUniqueIdentifier);
-            }
-
             //if user is blocked, we immediately write appropriate response and stop the filter chain, which
             //will release pressure on the server and protect it from DDOS attacks
             if(ddosProtectionService.userIsBlocked(userUniqueIdentifier)) {

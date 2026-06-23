@@ -24,6 +24,14 @@ public class BadLoginRequestListener {
         String userIdentifier = authentication.getDetails().toString();
 
         ddosProtectionService.recordUserAttempt(userIdentifier);
+
+        //if number of failed attempts exceed limit, user will be blocked
+        if(ddosProtectionService.userShouldBeBlocked(userIdentifier)) {
+            ddosProtectionService.blockUser(userIdentifier);
+            throw new DDOSProtectionException("You are blocked due to numerous failed logging attempts. " +
+                    "Please, wait for " + ddosProtectionService.
+                    timeLeftBeforeLockIsReleased(userIdentifier) + " seconds to attempt again!");
+        }
     }
 
 
