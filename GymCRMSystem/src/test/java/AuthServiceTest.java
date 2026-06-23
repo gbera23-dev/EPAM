@@ -53,7 +53,7 @@ class AuthServiceImplTest {
         when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class))).thenReturn(authentication);
         when(jwtService.generateToken("john.doe")).thenReturn("jwt-token");
 
-        String token = authService.authenticateUser("john.doe", "pass123");
+        String token = authService.authenticateUser("john.doe", "pass123", null);
 
         assertEquals("jwt-token", token);
     }
@@ -64,7 +64,8 @@ class AuthServiceImplTest {
         when(authentication.isAuthenticated()).thenReturn(false);
         when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class))).thenReturn(authentication);
 
-        assertThrows(UserCannotBeAuthorizedException.class, () -> authService.authenticateUser("john.doe", "pass123"));
+        assertThrows(UserCannotBeAuthorizedException.class, () -> authService.authenticateUser
+                ("john.doe", "pass123", null));
     }
 
     @Test

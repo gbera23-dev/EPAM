@@ -1,4 +1,4 @@
-package app.healthMetrics;
+package app.aspects.healthMetrics;
 
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.Tags;

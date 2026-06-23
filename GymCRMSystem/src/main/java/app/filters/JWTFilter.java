@@ -28,6 +28,7 @@ public class JWTFilter extends OncePerRequestFilter {
         this.jwtService = jwtService;
         this.userDetailsService = userDetailsService;
     }
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
@@ -52,6 +53,10 @@ public class JWTFilter extends OncePerRequestFilter {
 
             //check that token really is owned by the user(token has username in it and it is not expired)
             if(jwtService.tokenIsValid(jwtToken, userDetails)) {
+
+                //set attribute for ddos protection filter
+                request.setAttribute("isAuthenticated", true);
+
                 setUserSession(request, userDetails);
             }
         }

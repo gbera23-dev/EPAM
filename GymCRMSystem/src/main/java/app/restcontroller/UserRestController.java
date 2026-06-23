@@ -2,6 +2,8 @@ package app.restcontroller;
 
 import app.dto.api.request.LoginRequest;
 import app.dto.api.request.PasswordChangeRequest;
+import app.exceptions.DDOSProtectionException;
+import app.services.DDOSProtectionService;
 import app.services.JWTService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -13,6 +15,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
         import app.services.AuthService;
+import org.thymeleaf.templateparser.markup.HTMLTemplateParser;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -41,9 +44,11 @@ public class UserRestController {
             @ApiResponse(responseCode = "401", description = "Authentication failed", content = @Content)
     })
     @GetMapping("/login")
-    public ResponseEntity<Map<String, String>> loginUser(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<Map<String, String>> loginUser(@RequestBody LoginRequest loginRequest,
+                                                         HttpServletRequest httpServletRequest) {
 
-        String jwtToken = authService.authenticateUser(loginRequest.getUsername(), loginRequest.getPassword());
+        String jwtToken = authService.authenticateUser(loginRequest.getUsername(), loginRequest.getPassword(),
+                httpServletRequest.getRemoteAddr());
 
         Map<String, String> output = new HashMap<>();
 

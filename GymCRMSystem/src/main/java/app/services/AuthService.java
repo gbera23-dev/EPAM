@@ -10,5 +10,5 @@ public interface AuthService {
     void changeUserProfilePassword(String username, String newPassword);
 
     /** Authenticates the user and opens new JWT session. */
-    String authenticateUser(String username, String password);
+    String authenticateUser(String username, String password, String ip);
 }

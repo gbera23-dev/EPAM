@@ -9,6 +9,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
+import java.time.LocalTime;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -50,4 +51,5 @@ public class ApplicationConfig {
     public Resource trainingResource(@Value("${data.TrainingDataPath}") String path) {
         return new ClassPathResource(path);
     }
+
 }
