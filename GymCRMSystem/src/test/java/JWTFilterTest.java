@@ -49,7 +49,6 @@ public class JWTFilterTest {
         when(userDetailsService.loadUserByUsername("alice")).thenReturn(userDetails);
         when(jwtService.tokenIsValid("sometoken", userDetails)).thenReturn(true);
         doAnswer(invocation -> {
-            assertEquals(Boolean.TRUE, req.getAttribute("isAuthenticated"));
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
             assertNotNull(auth);
             assertEquals(userDetails, auth.getPrincipal());

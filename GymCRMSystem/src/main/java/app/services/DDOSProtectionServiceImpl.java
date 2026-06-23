@@ -34,7 +34,6 @@ public class DDOSProtectionServiceImpl implements DDOSProtectionService {
             userAttemptCounts.put(userIdentifier, 0);
         }
         userAttemptCounts.put(userIdentifier, userAttemptCounts.get(userIdentifier) + 1);
-        System.out.println("user attempt count: " + userAttemptCounts.get(userIdentifier));
     }
 
     @Override
@@ -71,7 +70,6 @@ public class DDOSProtectionServiceImpl implements DDOSProtectionService {
     }
 
     private boolean numAttemptsExceedLimit(String userIdentifier) {
-        System.out.println("wtttf user aattemmpt? : " + userAttemptCounts.get(userIdentifier));
         return userAttemptCounts.containsKey(userIdentifier) &&
                 userAttemptCounts.get(userIdentifier) >= NUM_LOGIN_ATTEMPTS;
     }
