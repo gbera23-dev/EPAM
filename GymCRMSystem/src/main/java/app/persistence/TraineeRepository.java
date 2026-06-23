@@ -11,10 +11,6 @@ import java.util.List;
 @Repository("TraineeRepository")
 public interface TraineeRepository extends JpaRepository<Trainee, Long>{
 
-    @Query("SELECT u AS user FROM Trainee t JOIN t.user u " +
-            "WHERE u.firstName = :#{#trainee.user.firstName} AND u.lastName = :#{#trainee.user.lastName}")
-    List<User> getUsernameWithMaxNumberSuffix(@Param("trainee") Trainee trainee);
-
     @Query("SELECT t FROM Trainee t " +
             "JOIN FETCH t.user u " +
             "LEFT JOIN FETCH t.trainers tr " +

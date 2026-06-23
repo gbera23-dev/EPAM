@@ -2,6 +2,7 @@ import app.entities.Trainer;
 import app.entities.Training;
 import app.entities.TrainingType;
 import app.entities.User;
+import app.persistence.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -33,6 +34,9 @@ class TrainerServiceTest {
     private TrainingRepository trainingRepository;
 
     @Mock
+    private UserRepository userRepository;
+
+    @Mock
     private PasswordEncoder passwordEncoder;
 
     @InjectMocks
@@ -56,7 +60,7 @@ class TrainerServiceTest {
 
     @Test
     void testCreateTrainerProfileGeneratesBaseUsername() {
-        when(trainerRepository.getUsersWithFirstAndLastName(trainer)).thenReturn(Collections.emptyList());
+        when(userRepository.findUsersByFirstNameAndLastName("John", "Doe")).thenReturn(Collections.emptyList());
         when(passwordEncoder.encode(any(String.class))).thenReturn("password");
 
         trainerService.createTrainerProfile(trainer);
@@ -66,7 +70,7 @@ class TrainerServiceTest {
 
     @Test
     void testCreateTrainerProfileGeneratesNonEmptyPassword() {
-        when(trainerRepository.getUsersWithFirstAndLastName(trainer)).thenReturn(Collections.emptyList());
+        when(userRepository.findUsersByFirstNameAndLastName("John", "Doe")).thenReturn(Collections.emptyList());
         when(passwordEncoder.encode(any(String.class))).thenReturn("password");
 
         trainerService.createTrainerProfile(trainer);
@@ -79,7 +83,7 @@ class TrainerServiceTest {
     void testCreateTrainerProfileAppendsCounterWhenUsernameExists() {
         User existingUser = new User();
         existingUser.setUsername("John.Doe");
-        when(trainerRepository.getUsersWithFirstAndLastName(trainer)).thenReturn(List.of(existingUser));
+        when(userRepository.findUsersByFirstNameAndLastName("John", "Doe")).thenReturn(List.of(existingUser));
         when(passwordEncoder.encode(any(String.class))).thenReturn("password");
 
         trainerService.createTrainerProfile(trainer);
@@ -93,7 +97,7 @@ class TrainerServiceTest {
         u1.setUsername("John.Doe");
         User u2 = new User();
         u2.setUsername("John.Doe1");
-        when(trainerRepository.getUsersWithFirstAndLastName(trainer)).thenReturn(List.of(u1, u2));
+        when(userRepository.findUsersByFirstNameAndLastName("John", "Doe")).thenReturn(List.of(u1, u2));
         when(passwordEncoder.encode(any(String.class))).thenReturn("password");
 
         trainerService.createTrainerProfile(trainer);
@@ -103,7 +107,7 @@ class TrainerServiceTest {
 
     @Test
     void testCreateTrainerProfileSavesTrainer() {
-        when(trainerRepository.getUsersWithFirstAndLastName(trainer)).thenReturn(Collections.emptyList());
+        when(userRepository.findUsersByFirstNameAndLastName("John", "Doe")).thenReturn(Collections.emptyList());
         when(passwordEncoder.encode(any(String.class))).thenReturn("password");
 
         trainerService.createTrainerProfile(trainer);

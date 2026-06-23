@@ -3,6 +3,7 @@ package app.services;
 import app.entities.Trainer;
 import app.entities.Training;
 import app.entities.User;
+import app.persistence.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -19,13 +20,16 @@ public class TrainerServiceImpl implements TrainerService {
 
     private final TrainerRepository trainerRepository;
     private final TrainingRepository trainingRepository;
+    private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
     public TrainerServiceImpl(TrainerRepository trainerRepository,
                               TrainingRepository trainingRepository,
+                              UserRepository userRepository,
                               PasswordEncoder passwordEncoder) {
         this.trainerRepository = trainerRepository;
         this.trainingRepository = trainingRepository;
+        this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -35,7 +39,8 @@ public class TrainerServiceImpl implements TrainerService {
     public String createTrainerProfile(Trainer trainer) {
         User currentUser = trainer.getUser();
 
-        List<User> users = trainerRepository.getUsersWithFirstAndLastName(trainer);
+        List<User> users = userRepository.findUsersByFirstNameAndLastName(trainer.getUser().getFirstName(),
+                trainer.getUser().getLastName());
 
         UserUtils.generateUserCredentials(currentUser, users);
 

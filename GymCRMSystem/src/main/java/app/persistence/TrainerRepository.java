@@ -11,11 +11,6 @@ import java.util.List;
 @Repository("TrainerRepository")
 public interface TrainerRepository extends JpaRepository<Trainer, Long> {
 
-    @Query("SELECT u AS user FROM Trainee t JOIN t.user u " +
-            "WHERE u.firstName = :#{#trainer.user.firstName} AND u.lastName = :#{#trainer.user.lastName}")
-    List<User> getUsersWithFirstAndLastName(@Param("trainer") Trainer trainer);
-
-
     @Query("SELECT t FROM Trainer t " +
             "JOIN FETCH t.user u " +
             "LEFT JOIN FETCH t.trainees tr LEFT JOIN FETCH t.trainingType " +
