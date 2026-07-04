@@ -87,7 +87,9 @@ public class UserRestController {
     public ResponseEntity<String> changeUserPassword
             (@RequestBody PasswordChangeRequest passwordChangeRequest) {
 
-        authService.changeUserProfilePassword(passwordChangeRequest.getUsername(), passwordChangeRequest.getNewPassword());
+        authService.changeUserProfilePassword(passwordChangeRequest.getUsername(),
+                passwordChangeRequest.getOldPassword(),
+                passwordChangeRequest.getNewPassword());
 
         return ResponseEntity.ok().body("Password change was successful!");
     }

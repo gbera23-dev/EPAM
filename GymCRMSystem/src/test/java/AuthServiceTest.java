@@ -14,7 +14,10 @@ import app.services.JWTService;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -74,18 +77,19 @@ class AuthServiceImplTest {
 
     @Test
     void testChangeUserProfilePasswordUpdatesPassword() {
-        when(userRepository.findByUsername("john.doe")).thenReturn(user);
+        when(userRepository.findByUsername("john.doe")).thenReturn(Optional.of(user));
         when(passwordEncoder.encode(any(String.class))).thenReturn("encodedNewPass");
+        when(passwordEncoder.matches(any(String.class), any(String.class))).thenReturn(true);
 
-        authService.changeUserProfilePassword("john.doe", "newPass");
+        authService.changeUserProfilePassword("john.doe", "oldPass", "newPass");
 
         assertEquals("encodedNewPass", user.getPassword());
     }
 
     @Test
     void testChangeUserProfilePasswordThrowsWhenUserNotFound() {
-        when(userRepository.findByUsername("ghost")).thenReturn(null);
+        when(userRepository.findByUsername("ghost")).thenReturn(Optional.empty());
 
-        assertThrows(UserNotFoundException.class, () -> authService.changeUserProfilePassword("ghost", "newPass"));
+        assertThrows(UsernameNotFoundException.class, () -> authService.changeUserProfilePassword("ghost", "oldPass","newPass"));
     }
 }

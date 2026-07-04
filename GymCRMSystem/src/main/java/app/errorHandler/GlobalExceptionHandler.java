@@ -96,5 +96,14 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(e.getMessage());
     }
 
+    @ExceptionHandler(TrainingTypeNotFoundException.class)
+    public ResponseEntity<String> handleTrainingTypeNotFound(TrainingTypeNotFoundException e){
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+    }
+
+    @ExceptionHandler(TrainingNotFoundException.class)
+    public ResponseEntity<String> handleTrainingNotFound(TrainingNotFoundException e){
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+    }
 
 }

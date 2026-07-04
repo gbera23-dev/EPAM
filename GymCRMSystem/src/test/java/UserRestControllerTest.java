@@ -64,7 +64,7 @@ class UserRestControllerTest {
 
     @Test
     void testChangePasswordReturns200OnSuccess() throws Exception {
-        doNothing().when(authService).changeUserProfilePassword("john.doe", "newPass");
+        doNothing().when(authService).changeUserProfilePassword("john.doe", "oldPass","newPass");
 
         mockMvc.perform(put("/api/user/password-change")
                         .header("user-session", "john.doe")

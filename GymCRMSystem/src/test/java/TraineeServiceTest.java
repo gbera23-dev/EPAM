@@ -128,7 +128,7 @@ class TraineeServiceTest {
 
     @Test
     void testSelectTraineeProfileByUsernameReturnsTrainee() {
-        when(traineeRepository.findByUserUsername("John.Doe")).thenReturn(trainee);
+        when(traineeRepository.findByUserUsername("John.Doe")).thenReturn(Optional.of(trainee));
 
         Trainee result = traineeService.selectTraineeProfileByUsername("John.Doe");
 
@@ -197,7 +197,7 @@ class TraineeServiceTest {
     void testDeleteTraineeProfileByUsernameDeletesTrainee() {
         String name = "John.Doe";
 
-        when(traineeRepository.findByUserUsername(name)).thenReturn(trainee);
+        when(traineeRepository.findByUserUsername(name)).thenReturn(Optional.of(trainee));
 
         traineeService.deleteTraineeProfileByUsername(name);
 

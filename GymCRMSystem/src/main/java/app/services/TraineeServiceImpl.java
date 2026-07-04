@@ -1,9 +1,11 @@
 package app.services;
 
 import app.entities.*;
+import app.exceptions.UserAlreadyActiveException;
+import app.exceptions.UserAlreadyInactiveException;
 import app.exceptions.UserNotFoundException;
 import app.persistence.UserRepository;
-import jakarta.persistence.EntityNotFoundException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -59,13 +61,16 @@ public class TraineeServiceImpl implements TraineeService {
     @Override
     public Trainee selectTraineeProfileById(long traineeId) {
         return traineeRepository.findById(traineeId).orElseThrow(() ->
-                new EntityNotFoundException("Could not find Trainee!")
+                new UserNotFoundException("Could not find Trainee!")
         );
     }
 
     @Override
     public Trainee selectTraineeProfileByUsername(String username) {
-        return traineeRepository.findByUserUsername(username);
+        return traineeRepository.findByUserUsername(username)
+                .orElseThrow(
+                        () -> new UsernameNotFoundException("Could not find user with username!")
+                );
     }
 
     @Override
@@ -100,7 +105,7 @@ public class TraineeServiceImpl implements TraineeService {
     @Transactional
     public void deleteTraineeProfileById(long traineeId) {
         Trainee trainee = traineeRepository.findById(traineeId)
-                .orElseThrow(() -> new EntityNotFoundException("Trainee not found"));
+                .orElseThrow(() -> new UserNotFoundException("Trainee not found"));
 
         for (Trainer trainer : trainee.getTrainers()) {
             trainer.getTrainees().remove(trainee);
@@ -117,11 +122,10 @@ public class TraineeServiceImpl implements TraineeService {
     @Override
     @Transactional
     public void deleteTraineeProfileByUsername(String username) {
-        Trainee trainee = traineeRepository.findByUserUsername(username);
-
-        if (trainee == null) {
-            throw new EntityNotFoundException("Trainee not found with username: " + username);
-        }
+        Trainee trainee = traineeRepository.findByUserUsername(username)
+                .orElseThrow(
+                        () -> new UsernameNotFoundException("Could not find user with username!")
+                );
 
         for (Trainer trainer : trainee.getTrainers()) {
             trainer.getTrainees().remove(trainee);
@@ -139,10 +143,10 @@ public class TraineeServiceImpl implements TraineeService {
     @Transactional
     public void activateTraineeProfile(long traineeId) {
         Trainee trainee = traineeRepository.findById(traineeId).orElseThrow(() ->
-                 new EntityNotFoundException("Trainee not found!"));
+                 new UserNotFoundException("Trainee not found!"));
 
         if (trainee.getUser().isActive()) {
-            throw new IllegalStateException("Trainee profile is already active!");
+            throw new UserAlreadyActiveException("Trainee profile is already active!");
         }
 
         trainee.getUser().setActive(true);
@@ -152,10 +156,10 @@ public class TraineeServiceImpl implements TraineeService {
     @Transactional
     public void deactivateTraineeProfile(long traineeId) {
         Trainee trainee = traineeRepository.findById(traineeId).orElseThrow(() ->
-                new EntityNotFoundException("Trainee not found!"));
+                new UserNotFoundException("Trainee not found!"));
 
         if (!trainee.getUser().isActive()) {
-            throw new IllegalStateException("Trainee profile is already inactive!");
+            throw new UserAlreadyInactiveException("Trainee profile is already inactive!");
         }
 
         trainee.getUser().setActive(false);

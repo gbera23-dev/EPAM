@@ -10,6 +10,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -54,7 +55,7 @@ public class TrainingTypeServiceTest {
 
     @Test
     public void testGetTrainingTypeById() {
-        when(trainingTypeRepository.findById(0)).thenReturn(trainingTypeList.get(0));
+        when(trainingTypeRepository.findById(0)).thenReturn(Optional.of(trainingTypeList.get(0)));
 
         TrainingType result = trainingTypeService.getTrainingTypeById(0);
 

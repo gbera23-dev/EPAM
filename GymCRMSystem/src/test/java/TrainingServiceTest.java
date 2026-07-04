@@ -1,5 +1,5 @@
 import app.entities.*;
-import jakarta.persistence.EntityNotFoundException;
+import app.exceptions.TrainingNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -11,6 +11,7 @@ import app.persistence.TraineeRepository;
 import app.persistence.TrainerRepository;
 import app.persistence.TrainingRepository;
 import app.services.TrainingServiceImpl;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.time.LocalDate;
 import java.util.Optional;
@@ -70,15 +71,15 @@ class TrainingServiceTest {
     void testSelectTrainingThrowsWhenNotFound() {
         when(trainingRepository.findById(99L)).thenReturn(Optional.empty());
 
-        assertThrows(EntityNotFoundException.class,
+        assertThrows(TrainingNotFoundException.class,
                 () -> trainingService.selectTraining(99L));
     }
 
     @Test
     void testAddTrainingSavesTraining() {
         LocalDate date = LocalDate.of(2024, 5, 20);
-        when(traineeRepository.findByUserUsername("john.doe")).thenReturn(trainee);
-        when(trainerRepository.findByUserUsername("jane.doe")).thenReturn(trainer);
+        when(traineeRepository.findByUserUsername("john.doe")).thenReturn(Optional.of(trainee));
+        when(trainerRepository.findByUserUsername("jane.doe")).thenReturn(Optional.of(trainer));
 
         trainingService.addTraining("john.doe", "jane.doe", "Morning Session", date, 90);
 
@@ -88,8 +89,8 @@ class TrainingServiceTest {
     @Test
     void testAddTrainingSetsTrainingName() {
         LocalDate date = LocalDate.of(2024, 5, 20);
-        when(traineeRepository.findByUserUsername("john.doe")).thenReturn(trainee);
-        when(trainerRepository.findByUserUsername("jane.doe")).thenReturn(trainer);
+        when(traineeRepository.findByUserUsername("john.doe")).thenReturn(Optional.of(trainee));
+        when(trainerRepository.findByUserUsername("jane.doe")).thenReturn(Optional.of(trainer));
         ArgumentCaptor<Training> captor = ArgumentCaptor.forClass(Training.class);
 
         trainingService.addTraining("john.doe", "jane.doe", "Morning Session", date, 90);
@@ -101,8 +102,8 @@ class TrainingServiceTest {
     @Test
     void testAddTrainingSetsTrainingDate() {
         LocalDate date = LocalDate.of(2024, 5, 20);
-        when(traineeRepository.findByUserUsername("john.doe")).thenReturn(trainee);
-        when(trainerRepository.findByUserUsername("jane.doe")).thenReturn(trainer);
+        when(traineeRepository.findByUserUsername("john.doe")).thenReturn(Optional.of(trainee));
+        when(trainerRepository.findByUserUsername("jane.doe")).thenReturn(Optional.of(trainer));
         ArgumentCaptor<Training> captor = ArgumentCaptor.forClass(Training.class);
 
         trainingService.addTraining("john.doe", "jane.doe", "Morning Session", date, 90);
@@ -114,8 +115,8 @@ class TrainingServiceTest {
     @Test
     void testAddTrainingSetsTrainingDuration() {
         LocalDate date = LocalDate.of(2024, 5, 20);
-        when(traineeRepository.findByUserUsername("john.doe")).thenReturn(trainee);
-        when(trainerRepository.findByUserUsername("jane.doe")).thenReturn(trainer);
+        when(traineeRepository.findByUserUsername("john.doe")).thenReturn(Optional.of(trainee));
+        when(trainerRepository.findByUserUsername("jane.doe")).thenReturn(Optional.of(trainer));
         ArgumentCaptor<Training> captor = ArgumentCaptor.forClass(Training.class);
 
         trainingService.addTraining("john.doe", "jane.doe", "Morning Session", date, 90);
@@ -127,8 +128,8 @@ class TrainingServiceTest {
     @Test
     void testAddTrainingSetsTrainingTypeFromTrainer() {
         LocalDate date = LocalDate.of(2024, 5, 20);
-        when(traineeRepository.findByUserUsername("john.doe")).thenReturn(trainee);
-        when(trainerRepository.findByUserUsername("jane.doe")).thenReturn(trainer);
+        when(traineeRepository.findByUserUsername("john.doe")).thenReturn(Optional.of(trainee));
+        when(trainerRepository.findByUserUsername("jane.doe")).thenReturn(Optional.of(trainer));
         ArgumentCaptor<Training> captor = ArgumentCaptor.forClass(Training.class);
 
         trainingService.addTraining("john.doe", "jane.doe", "Morning Session", date, 90);
@@ -140,8 +141,8 @@ class TrainingServiceTest {
     @Test
     void testAddTrainingAssociatesCorrectTrainee() {
         LocalDate date = LocalDate.of(2024, 5, 20);
-        when(traineeRepository.findByUserUsername("john.doe")).thenReturn(trainee);
-        when(trainerRepository.findByUserUsername("jane.doe")).thenReturn(trainer);
+        when(traineeRepository.findByUserUsername("john.doe")).thenReturn(Optional.of(trainee));
+        when(trainerRepository.findByUserUsername("jane.doe")).thenReturn(Optional.of(trainer));
         ArgumentCaptor<Training> captor = ArgumentCaptor.forClass(Training.class);
 
         trainingService.addTraining("john.doe", "jane.doe", "Morning Session", date, 90);
@@ -153,8 +154,8 @@ class TrainingServiceTest {
     @Test
     void testAddTrainingAssociatesCorrectTrainer() {
         LocalDate date = LocalDate.of(2024, 5, 20);
-        when(traineeRepository.findByUserUsername("john.doe")).thenReturn(trainee);
-        when(trainerRepository.findByUserUsername("jane.doe")).thenReturn(trainer);
+        when(traineeRepository.findByUserUsername("john.doe")).thenReturn(Optional.of(trainee));
+        when(trainerRepository.findByUserUsername("jane.doe")).thenReturn(Optional.of(trainer));
         ArgumentCaptor<Training> captor = ArgumentCaptor.forClass(Training.class);
 
         trainingService.addTraining("john.doe", "jane.doe", "Morning Session", date, 90);
@@ -166,30 +167,28 @@ class TrainingServiceTest {
     @Test
     void testAddTrainingThrowsWhenTraineeNotFound() {
         LocalDate date = LocalDate.of(2024, 5, 20);
-        when(traineeRepository.findByUserUsername("unknown")).thenReturn(null);
-        when(trainerRepository.findByUserUsername("jane.doe")).thenReturn(trainer);
+        when(traineeRepository.findByUserUsername("unknown")).thenReturn(Optional.empty());
 
-        assertThrows(EntityNotFoundException.class,
+        assertThrows(UsernameNotFoundException.class,
                 () -> trainingService.addTraining("unknown", "jane.doe", "Session", date, 60));
     }
 
     @Test
     void testAddTrainingThrowsWhenTrainerNotFound() {
         LocalDate date = LocalDate.of(2024, 5, 20);
-        when(traineeRepository.findByUserUsername("john.doe")).thenReturn(trainee);
-        when(trainerRepository.findByUserUsername("unknown")).thenReturn(null);
+        when(traineeRepository.findByUserUsername("john.doe")).thenReturn(Optional.of(trainee));
+        when(trainerRepository.findByUserUsername("unknown")).thenReturn(Optional.empty());
 
-        assertThrows(EntityNotFoundException.class,
+        assertThrows(UsernameNotFoundException.class,
                 () -> trainingService.addTraining("john.doe", "unknown", "Session", date, 60));
     }
 
     @Test
     void testAddTrainingDoesNotSaveWhenTraineeNotFound() {
         LocalDate date = LocalDate.of(2024, 5, 20);
-        when(traineeRepository.findByUserUsername("unknown")).thenReturn(null);
-        when(trainerRepository.findByUserUsername("jane.doe")).thenReturn(trainer);
+        when(traineeRepository.findByUserUsername("unknown")).thenReturn(Optional.empty());
 
-        assertThrows(EntityNotFoundException.class,
+        assertThrows(UsernameNotFoundException.class,
                 () -> trainingService.addTraining("unknown", "jane.doe", "Session", date, 60));
 
         verify(trainingRepository, never()).save(any());

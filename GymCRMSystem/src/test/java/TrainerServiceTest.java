@@ -2,6 +2,7 @@ import app.entities.Trainer;
 import app.entities.Training;
 import app.entities.TrainingType;
 import app.entities.User;
+import app.exceptions.UserNotFoundException;
 import app.persistence.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,6 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import app.persistence.TrainerRepository;
 import app.persistence.TrainingRepository;
 import app.services.TrainerServiceImpl;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -133,7 +135,7 @@ class TrainerServiceTest {
 
     @Test
     void testSelectTrainerProfileByUsernameReturnsTrainer() {
-        when(trainerRepository.findByUserUsername("John.Doe")).thenReturn(trainer);
+        when(trainerRepository.findByUserUsername("John.Doe")).thenReturn(Optional.of(trainer));
 
         Trainer result = trainerService.selectTrainerProfileByUsername("John.Doe");
 
@@ -141,10 +143,11 @@ class TrainerServiceTest {
     }
 
     @Test
-    void testSelectTrainerProfileByUsernameReturnsNullWhenNotFound() {
-        when(trainerRepository.findByUserUsername("unknown")).thenReturn(null);
+    void testSelectTrainerProfileByUsernameThrowsWhenNotFound() {
+        when(trainerRepository.findByUserUsername("unknown")).thenReturn(Optional.empty());
 
-        assertNull(trainerService.selectTrainerProfileByUsername("unknown"));
+        assertThrows(UsernameNotFoundException.class,
+                () -> trainerService.selectTrainerProfileByUsername("unknown"));
     }
 
     @Test
@@ -161,7 +164,7 @@ class TrainerServiceTest {
     void testActivateTrainerProfileThrowsWhenNotFound() {
         when(trainerRepository.findById(99L)).thenReturn(Optional.empty());
 
-        assertThrows(EntityNotFoundException.class,
+        assertThrows(UserNotFoundException.class,
                 () -> trainerService.activateTrainerProfile(99L));
     }
 
@@ -179,7 +182,7 @@ class TrainerServiceTest {
     void testDeactivateTrainerProfileThrowsWhenNotFound() {
         when(trainerRepository.findById(99L)).thenReturn(Optional.empty());
 
-        assertThrows(EntityNotFoundException.class,
+        assertThrows(UserNotFoundException.class,
                 () -> trainerService.deactivateTrainerProfile(99L));
     }
 

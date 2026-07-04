@@ -49,7 +49,17 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> {
 
                     if (isH2Active) {
-                        auth.requestMatchers(PathRequest.toH2Console()).permitAll();
+                        auth.requestMatchers(PathRequest.toH2Console()).permitAll()
+                        .requestMatchers("/actuator/**").permitAll()
+                                .requestMatchers("/v3/api-docs",
+                                        "/v3/api-docs/**",
+                                        "/v3/swagger-ui/**",
+                                        "/swagger-ui/index.html",
+                                        "/api-docs",
+                                        "/api-docs/**",
+                                        "/swagger-ui/**",
+                                        "/swagger-ui.html")
+                                .permitAll();
                     }
 
                     auth.requestMatchers("/api/trainer/register", "/api/trainee/register",

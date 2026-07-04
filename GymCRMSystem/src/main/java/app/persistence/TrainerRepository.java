@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import java.util.List;
+import java.util.Optional;
 
 @Repository("TrainerRepository")
 public interface TrainerRepository extends JpaRepository<Trainer, Long> {
@@ -15,7 +16,7 @@ public interface TrainerRepository extends JpaRepository<Trainer, Long> {
             "JOIN FETCH t.user u " +
             "LEFT JOIN FETCH t.trainees tr LEFT JOIN FETCH t.trainingType " +
             "WHERE u.username = :username")
-    Trainer findByUserUsername(@Param("username") String username);
+    Optional<Trainer> findByUserUsername(@Param("username") String username);
 
     List<Trainer> findByUserUsernameIn(List<String> usernames);
 

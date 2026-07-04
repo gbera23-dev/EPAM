@@ -3,8 +3,11 @@ package app.services;
 import app.entities.Trainer;
 import app.entities.Training;
 import app.entities.User;
+import app.exceptions.UserAlreadyActiveException;
+import app.exceptions.UserAlreadyInactiveException;
+import app.exceptions.UserNotFoundException;
 import app.persistence.UserRepository;
-import jakarta.persistence.EntityNotFoundException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -66,17 +69,20 @@ public class TrainerServiceImpl implements TrainerService {
 
     @Override
     public Trainer selectTrainerProfileByUsername(String username) {
-        return trainerRepository.findByUserUsername(username);
+        return trainerRepository.findByUserUsername(username)
+                .orElseThrow(
+                        () -> new UsernameNotFoundException("Could not find user with username!")
+                );
     }
 
     @Override
     @Transactional
     public void activateTrainerProfile(long trainerId) {
         Trainer trainer = trainerRepository.findById(trainerId).orElseThrow(() ->
-                new EntityNotFoundException("Trainer not found!"));
+                new UserNotFoundException("Trainer not found!"));
 
         if (trainer.getUser().isActive()) {
-            throw new IllegalStateException("Trainee profile is already active!");
+            throw new UserAlreadyActiveException("Trainee profile is already active!");
         }
 
         trainer.getUser().setActive(true);
@@ -86,10 +92,10 @@ public class TrainerServiceImpl implements TrainerService {
     @Transactional
     public void deactivateTrainerProfile(long trainerId) {
         Trainer trainer = trainerRepository.findById(trainerId).orElseThrow(() ->
-                new EntityNotFoundException("Trainer not found!"));
+                new UserNotFoundException("Trainer not found!"));
 
         if (!trainer.getUser().isActive()) {
-            throw new IllegalStateException("Trainee profile is already inactive!");
+            throw new UserAlreadyInactiveException("Trainee profile is already inactive!");
         }
 
         trainer.getUser().setActive(false);

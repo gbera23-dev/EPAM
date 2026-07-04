@@ -2,15 +2,14 @@ package app.services;
 
 import app.entities.User;
 import app.exceptions.*;
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import app.persistence.UserRepository;
-import org.springframework.web.context.request.RequestContextHolder;
 
 @Component
 public class AuthServiceImpl implements AuthService {
@@ -35,11 +34,15 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     @Transactional
-    public void changeUserProfilePassword(String username, String newPassword) {
-        User user = userRepository.findByUsername(username);
+    public void changeUserProfilePassword(String username, String oldPassword, String newPassword) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(
+                        () -> new UsernameNotFoundException("Could not find user with username!")
+                );
 
-        if(user == null)
-            throw new UserNotFoundException("User could not be found!");
+        if(!passwordEncoder.matches(oldPassword, user.getPassword())) {
+            throw new PasswordDoesNotMatchException("passwords do not match!");
+        }
 
         user.setPassword(passwordEncoder.encode(newPassword));
     }
