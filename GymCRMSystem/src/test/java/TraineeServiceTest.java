@@ -4,7 +4,6 @@ import app.entities.Training;
 import app.entities.User;
 import app.exceptions.UserNotFoundException;
 import app.persistence.UserRepository;
-import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,6 +14,7 @@ import app.persistence.TraineeRepository;
 import app.persistence.TrainerRepository;
 import app.persistence.TrainingRepository;
 import app.services.TraineeServiceImpl;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDate;
@@ -136,10 +136,10 @@ class TraineeServiceTest {
     }
 
     @Test
-    void testSelectTraineeProfileByUsernameReturnsNullWhenNotFound() {
-        when(traineeRepository.findByUserUsername("unknown")).thenReturn(null);
+    void testSelectTraineeProfileByUsernameThrowsWhenNotFound() {
+        when(traineeRepository.findByUserUsername("unknown")).thenReturn(Optional.empty());
 
-        assertNull(traineeService.selectTraineeProfileByUsername("unknown"));
+        assertThrows(UsernameNotFoundException.class, () -> traineeService.selectTraineeProfileByUsername("unknown"));
     }
 
     @Test
@@ -219,7 +219,7 @@ class TraineeServiceTest {
     void testActivateTraineeProfileThrowsWhenNotFound() {
         when(traineeRepository.findById(99L)).thenReturn(Optional.empty());
 
-        assertThrows(EntityNotFoundException.class,
+        assertThrows(UserNotFoundException.class,
                 () -> traineeService.activateTraineeProfile(99L));
     }
 
@@ -237,7 +237,7 @@ class TraineeServiceTest {
     void testDeactivateTraineeProfileThrowsWhenNotFound() {
         when(traineeRepository.findById(99L)).thenReturn(Optional.empty());
 
-        assertThrows(EntityNotFoundException.class,
+        assertThrows(UserNotFoundException.class,
                 () -> traineeService.deactivateTraineeProfile(99L));
     }
 
