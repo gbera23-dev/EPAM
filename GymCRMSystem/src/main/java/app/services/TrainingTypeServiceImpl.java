@@ -1,6 +1,7 @@
 package app.services;
 
 import app.entities.TrainingType;
+import app.exceptions.TrainingTypeNotFoundException;
 import org.springframework.stereotype.Service;
 import app.persistence.TrainingTypeRepository;
 
@@ -23,7 +24,10 @@ public class TrainingTypeServiceImpl implements TrainingTypeService {
 
     @Override
     public TrainingType getTrainingTypeById(long id) {
-        return trainingTypeRepository.findById(id);
+        return trainingTypeRepository.findById(id)
+                .orElseThrow(
+                        () -> new TrainingTypeNotFoundException("Could not find training type!")
+                );
     }
 
 }

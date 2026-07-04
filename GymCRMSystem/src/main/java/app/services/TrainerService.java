@@ -11,8 +11,8 @@ import java.util.List;
  */
 public interface TrainerService {
 
-    /** Creates a new trainer profile, generating user credentials. */
-    void createTrainerProfile(Trainer trainer);
+    /** Creates a new trainer profile, generating user credentials. Returns generated RAW password to user*/
+    String createTrainerProfile(Trainer trainer);
 
     /** Persists changes to an existing trainer profile. */
     void updateTrainerProfile(Trainer trainer);

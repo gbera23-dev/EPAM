@@ -3,7 +3,7 @@ import app.entities.Trainer;
 import app.entities.Training;
 import app.entities.User;
 import app.exceptions.UserNotFoundException;
-import jakarta.persistence.EntityNotFoundException;
+import app.persistence.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,6 +14,8 @@ import app.persistence.TraineeRepository;
 import app.persistence.TrainerRepository;
 import app.persistence.TrainingRepository;
 import app.services.TraineeServiceImpl;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -36,6 +38,12 @@ class TraineeServiceTest {
     @Mock
     private TrainingRepository trainingRepository;
 
+    @Mock
+    private UserRepository userRepository;
+
+    @Mock
+    private PasswordEncoder passwordEncoder;
+
     @InjectMocks
     private TraineeServiceImpl traineeService;
 
@@ -54,7 +62,8 @@ class TraineeServiceTest {
 
     @Test
     void testCreateTraineeProfileGeneratesNonEmptyPassword() {
-        when(traineeRepository.getUsernameWithMaxNumberSuffix(trainee)).thenReturn(Collections.emptyList());
+        when(userRepository.findUsersByFirstNameAndLastName("John", "Doe")).thenReturn(Collections.emptyList());
+        when(passwordEncoder.encode(any(String.class))).thenReturn("password");
 
         traineeService.createTraineeProfile(trainee);
 
@@ -64,7 +73,8 @@ class TraineeServiceTest {
 
     @Test
     void testCreateTraineeProfileGeneratesBaseUsername() {
-        when(traineeRepository.getUsernameWithMaxNumberSuffix(trainee)).thenReturn(Collections.emptyList());
+        when(userRepository.findUsersByFirstNameAndLastName("John", "Doe")).thenReturn(Collections.emptyList());
+        when(passwordEncoder.encode(any(String.class))).thenReturn("password");
 
         traineeService.createTraineeProfile(trainee);
 
@@ -75,7 +85,8 @@ class TraineeServiceTest {
     void testCreateTraineeProfileAppendsCounterWhenUsernameExists() {
         User existingUser = new User();
         existingUser.setUsername("John.Doe");
-        when(traineeRepository.getUsernameWithMaxNumberSuffix(trainee)).thenReturn(List.of(existingUser));
+        when(userRepository.findUsersByFirstNameAndLastName("John", "Doe")).thenReturn(List.of(existingUser));
+        when(passwordEncoder.encode(any(String.class))).thenReturn("password");
 
         traineeService.createTraineeProfile(trainee);
 
@@ -88,7 +99,8 @@ class TraineeServiceTest {
         u1.setUsername("John.Doe");
         User u2 = new User();
         u2.setUsername("John.Doe1");
-        when(traineeRepository.getUsernameWithMaxNumberSuffix(trainee)).thenReturn(List.of(u1, u2));
+        when(userRepository.findUsersByFirstNameAndLastName("John", "Doe")).thenReturn(List.of(u1, u2));
+        when(passwordEncoder.encode(any(String.class))).thenReturn("password");
 
         traineeService.createTraineeProfile(trainee);
 
@@ -97,7 +109,8 @@ class TraineeServiceTest {
 
     @Test
     void testCreateTraineeProfileSavesTrainee() {
-        when(traineeRepository.getUsernameWithMaxNumberSuffix(trainee)).thenReturn(Collections.emptyList());
+        when(userRepository.findUsersByFirstNameAndLastName("John", "Doe")).thenReturn(Collections.emptyList());
+        when(passwordEncoder.encode(any(String.class))).thenReturn("password");
 
         traineeService.createTraineeProfile(trainee);
 
@@ -115,7 +128,7 @@ class TraineeServiceTest {
 
     @Test
     void testSelectTraineeProfileByUsernameReturnsTrainee() {
-        when(traineeRepository.findByUserUsername("John.Doe")).thenReturn(trainee);
+        when(traineeRepository.findByUserUsername("John.Doe")).thenReturn(Optional.of(trainee));
 
         Trainee result = traineeService.selectTraineeProfileByUsername("John.Doe");
 
@@ -123,10 +136,10 @@ class TraineeServiceTest {
     }
 
     @Test
-    void testSelectTraineeProfileByUsernameReturnsNullWhenNotFound() {
-        when(traineeRepository.findByUserUsername("unknown")).thenReturn(null);
+    void testSelectTraineeProfileByUsernameThrowsWhenNotFound() {
+        when(traineeRepository.findByUserUsername("unknown")).thenReturn(Optional.empty());
 
-        assertNull(traineeService.selectTraineeProfileByUsername("unknown"));
+        assertThrows(UsernameNotFoundException.class, () -> traineeService.selectTraineeProfileByUsername("unknown"));
     }
 
     @Test
@@ -184,7 +197,7 @@ class TraineeServiceTest {
     void testDeleteTraineeProfileByUsernameDeletesTrainee() {
         String name = "John.Doe";
 
-        when(traineeRepository.findByUserUsername(name)).thenReturn(trainee);
+        when(traineeRepository.findByUserUsername(name)).thenReturn(Optional.of(trainee));
 
         traineeService.deleteTraineeProfileByUsername(name);
 
@@ -206,7 +219,7 @@ class TraineeServiceTest {
     void testActivateTraineeProfileThrowsWhenNotFound() {
         when(traineeRepository.findById(99L)).thenReturn(Optional.empty());
 
-        assertThrows(EntityNotFoundException.class,
+        assertThrows(UserNotFoundException.class,
                 () -> traineeService.activateTraineeProfile(99L));
     }
 
@@ -224,7 +237,7 @@ class TraineeServiceTest {
     void testDeactivateTraineeProfileThrowsWhenNotFound() {
         when(traineeRepository.findById(99L)).thenReturn(Optional.empty());
 
-        assertThrows(EntityNotFoundException.class,
+        assertThrows(UserNotFoundException.class,
                 () -> traineeService.deactivateTraineeProfile(99L));
     }
 

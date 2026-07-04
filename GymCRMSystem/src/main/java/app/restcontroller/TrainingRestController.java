@@ -1,6 +1,5 @@
 package app.restcontroller;
 
-import app.annotations.AuthRequired;
 import app.dto.api.request.TrainingRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -14,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import app.services.TrainingService;
 
 @RestController
-@RequestMapping("api/trainings")
+@RequestMapping("/api/trainings")
 @Tag(name = "Training Management", description = "Operations for adding new trainings")
 public class TrainingRestController {
 
@@ -33,7 +32,7 @@ public class TrainingRestController {
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content),
             @ApiResponse(responseCode = "404", description = "Trainee or trainer not found", content = @Content)
     })
-    @AuthRequired
+    
     @PostMapping
     public ResponseEntity<String> addTraining(@Valid @RequestBody TrainingRequest trainingRequest) {
 

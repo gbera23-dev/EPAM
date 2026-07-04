@@ -3,7 +3,12 @@ package app.services;
 import app.entities.Trainer;
 import app.entities.Training;
 import app.entities.User;
-import jakarta.persistence.EntityNotFoundException;
+import app.exceptions.UserAlreadyActiveException;
+import app.exceptions.UserAlreadyInactiveException;
+import app.exceptions.UserNotFoundException;
+import app.persistence.UserRepository;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import app.persistence.TrainerRepository;
@@ -18,24 +23,37 @@ public class TrainerServiceImpl implements TrainerService {
 
     private final TrainerRepository trainerRepository;
     private final TrainingRepository trainingRepository;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public TrainerServiceImpl(TrainerRepository trainerRepository,
-                              TrainingRepository trainingRepository) {
+                              TrainingRepository trainingRepository,
+                              UserRepository userRepository,
+                              PasswordEncoder passwordEncoder) {
         this.trainerRepository = trainerRepository;
         this.trainingRepository = trainingRepository;
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
 
     @Override
     @Transactional
-    public void createTrainerProfile(Trainer trainer) {
+    public String createTrainerProfile(Trainer trainer) {
         User currentUser = trainer.getUser();
 
-        List<User> users = trainerRepository.getUsersWithFirstAndLastName(trainer);
+        List<User> users = userRepository.findUsersByFirstNameAndLastName(trainer.getUser().getFirstName(),
+                trainer.getUser().getLastName());
 
         UserUtils.generateUserCredentials(currentUser, users);
 
+        String rawPassword = currentUser.getPassword();
+
+        currentUser.setPassword(passwordEncoder.encode(currentUser.getPassword()));
+
         trainerRepository.save(trainer);
+
+        return rawPassword;
     }
 
     @Override
@@ -51,17 +69,20 @@ public class TrainerServiceImpl implements TrainerService {
 
     @Override
     public Trainer selectTrainerProfileByUsername(String username) {
-        return trainerRepository.findByUserUsername(username);
+        return trainerRepository.findByUserUsername(username)
+                .orElseThrow(
+                        () -> new UsernameNotFoundException("Could not find user with username!")
+                );
     }
 
     @Override
     @Transactional
     public void activateTrainerProfile(long trainerId) {
         Trainer trainer = trainerRepository.findById(trainerId).orElseThrow(() ->
-                new EntityNotFoundException("Trainer not found!"));
+                new UserNotFoundException("Trainer not found!"));
 
         if (trainer.getUser().isActive()) {
-            throw new IllegalStateException("Trainee profile is already active!");
+            throw new UserAlreadyActiveException("Trainee profile is already active!");
         }
 
         trainer.getUser().setActive(true);
@@ -71,10 +92,10 @@ public class TrainerServiceImpl implements TrainerService {
     @Transactional
     public void deactivateTrainerProfile(long trainerId) {
         Trainer trainer = trainerRepository.findById(trainerId).orElseThrow(() ->
-                new EntityNotFoundException("Trainer not found!"));
+                new UserNotFoundException("Trainer not found!"));
 
         if (!trainer.getUser().isActive()) {
-            throw new IllegalStateException("Trainee profile is already inactive!");
+            throw new UserAlreadyInactiveException("Trainee profile is already inactive!");
         }
 
         trainer.getUser().setActive(false);

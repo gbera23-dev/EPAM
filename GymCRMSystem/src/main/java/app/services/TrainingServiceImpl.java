@@ -4,7 +4,9 @@ import app.entities.Trainee;
 import app.entities.Trainer;
 import app.entities.Training;
 import app.entities.TrainingType;
+import app.exceptions.TrainingNotFoundException;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import app.persistence.TraineeRepository;
@@ -30,7 +32,8 @@ public class TrainingServiceImpl implements TrainingService{
 
     @Override
     public Training selectTraining(long trainingId) {
-        return trainingRepository.findById(trainingId).orElseThrow(() -> new EntityNotFoundException("Such training " +
+        return trainingRepository.findById(trainingId).orElseThrow(() ->
+                new TrainingNotFoundException("Such training " +
                 "does not exist!"));
     }
 
@@ -40,13 +43,17 @@ public class TrainingServiceImpl implements TrainingService{
                             String trainingName, LocalDate date, int duration) {
         Training training = new Training();
 
-        Trainee trainee = traineeRepository.findByUserUsername(traineeUsername);
+        Trainee trainee = traineeRepository.findByUserUsername(traineeUsername)
+                .orElseThrow(
+                        () -> new UsernameNotFoundException("Could not find user with username!")
+                );
 
-        Trainer trainer = trainerRepository.findByUserUsername(trainerUsername);
+        Trainer trainer = trainerRepository.findByUserUsername(trainerUsername)
+                .orElseThrow(
+                        () -> new UsernameNotFoundException("Could not find user with username!")
+                );;
 
-        if(trainee == null || trainer == null) {
-            throw new EntityNotFoundException("Could not find either trainee or trainer in database!");
-        }
+
         TrainingType trainingType = trainer.getTrainingType();
 
         training.setName(trainingName);

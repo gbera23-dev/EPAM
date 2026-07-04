@@ -1,4 +1,4 @@
-import app.logging.LoggingAspect;
+import app.aspects.logging.LoggingAspect;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.aspectj.lang.JoinPoint;

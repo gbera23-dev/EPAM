@@ -74,7 +74,7 @@ class TrainerRestControllerTest {
         when(trainingTypeService.getTrainingTypeById(1L)).thenReturn(trainingType);
         when(trainerApiMapper.toTrainer(any(TrainerRegistrationRequest.class), eq(trainingType)))
                 .thenReturn(trainer);
-        doNothing().when(trainerService).createTrainerProfile(trainer);
+        when(trainerService.createTrainerProfile(trainer)).thenReturn("secret");
 
         mockMvc.perform(post("/api/trainer/register")
                         .contentType(MediaType.APPLICATION_JSON)

@@ -1,6 +1,5 @@
 package app.restcontroller;
 
-import app.annotations.AuthRequired;
 import app.dto.api.response.TrainingTypeResponse;
 import app.entities.TrainingType;
 import io.swagger.v3.oas.annotations.Operation;
@@ -20,7 +19,7 @@ import app.services.TrainingTypeService;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/training-types")
+@RequestMapping("/api/training-types")
 @Tag(name = "Training type management", description = "Operations for getting training types")
 public class TrainingTypeRestController {
 
@@ -40,7 +39,7 @@ public class TrainingTypeRestController {
                     content = @Content(array = @ArraySchema(schema = @Schema(implementation = TrainingTypeResponse.class)))),
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content)
     })
-    @AuthRequired
+    
     @GetMapping
     public ResponseEntity<List<TrainingTypeResponse>> getTrainingTypes() {
 

@@ -1,6 +1,5 @@
 package app.restcontroller;
 
-import app.annotations.AuthRequired;
 import app.dto.api.request.*;
 import app.dto.api.response.*;
 import app.entities.*;
@@ -25,7 +24,7 @@ import app.services.TraineeService;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/trainee")
+@RequestMapping("/api/trainee")
 @Tag(name = "Trainee Management", description = "Operations for trainees")
 public class TraineeRestController {
 
@@ -55,10 +54,10 @@ public class TraineeRestController {
             (@Valid @RequestBody TraineeRegistrationRequest traineeRegistrationRequest) {
         Trainee trainee = traineeApiMapper.toTrainee(traineeRegistrationRequest);
 
-        traineeService.createTraineeProfile(trainee);
+        String rawPassword = traineeService.createTraineeProfile(trainee);
 
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(new UserCredentialsResponse(trainee.getUser().getUsername(), trainee.getUser().getPassword()));
+                .body(new UserCredentialsResponse(trainee.getUser().getUsername(), rawPassword));
     }
 
 
@@ -70,7 +69,7 @@ public class TraineeRestController {
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content),
             @ApiResponse(responseCode = "404", description = "Trainee not found", content = @Content)
     })
-    @AuthRequired
+    
     @GetMapping
     public ResponseEntity<TraineeProfileResponse> getTrainee(@NotBlank @RequestParam("username") String username) {
 
@@ -88,7 +87,7 @@ public class TraineeRestController {
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content),
             @ApiResponse(responseCode = "404", description = "Trainee not found", content = @Content)
     })
-    @AuthRequired
+    
     @PutMapping("/update")
     public ResponseEntity<TraineeProfileResponse> updateTrainee
             (@Valid @RequestBody TraineeUpdateRequest traineeUpdateRequest) {
@@ -115,7 +114,7 @@ public class TraineeRestController {
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content),
             @ApiResponse(responseCode = "404", description = "Trainee not found", content = @Content)
     })
-    @AuthRequired
+    
     @DeleteMapping
     public ResponseEntity<String> deleteTrainee(@NotBlank @RequestParam("username") String username) {
 
@@ -132,7 +131,7 @@ public class TraineeRestController {
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content),
             @ApiResponse(responseCode = "404", description = "Trainee not found", content = @Content)
     })
-    @AuthRequired
+    
     @GetMapping("/not-assigned-trainers")
     public ResponseEntity<List<TrainerSummaryResponse>> getNotAssignedActiveTrainers
             (@NotBlank @RequestParam("username") String username) {
@@ -153,7 +152,7 @@ public class TraineeRestController {
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content),
             @ApiResponse(responseCode = "404", description = "Trainee not found", content = @Content)
     })
-    @AuthRequired
+    
     @PutMapping("/update-trainers")
     public ResponseEntity<List<TrainerSummaryResponse>> updateTraineeTrainersList
             (@Valid @RequestBody TraineeTrainersUpdateRequest traineeTrainersUpdateRequest) {
@@ -178,7 +177,7 @@ public class TraineeRestController {
             @ApiResponse(responseCode = "400", description = "Invalid request body", content = @Content),
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content)
     })
-    @AuthRequired
+    
     @GetMapping("/trainings")
     public ResponseEntity<List<TrainingResponse>> getTraineeTrainingsList
             (@Valid @RequestBody TraineeTrainingsRequest traineeTrainingsRequest) {
@@ -203,7 +202,7 @@ public class TraineeRestController {
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content),
             @ApiResponse(responseCode = "404", description = "Trainee not found", content = @Content)
     })
-    @AuthRequired
+    
     @PatchMapping("/{username}/status")
     public ResponseEntity<String> changeTraineeActiveStatus
             (@NotBlank @PathVariable("username") String username,

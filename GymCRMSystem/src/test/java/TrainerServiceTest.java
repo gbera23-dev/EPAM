@@ -2,6 +2,8 @@ import app.entities.Trainer;
 import app.entities.Training;
 import app.entities.TrainingType;
 import app.entities.User;
+import app.exceptions.UserNotFoundException;
+import app.persistence.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,6 +14,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import app.persistence.TrainerRepository;
 import app.persistence.TrainingRepository;
 import app.services.TrainerServiceImpl;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDate;
 import java.util.Collections;
@@ -30,6 +35,12 @@ class TrainerServiceTest {
     @Mock
     private TrainingRepository trainingRepository;
 
+    @Mock
+    private UserRepository userRepository;
+
+    @Mock
+    private PasswordEncoder passwordEncoder;
+
     @InjectMocks
     private TrainerServiceImpl trainerService;
 
@@ -41,6 +52,7 @@ class TrainerServiceTest {
         user = new User();
         user.setFirstName("John");
         user.setLastName("Doe");
+        user.setPassword("password");
         trainer = new Trainer();
         trainer.setUser(user);
         TrainingType trainingType = new TrainingType();
@@ -50,7 +62,8 @@ class TrainerServiceTest {
 
     @Test
     void testCreateTrainerProfileGeneratesBaseUsername() {
-        when(trainerRepository.getUsersWithFirstAndLastName(trainer)).thenReturn(Collections.emptyList());
+        when(userRepository.findUsersByFirstNameAndLastName("John", "Doe")).thenReturn(Collections.emptyList());
+        when(passwordEncoder.encode(any(String.class))).thenReturn("password");
 
         trainerService.createTrainerProfile(trainer);
 
@@ -59,7 +72,8 @@ class TrainerServiceTest {
 
     @Test
     void testCreateTrainerProfileGeneratesNonEmptyPassword() {
-        when(trainerRepository.getUsersWithFirstAndLastName(trainer)).thenReturn(Collections.emptyList());
+        when(userRepository.findUsersByFirstNameAndLastName("John", "Doe")).thenReturn(Collections.emptyList());
+        when(passwordEncoder.encode(any(String.class))).thenReturn("password");
 
         trainerService.createTrainerProfile(trainer);
 
@@ -71,7 +85,8 @@ class TrainerServiceTest {
     void testCreateTrainerProfileAppendsCounterWhenUsernameExists() {
         User existingUser = new User();
         existingUser.setUsername("John.Doe");
-        when(trainerRepository.getUsersWithFirstAndLastName(trainer)).thenReturn(List.of(existingUser));
+        when(userRepository.findUsersByFirstNameAndLastName("John", "Doe")).thenReturn(List.of(existingUser));
+        when(passwordEncoder.encode(any(String.class))).thenReturn("password");
 
         trainerService.createTrainerProfile(trainer);
 
@@ -84,7 +99,8 @@ class TrainerServiceTest {
         u1.setUsername("John.Doe");
         User u2 = new User();
         u2.setUsername("John.Doe1");
-        when(trainerRepository.getUsersWithFirstAndLastName(trainer)).thenReturn(List.of(u1, u2));
+        when(userRepository.findUsersByFirstNameAndLastName("John", "Doe")).thenReturn(List.of(u1, u2));
+        when(passwordEncoder.encode(any(String.class))).thenReturn("password");
 
         trainerService.createTrainerProfile(trainer);
 
@@ -93,7 +109,8 @@ class TrainerServiceTest {
 
     @Test
     void testCreateTrainerProfileSavesTrainer() {
-        when(trainerRepository.getUsersWithFirstAndLastName(trainer)).thenReturn(Collections.emptyList());
+        when(userRepository.findUsersByFirstNameAndLastName("John", "Doe")).thenReturn(Collections.emptyList());
+        when(passwordEncoder.encode(any(String.class))).thenReturn("password");
 
         trainerService.createTrainerProfile(trainer);
 
@@ -118,7 +135,7 @@ class TrainerServiceTest {
 
     @Test
     void testSelectTrainerProfileByUsernameReturnsTrainer() {
-        when(trainerRepository.findByUserUsername("John.Doe")).thenReturn(trainer);
+        when(trainerRepository.findByUserUsername("John.Doe")).thenReturn(Optional.of(trainer));
 
         Trainer result = trainerService.selectTrainerProfileByUsername("John.Doe");
 
@@ -126,10 +143,11 @@ class TrainerServiceTest {
     }
 
     @Test
-    void testSelectTrainerProfileByUsernameReturnsNullWhenNotFound() {
-        when(trainerRepository.findByUserUsername("unknown")).thenReturn(null);
+    void testSelectTrainerProfileByUsernameThrowsWhenNotFound() {
+        when(trainerRepository.findByUserUsername("unknown")).thenReturn(Optional.empty());
 
-        assertNull(trainerService.selectTrainerProfileByUsername("unknown"));
+        assertThrows(UsernameNotFoundException.class,
+                () -> trainerService.selectTrainerProfileByUsername("unknown"));
     }
 
     @Test
@@ -146,7 +164,7 @@ class TrainerServiceTest {
     void testActivateTrainerProfileThrowsWhenNotFound() {
         when(trainerRepository.findById(99L)).thenReturn(Optional.empty());
 
-        assertThrows(EntityNotFoundException.class,
+        assertThrows(UserNotFoundException.class,
                 () -> trainerService.activateTrainerProfile(99L));
     }
 
@@ -164,7 +182,7 @@ class TrainerServiceTest {
     void testDeactivateTrainerProfileThrowsWhenNotFound() {
         when(trainerRepository.findById(99L)).thenReturn(Optional.empty());
 
-        assertThrows(EntityNotFoundException.class,
+        assertThrows(UserNotFoundException.class,
                 () -> trainerService.deactivateTrainerProfile(99L));
     }
 

@@ -67,7 +67,7 @@ class TraineeRestControllerTest {
     @Test
     void testRegisterTraineeReturns201WithCredentials() throws Exception {
         when(traineeApiMapper.toTrainee(any(TraineeRegistrationRequest.class))).thenReturn(trainee);
-        doNothing().when(traineeService).createTraineeProfile(trainee);
+        when(traineeService.createTraineeProfile(trainee)).thenReturn("pass123");
 
         mockMvc.perform(post("/api/trainee/register")
                         .contentType(MediaType.APPLICATION_JSON)
