@@ -20,7 +20,7 @@ public class TrainerRestController {
     }
 
     @PostMapping
-    ResponseEntity<String> createTrainerWorkload(
+    public ResponseEntity<String> createTrainerWorkload(
             @RequestBody TrainerWorkloadCreationRequest trainerWorkloadCreationRequest) {
 
         trainerService.createNewWorkload(
@@ -36,7 +36,7 @@ public class TrainerRestController {
     }
 
     @PutMapping
-    ResponseEntity<String> updateTrainerWorkload(
+    public ResponseEntity<String> updateTrainerWorkload(
             @RequestBody TrainerWorkloadRequest trainerWorkloadRequest) {
             if(trainerWorkloadRequest.getActionType().equals(ActionType.ADD)){
                 trainerService.addTrainingHours(trainerWorkloadRequest.getUsername(),
@@ -54,7 +54,7 @@ public class TrainerRestController {
     }
 
     @GetMapping
-    ResponseEntity<Integer> getTrainerHours(
+    public ResponseEntity<Integer> getTrainerHours(
             @RequestBody TrainerHoursRequest trainerHoursRequest) {
 
         int hours = trainerService.getTrainingHours(trainerHoursRequest.getUsername(),
