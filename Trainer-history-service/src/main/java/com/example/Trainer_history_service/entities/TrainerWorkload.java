@@ -19,6 +19,6 @@ public class TrainerWorkload {
     @Column(name="status")
     private boolean active;
 
-    @OneToMany
+    @OneToMany(mappedBy="trainerWorkload", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<MonthlySummery> monthlySummeryList;
 }
