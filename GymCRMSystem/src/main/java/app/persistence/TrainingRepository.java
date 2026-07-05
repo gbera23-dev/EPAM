@@ -37,7 +37,4 @@ public interface TrainingRepository extends JpaRepository<Training, Long> {
             @Param("traineeName") String traineeName
     );
 
-
-
-
 }

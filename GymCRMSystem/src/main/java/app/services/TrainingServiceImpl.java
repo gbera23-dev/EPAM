@@ -64,4 +64,16 @@ public class TrainingServiceImpl implements TrainingService{
         training.setTrainer(trainer);
         trainingRepository.save(training);
     }
+
+    @Override
+    @Transactional
+    public void deleteTraining(long trainingId) {
+        Training training = trainingRepository.findById(trainingId)
+                        .orElseThrow(
+                                () -> new TrainingNotFoundException("Such training does not exist!")
+                        );
+
+        trainingRepository.delete(training);
+    }
+
 }

@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import app.services.TrainingService;
@@ -45,6 +46,14 @@ public class TrainingRestController {
         );
 
         return ResponseEntity.ok("Training was added successfully!");
+    }
+
+    @DeleteMapping("/{training-id}")
+    public ResponseEntity<String> deleteTraining(@Valid @PathVariable("training-id") Long trainingId) {
+
+        trainingService.deleteTraining(trainingId);
+
+        return ResponseEntity.status(HttpStatus.OK).body("Training was deleted successfully!");
     }
 
 }

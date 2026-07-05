@@ -3,7 +3,7 @@ package app.services;
 import app.entities.Training;
 import java.time.LocalDate;
 /**
- * Operations for creating and retrieving {@link entities.Training} records.
+ * Operations for creating and retrieving {@link app.entities.Training} records.
  */
 public interface TrainingService {
 
@@ -17,4 +17,7 @@ public interface TrainingService {
      */
     void addTraining(String traineeUsername, String trainerUsername,
                      String trainingName, LocalDate date, int duration);
+
+
+    void deleteTraining(long trainingId);
 }

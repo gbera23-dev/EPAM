@@ -14,6 +14,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.client.ResourceAccessException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -104,6 +105,16 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(TrainingNotFoundException.class)
     public ResponseEntity<String> handleTrainingNotFound(TrainingNotFoundException e){
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+    }
+
+    @ExceptionHandler(EndpointNotFoundException.class)
+    public ResponseEntity<String> handleEndpointNotFound(EndpointNotFoundException e){
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+    }
+
+    @ExceptionHandler(ResourceAccessException.class)
+    public ResponseEntity<String> handleClientNotUp(ResourceAccessException e){
+        return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(e.getMessage());
     }
 
 }
