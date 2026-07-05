@@ -31,6 +31,11 @@ public class TrainerServiceImpl implements TrainerService {
     }
 
     @Override
+    public boolean workloadExists(String username) {
+        return trainerWorkloadRepository.existsByUsername(username);
+    }
+
+    @Override
     public Integer getTrainingHours(String username, LocalDate date) {
         TrainerWorkload trainerWorkload = trainerWorkloadRepository.findByUsername(username)
                 .orElseThrow(() -> new UserNotFoundException("could not find trainer workload!"));

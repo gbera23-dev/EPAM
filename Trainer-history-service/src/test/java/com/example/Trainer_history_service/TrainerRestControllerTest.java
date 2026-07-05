@@ -33,17 +33,6 @@ class TrainerRestControllerTest {
     }
 
     @Test
-    void testCreateTrainerWorkloadReturnsCreated() {
-        TrainerWorkloadCreationRequest request =
-                new TrainerWorkloadCreationRequest("john", "John", "Doe", true);
-
-        ResponseEntity<String> response = controller.createTrainerWorkload(request);
-
-        verify(trainerService).createNewWorkload("john", "John", "Doe", true);
-        assertEquals(HttpStatus.CREATED, response.getStatusCode());
-    }
-
-    @Test
     void testUpdateTrainerWorkloadCallsAddTrainingHoursWhenActionTypeAdd() {
         TrainerWorkloadRequest request = new TrainerWorkloadRequest(
                 "john", "John", "Doe", true, LocalDate.of(2026, 7, 1), 60, ActionType.ADD);

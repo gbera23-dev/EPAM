@@ -8,6 +8,8 @@ public interface TrainerService {
     void createNewWorkload(String username, String firstName, String lastName,
                            boolean isActive);
 
+    boolean workloadExists(String username);
+
     Integer getTrainingHours(String username, LocalDate date);
 
     void addTrainingHours(String username, LocalDate date,

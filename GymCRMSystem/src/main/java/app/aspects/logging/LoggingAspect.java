@@ -34,7 +34,27 @@ public class LoggingAspect {
     @Pointcut("execution(* app.restcontroller.*.*(..))")
     public void restControllerLayer() {}
 
+    @Pointcut("execution(* app.clients.*.*(..))")
+    public void clientLayer() {}
 
+
+    @Around("clientLayer()")
+    public Object logClientExecution(ProceedingJoinPoint pjp) throws Throwable {
+        String methodName = pjp.getSignature().getName();
+        String className = pjp.getSignature().getDeclaringTypeName();
+
+        log.info("Client method {} of {} started execution", methodName, className);
+        log.debug("Client method {} called with arguments: {}", methodName, pjp.getArgs());
+
+        long start = System.currentTimeMillis();
+        Object result = pjp.proceed();
+        long executionTime = System.currentTimeMillis() - start;
+
+        log.debug("Client method {} of {} completed in {} ms", methodName, className, executionTime);
+
+        log.info("Client method {} of {} finished successfully", methodName, className);
+        return result;
+    }
 
     @Around("restControllerLayer()")
     public Object logRestControllerExecution(ProceedingJoinPoint joinPoint) throws Throwable {

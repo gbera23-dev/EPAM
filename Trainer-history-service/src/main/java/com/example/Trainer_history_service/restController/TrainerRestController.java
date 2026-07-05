@@ -20,38 +20,17 @@ public class TrainerRestController {
     }
 
     @PostMapping
-    public ResponseEntity<String> createTrainerWorkload(
-            @RequestBody TrainerWorkloadCreationRequest trainerWorkloadCreationRequest) {
-
-        trainerService.createNewWorkload(
-                trainerWorkloadCreationRequest.getUsername(),
-                trainerWorkloadCreationRequest.getFirstName(),
-                trainerWorkloadCreationRequest.getLastName(),
-                trainerWorkloadCreationRequest.getIsActive()
-        );
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(
-                "trainer workload created successfully!"
-        );
-    }
-
-    @PutMapping
     public ResponseEntity<String> updateTrainerWorkload(
             @RequestBody TrainerWorkloadRequest trainerWorkloadRequest) {
-            if(trainerWorkloadRequest.getActionType().equals(ActionType.ADD)){
-                trainerService.addTrainingHours(trainerWorkloadRequest.getUsername(),
-                        trainerWorkloadRequest.getTrainingDate(),
-                        trainerWorkloadRequest.getDuration()
-                        );
-            }
-            else {
-                trainerService.deleteTrainingHours(trainerWorkloadRequest.getUsername(),
-                        trainerWorkloadRequest.getTrainingDate(),
-                        trainerWorkloadRequest.getDuration());
-            }
+
+            createWorkloadIfNotExists(trainerWorkloadRequest);
+
+            changeTrainingHours(trainerWorkloadRequest);
+
         return ResponseEntity.ok(
                 "trainer workload updated successfully!");
     }
+
 
     @GetMapping
     public ResponseEntity<Integer> getTrainerHours(
@@ -61,6 +40,36 @@ public class TrainerRestController {
                 trainerHoursRequest.getDate());
 
         return ResponseEntity.ok(hours);
+    }
+
+
+    private void createTrainerWorkload(TrainerWorkloadRequest trainerWorkloadRequest) {
+        trainerService.createNewWorkload(
+                trainerWorkloadRequest.getUsername(),
+                trainerWorkloadRequest.getFirstName(),
+                trainerWorkloadRequest.getLastName(),
+                trainerWorkloadRequest.getIsActive()
+        );
+    }
+
+    private void createWorkloadIfNotExists(TrainerWorkloadRequest trainerWorkloadRequest) {
+        if(!trainerService.workloadExists(trainerWorkloadRequest.getUsername())) {
+            createTrainerWorkload(trainerWorkloadRequest);
+        }
+    }
+
+    private void changeTrainingHours(TrainerWorkloadRequest trainerWorkloadRequest) {
+        if(trainerWorkloadRequest.getActionType().equals(ActionType.ADD)){
+            trainerService.addTrainingHours(trainerWorkloadRequest.getUsername(),
+                    trainerWorkloadRequest.getTrainingDate(),
+                    trainerWorkloadRequest.getDuration()
+            );
+        }
+        else {
+            trainerService.deleteTrainingHours(trainerWorkloadRequest.getUsername(),
+                    trainerWorkloadRequest.getTrainingDate(),
+                    trainerWorkloadRequest.getDuration());
+        }
     }
 
 }
