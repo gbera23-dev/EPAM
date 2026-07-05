@@ -1,5 +1,6 @@
 package com.example.Trainer_history_service.filters;
 
+import com.example.Trainer_history_service.exceptions.UserCannotBeAuthorizedException;
 import com.example.Trainer_history_service.services.JWTService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -37,8 +38,10 @@ public class JWTFilter extends OncePerRequestFilter {
         //check that authorization header really does contain bearer token and extract it out
         if(authenticationHeader != null && authenticationHeader.startsWith(JWT_TOKEN_PREFIX)) {
             jwtToken = authenticationHeader.substring(JWT_TOKEN_PREFIX.length());
-            username = jwtService.extractUsernameFromToken(jwtToken);
-            if(username == null) {
+
+            try {
+                username = jwtService.extractUsernameFromToken(jwtToken);
+            } catch(UserCannotBeAuthorizedException e) {
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 response.getWriter().write("JWT Validation failed!");
                 return;

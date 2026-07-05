@@ -9,6 +9,7 @@ import app.entities.Training;
 import app.entities.User;
 import app.services.TrainerService;
 import app.services.TrainingService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
@@ -27,6 +28,8 @@ import org.springframework.web.client.ResourceAccessException;
 @Component
 public class TrainerHistoryServiceAspect {
 
+    private static final String AUTHORIZATION_HEADER = "Authorization";
+
     private final TrainerHistoryServiceClient trainerHistoryServiceClient;
     private final TrainerService trainerService;
     private final TrainingService trainingService;
@@ -41,6 +44,7 @@ public class TrainerHistoryServiceAspect {
     public void addHoursToTrainerWorkload(JoinPoint jp) {
 
         TrainingRequest trainingRequest = (TrainingRequest) jp.getArgs()[0];
+        HttpServletRequest httpServletRequest = (HttpServletRequest) jp.getArgs()[1];
 
         Trainer trainer = trainerService.
                 selectTrainerProfileByUsername(trainingRequest.getTrainerUsername());
@@ -55,12 +59,13 @@ public class TrainerHistoryServiceAspect {
                 trainingRequest.getDuration(),
                 ActionType.ADD
         );
-        attemptSendingRequest(trainerWorkloadRequest);
+        attemptSendingRequest(httpServletRequest, trainerWorkloadRequest);
     }
 
     @Around("deleteTraining()")
         public Object removeHoursFromTrainerWorkload(ProceedingJoinPoint pjp) throws Throwable {
         Long trainingId = (Long) pjp.getArgs()[0];
+        HttpServletRequest httpServletRequest = (HttpServletRequest) pjp.getArgs()[1];
 
         Training training = trainingService.selectTraining(trainingId);
 
@@ -81,16 +86,17 @@ public class TrainerHistoryServiceAspect {
 
         obj = pjp.proceed();
 
-        attemptSendingRequest(trainerWorkloadRequest);
+        attemptSendingRequest(httpServletRequest, trainerWorkloadRequest);
 
         return obj;
     }
 
 
-    private void attemptSendingRequest(TrainerWorkloadRequest trainerWorkloadRequest) {
+    private void attemptSendingRequest(HttpServletRequest httpServletRequest, TrainerWorkloadRequest trainerWorkloadRequest) {
         try {
             ResponseEntity<String> resp =
-                    trainerHistoryServiceClient.updateTrainerWorkload(trainerWorkloadRequest);
+                    trainerHistoryServiceClient.updateTrainerWorkload(trainerWorkloadRequest,
+                            httpServletRequest.getHeader(AUTHORIZATION_HEADER));
 
         } catch(ResourceAccessException e) {
             log.warn("Could not connect to microservice: TrainerHistoryService... Proceeding without it!..");

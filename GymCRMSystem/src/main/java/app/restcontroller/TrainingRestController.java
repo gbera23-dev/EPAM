@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,7 +36,8 @@ public class TrainingRestController {
     })
     
     @PostMapping
-    public ResponseEntity<String> addTraining(@Valid @RequestBody TrainingRequest trainingRequest) {
+    public ResponseEntity<String> addTraining(@Valid @RequestBody TrainingRequest trainingRequest,
+                                              HttpServletRequest httpServletRequest) {
 
         trainingService.addTraining(
                 trainingRequest.getTraineeUsername(),
@@ -49,7 +51,8 @@ public class TrainingRestController {
     }
 
     @DeleteMapping("/{training-id}")
-    public ResponseEntity<String> deleteTraining(@Valid @PathVariable("training-id") Long trainingId) {
+    public ResponseEntity<String> deleteTraining(@Valid @PathVariable("training-id") Long trainingId,
+                                                 HttpServletRequest httpServletRequest) {
 
         trainingService.deleteTraining(trainingId);
 

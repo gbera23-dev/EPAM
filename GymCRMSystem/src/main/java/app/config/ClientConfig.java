@@ -15,6 +15,7 @@ public class ClientConfig {
     @Bean
     public TrainerHistoryServiceClient trainerHistoryServiceClient(@Value("${microservice.TrainerHistoryService.URI}")
                                                                    String uri) {
+
         RestClient restClient = RestClient.builder()
                 .baseUrl(uri)
                 .build();

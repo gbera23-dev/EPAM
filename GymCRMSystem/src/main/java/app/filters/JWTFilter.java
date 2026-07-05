@@ -1,10 +1,12 @@
 package app.filters;
 
+import app.exceptions.UserCannotBeAuthorizedException;
 import app.services.JWTService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,7 +20,6 @@ import java.io.IOException;
 public class JWTFilter extends OncePerRequestFilter {
 
     private static final String JWT_TOKEN_PREFIX = "Bearer ";
-    private static final String AUTHORIZATION_HEADER = "Authorization";
 
     private final JWTService jwtService;
     private final UserDetailsService userDetailsService;
@@ -33,14 +34,20 @@ public class JWTFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
         //get authorization header(where JWT Token is stored)
-        String authenticationHeader = request.getHeader(AUTHORIZATION_HEADER);
+        String authenticationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
         String jwtToken = null;
         String username = null;
 
         //check that authorization header really does contain bearer token and extract it out
         if(authenticationHeader != null && authenticationHeader.startsWith(JWT_TOKEN_PREFIX)) {
             jwtToken = authenticationHeader.substring(JWT_TOKEN_PREFIX.length());
-            username = jwtService.extractUsernameFromToken(jwtToken);
+            try {
+                username = jwtService.extractUsernameFromToken(jwtToken);
+            } catch(UserCannotBeAuthorizedException e) {
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.getWriter().write("JWT Validation failed!");
+                return;
+            }
         }
 
         //Only proceed if we have a username AND no active session exists AND token is not blacklisted.
