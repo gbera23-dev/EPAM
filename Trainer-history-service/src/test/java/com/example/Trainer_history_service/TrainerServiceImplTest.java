@@ -1,6 +1,6 @@
 package com.example.Trainer_history_service;
 
-import com.example.Trainer_history_service.entities.MonthlySummery;
+import com.example.Trainer_history_service.entities.MonthlySummary;
 import com.example.Trainer_history_service.entities.TrainerWorkload;
 import com.example.Trainer_history_service.exceptions.MonthlySummaryNotFoundException;
 import com.example.Trainer_history_service.exceptions.NegativeDurationException;
@@ -57,7 +57,7 @@ class TrainerServiceImplTest {
     @Test
     void testGetTrainingHoursReturnsHoursWhenFound() {
         TrainerWorkload workload = new TrainerWorkload(1L, "john", "John", "Doe", true, Collections.emptyList());
-        MonthlySummery summary = new MonthlySummery(1L, LocalDate.of(2026, 7, 1), 120, workload);
+        MonthlySummary summary = new MonthlySummary(1L, LocalDate.of(2026, 7, 1), 120, workload);
 
         when(trainerWorkloadRepository.findByUsername("john")).thenReturn(Optional.of(workload));
         when(monthlySummeryRepository.findByIdAndDate(eq(1L), eq(LocalDate.of(2026, 7, 1))))
@@ -89,7 +89,7 @@ class TrainerServiceImplTest {
     @Test
     void testAddTrainingHoursAddsToExistingSummary() {
         TrainerWorkload workload = new TrainerWorkload(1L, "john", "John", "Doe", true, Collections.emptyList());
-        MonthlySummery summary = new MonthlySummery(1L, LocalDate.of(2026, 7, 1), 60, workload);
+        MonthlySummary summary = new MonthlySummary(1L, LocalDate.of(2026, 7, 1), 60, workload);
 
         when(trainerWorkloadRepository.findByUsername("john")).thenReturn(Optional.of(workload));
         when(monthlySummeryRepository.findByIdAndDate(eq(1L), eq(LocalDate.of(2026, 7, 1))))
@@ -97,7 +97,7 @@ class TrainerServiceImplTest {
 
         trainerService.addTrainingHours("john", LocalDate.of(2026, 7, 10), 30);
 
-        ArgumentCaptor<MonthlySummery> captor = ArgumentCaptor.forClass(MonthlySummery.class);
+        ArgumentCaptor<MonthlySummary> captor = ArgumentCaptor.forClass(MonthlySummary.class);
         verify(monthlySummeryRepository).save(captor.capture());
         assertEquals(90, captor.getValue().getDuration());
     }
@@ -111,7 +111,7 @@ class TrainerServiceImplTest {
 
         trainerService.addTrainingHours("john", LocalDate.of(2026, 7, 10), 45);
 
-        ArgumentCaptor<MonthlySummery> captor = ArgumentCaptor.forClass(MonthlySummery.class);
+        ArgumentCaptor<MonthlySummary> captor = ArgumentCaptor.forClass(MonthlySummary.class);
         verify(monthlySummeryRepository).save(captor.capture());
         assertEquals(45, captor.getValue().getDuration());
     }
@@ -127,7 +127,7 @@ class TrainerServiceImplTest {
     @Test
     void testDeleteTrainingHoursSubtractsFromExistingSummary() {
         TrainerWorkload workload = new TrainerWorkload(1L, "john", "John", "Doe", true, Collections.emptyList());
-        MonthlySummery summary = new MonthlySummery(1L, LocalDate.of(2026, 7, 1), 60, workload);
+        MonthlySummary summary = new MonthlySummary(1L, LocalDate.of(2026, 7, 1), 60, workload);
 
         when(trainerWorkloadRepository.findByUsername("john")).thenReturn(Optional.of(workload));
         when(monthlySummeryRepository.findByIdAndDate(eq(1L), eq(LocalDate.of(2026, 7, 1))))
@@ -135,7 +135,7 @@ class TrainerServiceImplTest {
 
         trainerService.deleteTrainingHours("john", LocalDate.of(2026, 7, 10), 20);
 
-        ArgumentCaptor<MonthlySummery> captor = ArgumentCaptor.forClass(MonthlySummery.class);
+        ArgumentCaptor<MonthlySummary> captor = ArgumentCaptor.forClass(MonthlySummary.class);
         verify(monthlySummeryRepository).save(captor.capture());
         assertEquals(40, captor.getValue().getDuration());
     }
@@ -143,7 +143,7 @@ class TrainerServiceImplTest {
     @Test
     void testDeleteTrainingHoursDeletesSummaryWhenDurationBecomesZero() {
         TrainerWorkload workload = new TrainerWorkload(1L, "john", "John", "Doe", true, Collections.emptyList());
-        MonthlySummery summary = new MonthlySummery(1L, LocalDate.of(2026, 7, 1), 30, workload);
+        MonthlySummary summary = new MonthlySummary(1L, LocalDate.of(2026, 7, 1), 30, workload);
 
         when(trainerWorkloadRepository.findByUsername("john")).thenReturn(Optional.of(workload));
         when(monthlySummeryRepository.findByIdAndDate(eq(1L), eq(LocalDate.of(2026, 7, 1))))
@@ -158,7 +158,7 @@ class TrainerServiceImplTest {
     @Test
     void testDeleteTrainingHoursThrowsNegativeDurationExceptionWhenDurationBecomesNegative() {
         TrainerWorkload workload = new TrainerWorkload(1L, "john", "John", "Doe", true, Collections.emptyList());
-        MonthlySummery summary = new MonthlySummery(1L, LocalDate.of(2026, 7, 1), 10, workload);
+        MonthlySummary summary = new MonthlySummary(1L, LocalDate.of(2026, 7, 1), 10, workload);
 
         when(trainerWorkloadRepository.findByUsername("john")).thenReturn(Optional.of(workload));
         when(monthlySummeryRepository.findByIdAndDate(eq(1L), eq(LocalDate.of(2026, 7, 1))))

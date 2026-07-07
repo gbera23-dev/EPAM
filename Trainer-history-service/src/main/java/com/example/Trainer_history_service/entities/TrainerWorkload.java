@@ -28,5 +28,5 @@ public class TrainerWorkload {
     private boolean active;
 
     @OneToMany(mappedBy="trainerWorkload", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private List<MonthlySummery> monthlySummeryList;
+    private List<MonthlySummary> monthlySummaryList;
 }

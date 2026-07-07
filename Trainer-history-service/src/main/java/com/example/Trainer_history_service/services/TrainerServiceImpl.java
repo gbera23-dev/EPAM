@@ -1,6 +1,6 @@
 package com.example.Trainer_history_service.services;
 
-import com.example.Trainer_history_service.entities.MonthlySummery;
+import com.example.Trainer_history_service.entities.MonthlySummary;
 import com.example.Trainer_history_service.entities.TrainerWorkload;
 import com.example.Trainer_history_service.exceptions.MonthlySummaryNotFoundException;
 import com.example.Trainer_history_service.exceptions.NegativeDurationException;
@@ -40,13 +40,13 @@ public class TrainerServiceImpl implements TrainerService {
         TrainerWorkload trainerWorkload = trainerWorkloadRepository.findByUsername(username)
                 .orElseThrow(() -> new UserNotFoundException("could not find trainer workload!"));
 
-        MonthlySummery monthlySummery = monthlySummeryRepository.findByIdAndDate(trainerWorkload.getId(),
+        MonthlySummary monthlySummary = monthlySummeryRepository.findByIdAndDate(trainerWorkload.getId(),
                         LocalDate.of(date.getYear(), date.getMonth(), 1))
                 .orElseThrow(
                         () -> new MonthlySummaryNotFoundException("could not find monthly summary!")
                 );
 
-        return monthlySummery.getDuration();
+        return monthlySummary.getDuration();
     }
 
     @Override
@@ -55,16 +55,16 @@ public class TrainerServiceImpl implements TrainerService {
         TrainerWorkload trainerWorkload = trainerWorkloadRepository.findByUsername(username)
                 .orElseThrow(() -> new UserNotFoundException("could not find trainer workload!"));
 
-        MonthlySummery monthlySummery = monthlySummeryRepository.findByIdAndDate(trainerWorkload.getId(),
+        MonthlySummary monthlySummary = monthlySummeryRepository.findByIdAndDate(trainerWorkload.getId(),
                         LocalDate.of(date.getYear(), date.getMonth(), 1))
-                .orElse(new MonthlySummery(null,
+                .orElse(new MonthlySummary(null,
                         LocalDate.of(date.getYear(), date.getMonth(), 1), 0, trainerWorkload)
                 );
 
-        int durationToSet = monthlySummery.getDuration() + hours;
+        int durationToSet = monthlySummary.getDuration() + hours;
 
-        monthlySummery.setDuration(durationToSet);
-        monthlySummeryRepository.save(monthlySummery);
+        monthlySummary.setDuration(durationToSet);
+        monthlySummeryRepository.save(monthlySummary);
     }
 
     @Override
@@ -74,16 +74,16 @@ public class TrainerServiceImpl implements TrainerService {
                 .orElseThrow(() -> new UserNotFoundException("could not find trainer workload!"));
 
 
-        MonthlySummery monthlySummery = monthlySummeryRepository.findByIdAndDate(trainerWorkload.getId(),
+        MonthlySummary monthlySummary = monthlySummeryRepository.findByIdAndDate(trainerWorkload.getId(),
                         LocalDate.of(date.getYear(), date.getMonth(), 1))
-                .orElse(new MonthlySummery(null,
+                .orElse(new MonthlySummary(null,
                         LocalDate.of(date.getYear(), date.getMonth(), 1), 0, trainerWorkload)
                 );
 
-        int durationToSet = monthlySummery.getDuration() - hours;
+        int durationToSet = monthlySummary.getDuration() - hours;
 
         if(durationToSet == 0) {
-            monthlySummeryRepository.delete(monthlySummery);
+            monthlySummeryRepository.delete(monthlySummary);
             return;
         }
 
@@ -91,7 +91,7 @@ public class TrainerServiceImpl implements TrainerService {
             throw new NegativeDurationException("training hours cannot become negative!");
         }
 
-        monthlySummery.setDuration(durationToSet);
-        monthlySummeryRepository.save(monthlySummery);
+        monthlySummary.setDuration(durationToSet);
+        monthlySummeryRepository.save(monthlySummary);
     }
 }

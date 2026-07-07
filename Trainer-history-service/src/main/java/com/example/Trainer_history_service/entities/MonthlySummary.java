@@ -15,7 +15,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class MonthlySummery {
+public class MonthlySummary {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     @Column(name="MonthlySummery_id")
