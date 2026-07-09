@@ -1,6 +1,5 @@
 package app.config;
 
-import app.clients.TrainerHistoryServiceClient;
 import app.dto.internal.TraineeDTO;
 import app.dto.internal.TrainerDTO;
 import app.dto.internal.TrainingDTO;
@@ -9,9 +8,6 @@ import org.springframework.context.annotation.*;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.web.client.support.RestClientAdapter;
-import org.springframework.web.service.invoker.HttpServiceProxyFactory;
-
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
