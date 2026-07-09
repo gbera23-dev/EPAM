@@ -52,14 +52,7 @@ public class TrainerServiceImpl implements TrainerService {
     @Override
     @Transactional
     public void addTrainingHours(String username, LocalDate date, int hours) {
-        TrainerWorkload trainerWorkload = trainerWorkloadRepository.findByUsername(username)
-                .orElseThrow(() -> new UserNotFoundException("could not find trainer workload!"));
-
-        MonthlySummary monthlySummary = monthlySummeryRepository.findByIdAndDate(trainerWorkload.getId(),
-                        LocalDate.of(date.getYear(), date.getMonth(), 1))
-                .orElse(new MonthlySummary(null,
-                        LocalDate.of(date.getYear(), date.getMonth(), 1), 0, trainerWorkload)
-                );
+        MonthlySummary monthlySummary = getMonthlySummary(username, date, hours);
 
         int durationToSet = monthlySummary.getDuration() + hours;
 
@@ -70,15 +63,8 @@ public class TrainerServiceImpl implements TrainerService {
     @Override
     @Transactional
     public void deleteTrainingHours(String username, LocalDate date, int hours) {
-        TrainerWorkload trainerWorkload = trainerWorkloadRepository.findByUsername(username)
-                .orElseThrow(() -> new UserNotFoundException("could not find trainer workload!"));
 
-
-        MonthlySummary monthlySummary = monthlySummeryRepository.findByIdAndDate(trainerWorkload.getId(),
-                        LocalDate.of(date.getYear(), date.getMonth(), 1))
-                .orElse(new MonthlySummary(null,
-                        LocalDate.of(date.getYear(), date.getMonth(), 1), 0, trainerWorkload)
-                );
+        MonthlySummary monthlySummary = getMonthlySummary(username, date, hours);
 
         int durationToSet = monthlySummary.getDuration() - hours;
 
@@ -94,4 +80,21 @@ public class TrainerServiceImpl implements TrainerService {
         monthlySummary.setDuration(durationToSet);
         monthlySummeryRepository.save(monthlySummary);
     }
+
+    private MonthlySummary getMonthlySummary(String username, LocalDate date, int hours) {
+        if(hours <= 0) {
+            throw new NegativeDurationException("Number of hours cannot be negative!");
+        }
+
+        TrainerWorkload trainerWorkload = trainerWorkloadRepository.findByUsername(username)
+                .orElseThrow(() -> new UserNotFoundException("could not find trainer workload!"));
+
+
+        return monthlySummeryRepository.findByIdAndDate(trainerWorkload.getId(),
+                        LocalDate.of(date.getYear(), date.getMonth(), 1))
+                .orElse(new MonthlySummary(null,
+                        LocalDate.of(date.getYear(), date.getMonth(), 1), 0, trainerWorkload)
+                );
+    }
+
 }

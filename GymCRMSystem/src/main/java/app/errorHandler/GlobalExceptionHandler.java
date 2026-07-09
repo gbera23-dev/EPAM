@@ -117,4 +117,9 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(e.getMessage());
     }
 
+    @ExceptionHandler(AccessTimeoutException.class)
+    public ResponseEntity<String> handleClientRequestTimeout(AccessTimeoutException e){
+        return ResponseEntity.status(HttpStatus.GATEWAY_TIMEOUT).body(e.getMessage());
+    }
+
 }

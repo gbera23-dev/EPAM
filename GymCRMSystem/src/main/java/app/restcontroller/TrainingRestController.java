@@ -34,7 +34,6 @@ public class TrainingRestController {
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content),
             @ApiResponse(responseCode = "404", description = "Trainee or trainer not found", content = @Content)
     })
-    
     @PostMapping
     public ResponseEntity<String> addTraining(@Valid @RequestBody TrainingRequest trainingRequest,
                                               HttpServletRequest httpServletRequest) {
@@ -50,6 +49,14 @@ public class TrainingRestController {
         return ResponseEntity.ok("Training was added successfully!");
     }
 
+    @Operation(summary = "Delete existing training", description = "Deletes a particular training based on its id")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Training deleted successfully",
+                    content = @Content(schema = @Schema(type = "string"))),
+            @ApiResponse(responseCode = "400", description = "Invalid request body", content = @Content),
+            @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content),
+            @ApiResponse(responseCode = "404", description = "Training not found", content = @Content)
+    })
     @DeleteMapping("/{training-id}")
     public ResponseEntity<String> deleteTraining(@Valid @PathVariable("training-id") Long trainingId,
                                                  HttpServletRequest httpServletRequest) {
