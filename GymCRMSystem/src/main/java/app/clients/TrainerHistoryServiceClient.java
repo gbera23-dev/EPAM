@@ -8,7 +8,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 
-@FeignClient(name = "Trainer-history-service", url = "${microservice.TrainerHistoryService.URI}")
+@FeignClient(name = "Trainer-history-service", url = "${microservice.TrainerHistoryService.URI}",
+fallback = TrainerHistoryServiceFallback.class)
 public interface TrainerHistoryServiceClient {
 
     @PostMapping("/api/trainer")

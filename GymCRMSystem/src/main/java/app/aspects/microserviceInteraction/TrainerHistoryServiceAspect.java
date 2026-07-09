@@ -7,6 +7,7 @@ import app.entities.ActionType;
 import app.entities.Trainer;
 import app.entities.Training;
 import app.entities.User;
+import app.exceptions.UserAlreadyActiveException;
 import app.services.TrainerService;
 import app.services.TrainingService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,6 +19,7 @@ import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.ResourceAccessException;
@@ -98,8 +100,13 @@ public class TrainerHistoryServiceAspect {
                     trainerHistoryServiceClient.updateTrainerWorkload(trainerWorkloadRequest,
                             httpServletRequest.getHeader(AUTHORIZATION_HEADER));
 
+            if(resp.getStatusCode().equals(HttpStatus.GATEWAY_TIMEOUT)){
+                throw new ResourceAccessException(
+                        "Could not connect to microservice... Proceeding without it!");
+            }
+
         } catch(ResourceAccessException e) {
-            log.warn("Could not connect to microservice: TrainerHistoryService... Proceeding without it!..");
+            log.warn(e.getMessage());
         }
     }
 
