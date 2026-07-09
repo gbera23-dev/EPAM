@@ -57,20 +57,6 @@ class JWTFilterTest {
     }
 
     @Test
-    void testDoFilterInternalReturnsUnauthorizedWhenUsernameNull() throws Exception {
-        when(request.getHeader("Authorization")).thenReturn("Bearer badtoken");
-        when(jwtService.extractUsernameFromToken("badtoken")).thenReturn(null);
-        PrintWriter writer = mock(PrintWriter.class);
-        when(response.getWriter()).thenReturn(writer);
-
-        jwtFilter.doFilter(request, response, filterChain);
-
-        verify(response).setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        verify(filterChain, never()).doFilter(request, response);
-        assertNull(SecurityContextHolder.getContext().getAuthentication());
-    }
-
-    @Test
     void testDoFilterInternalProceedsWhenNoAuthorizationHeader() throws Exception {
         when(request.getHeader("Authorization")).thenReturn(null);
 

@@ -1,13 +1,12 @@
 package com.example.Trainer_history_service.restController;
 
-import com.example.Trainer_history_service.dto.TrainerHoursRequest;
-import com.example.Trainer_history_service.dto.TrainerWorkloadCreationRequest;
 import com.example.Trainer_history_service.dto.TrainerWorkloadRequest;
 import com.example.Trainer_history_service.entities.ActionType;
 import com.example.Trainer_history_service.services.TrainerService;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
 
 @RestController
 @RequestMapping("/api/trainer")
@@ -34,10 +33,9 @@ public class TrainerRestController {
 
     @GetMapping
     public ResponseEntity<Integer> getTrainerHours(
-            @RequestBody TrainerHoursRequest trainerHoursRequest) {
+            @RequestParam("username") String username, @RequestParam("date") LocalDate localDate) {
 
-        int hours = trainerService.getTrainingHours(trainerHoursRequest.getUsername(),
-                trainerHoursRequest.getDate());
+        int hours = trainerService.getTrainingHours(username, localDate);
 
         return ResponseEntity.ok(hours);
     }
