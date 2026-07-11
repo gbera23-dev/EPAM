@@ -27,7 +27,6 @@ public class TraineeServiceImpl implements TraineeService {
     private final TrainingRepository trainingRepository;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final TrainerHistoryServiceClient trainerHistoryServiceClient;
 
     public TraineeServiceImpl(TraineeRepository traineeRepository,
                               TrainerRepository trainerRepository,
@@ -40,7 +39,6 @@ public class TraineeServiceImpl implements TraineeService {
         this.trainingRepository = trainingRepository;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
-        this.trainerHistoryServiceClient = trainerHistoryServiceClient;
     }
 
     @Override
@@ -115,8 +113,9 @@ public class TraineeServiceImpl implements TraineeService {
             trainer.getTrainees().remove(trainee);
         }
 
-        if(trainee.getTrainings() != null)
+        if(trainee.getTrainings() != null) {
             trainee.getTrainings().clear();
+        }
 
         trainee.getUser().setTrainee(null);
 
@@ -185,5 +184,10 @@ public class TraineeServiceImpl implements TraineeService {
     @Override
     public List<Trainer> getTrainersAssignedToTrainee(String username) {
         return trainerRepository.findTrainersAssignedToTrainee(username);
+    }
+
+    @Override
+    public List<Training> getAllTrainingsForTrainee(String username) {
+        return trainingRepository.findAllTrainingDetailsByTraineeUsername(username);
     }
 }

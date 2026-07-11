@@ -12,18 +12,6 @@
     "duration": 60
   },
   {
-    "trainingPK": 2,
-    "traineeId": 42,
-    "trainerId": 1,
-    "name": "Heavy Leg Day",
-    "trainingType": {
-      "id": 2,
-      "name": "Bodybuilding"
-    },
-    "date": "2024-05-10T10:30:00Z",
-    "duration": 90
-  },
-  {
     "trainingPK": 3,
     "traineeId": 7,
     "trainerId": 8,
@@ -489,18 +477,6 @@
       "name": "Pilates"
     },
     "date": "2024-05-28T09:00:00Z",
-    "duration": 60
-  },
-  {
-    "trainingPK": 42,
-    "traineeId": 64,
-    "trainerId": 42,
-    "name": "AMRAP 20",
-    "trainingType": {
-      "id": 4,
-      "name": "CrossFit"
-    },
-    "date": "2024-05-29T17:30:00Z",
     "duration": 60
   },
   {

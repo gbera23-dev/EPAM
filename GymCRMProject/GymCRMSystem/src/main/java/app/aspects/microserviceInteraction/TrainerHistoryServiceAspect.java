@@ -3,11 +3,9 @@ package app.aspects.microserviceInteraction;
 import app.clients.TrainerHistoryServiceClient;
 import app.dto.api.request.TrainerWorkloadRequest;
 import app.dto.api.request.TrainingRequest;
-import app.entities.ActionType;
-import app.entities.Trainer;
-import app.entities.Training;
-import app.entities.User;
+import app.entities.*;
 import app.exceptions.AccessTimeoutException;
+import app.services.TraineeService;
 import app.services.TrainerService;
 import app.services.TrainingService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -23,6 +21,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Aspect
 @AllArgsConstructor
 @Slf4j
@@ -34,12 +34,16 @@ public class TrainerHistoryServiceAspect {
     private final TrainerHistoryServiceClient trainerHistoryServiceClient;
     private final TrainerService trainerService;
     private final TrainingService trainingService;
+    private final TraineeService traineeService;
 
     @Pointcut("execution(* app.restcontroller.TrainingRestController.addTraining(..))")
     public void addTraining() {}
 
     @Pointcut("execution(* app.restcontroller.TrainingRestController.deleteTraining(..))")
     public void deleteTraining() {}
+
+    @Pointcut("execution(* app.restcontroller.TraineeRestController.deleteTrainee(..))")
+    public void deleteTrainee() {}
 
     @After("addTraining()")
     public void addHoursToTrainerWorkload(JoinPoint jp) {
@@ -64,7 +68,7 @@ public class TrainerHistoryServiceAspect {
     }
 
     @Around("deleteTraining()")
-        public Object removeHoursFromTrainerWorkload(ProceedingJoinPoint pjp) throws Throwable {
+    public Object removeHoursFromTrainerWorkload(ProceedingJoinPoint pjp) throws Throwable {
         Long trainingId = (Long) pjp.getArgs()[0];
         HttpServletRequest httpServletRequest = (HttpServletRequest) pjp.getArgs()[1];
 
@@ -83,11 +87,35 @@ public class TrainerHistoryServiceAspect {
                 ActionType.DELETE
         );
 
-        Object obj = null;
-
-        obj = pjp.proceed();
+        Object obj = pjp.proceed();
 
         attemptSendingRequest(httpServletRequest, trainerWorkloadRequest);
+
+        return obj;
+    }
+
+    @Around("deleteTrainee()")
+    public Object updateTrainerHoursAfterTrainerDeletion(ProceedingJoinPoint pjp) throws Throwable {
+        String username = (String) pjp.getArgs()[0];
+        HttpServletRequest httpServletRequest = (HttpServletRequest) pjp.getArgs()[1];
+
+        List<Training> trainings = traineeService.getAllTrainingsForTrainee(username);
+
+        System.out.println("number of trainings: " + trainings.size());
+
+        Object obj = pjp.proceed();
+
+        trainings.forEach(tr ->
+                attemptSendingRequest(httpServletRequest, new TrainerWorkloadRequest(
+                        tr.getTrainer().getUser().getUsername(),
+                        tr.getTrainer().getUser().getFirstName(),
+                        tr.getTrainer().getUser().getLastName(),
+                        tr.getTrainer().getUser().isActive(),
+                        tr.getDate(),
+                        tr.getDuration(),
+                        ActionType.DELETE
+                        ))
+                );
 
         return obj;
     }

@@ -46,4 +46,6 @@ public interface TraineeService {
 
 
     List<Trainer> getTrainersAssignedToTrainee(String username);
+
+    List<Training> getAllTrainingsForTrainee(String username);
 }

@@ -37,4 +37,8 @@ public interface TrainingRepository extends JpaRepository<Training, Long> {
             @Param("traineeName") String traineeName
     );
 
+    @Query("SELECT tr FROM Training tr JOIN FETCH tr.trainee t JOIN FETCH t.user u WHERE u.username = :username")
+    List<Training> findAllTrainingDetailsByTraineeUsername(@Param("username") String username);
+
+
 }
