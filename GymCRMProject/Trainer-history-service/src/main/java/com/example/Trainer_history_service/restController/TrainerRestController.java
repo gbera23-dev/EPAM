@@ -73,7 +73,7 @@ public class TrainerRestController {
             @ApiResponse(responseCode = "400", description = "Invalid request body", content = @Content),
     })
     @PostMapping("/api/trainer/in-batch")
-    ResponseEntity<String> updateTrainersWorkloadInBatch(
+    public ResponseEntity<String> updateTrainersWorkloadInBatch(
             @RequestBody List<TrainerWorkloadRequest> trainerWorkloadRequests) {
 
         trainerWorkloadRequests.forEach(
