@@ -10,10 +10,12 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Tag(name = "Trainer Workload", description = "Endpoints for managing trainer workloads and training hours")
 @RestController
@@ -38,7 +40,6 @@ public class TrainerRestController {
                     content = @Content(schema = @Schema(implementation = String.class))
             ),
             @ApiResponse(responseCode = "400", description = "Invalid request body", content = @Content),
-            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
     })
     @PostMapping
     public ResponseEntity<String> updateTrainerWorkload(
@@ -49,11 +50,44 @@ public class TrainerRestController {
             )
             @RequestBody TrainerWorkloadRequest trainerWorkloadRequest) {
 
-        createWorkloadIfNotExists(trainerWorkloadRequest);
+        if (!trainerService.workloadExists(trainerWorkloadRequest.getUsername())) {
+            createTrainerWorkload(trainerWorkloadRequest);
+        }
+
         changeTrainingHours(trainerWorkloadRequest);
 
         return ResponseEntity.ok("trainer workload updated successfully!");
     }
+
+    @Operation(
+            summary = "Update trainers' workloads in batch",
+            description = "For each trainer, creates the trainer's workload profile if it does not exist, " +
+                    "then adds or removes training hours based on the action type in the request."
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Workloads have been updated successfully",
+                    content = @Content(schema = @Schema(implementation = String.class))
+            ),
+            @ApiResponse(responseCode = "400", description = "Invalid request body", content = @Content),
+    })
+    @PostMapping("/api/trainer/in-batch")
+    ResponseEntity<String> updateTrainersWorkloadInBatch(
+            @RequestBody List<TrainerWorkloadRequest> trainerWorkloadRequests) {
+
+        trainerWorkloadRequests.forEach(
+                twq -> {
+                    if (!trainerService.workloadExists(twq.getUsername())) {
+                        createTrainerWorkload(twq);
+                    }
+                    changeTrainingHours(twq);
+                }
+        );
+
+        return ResponseEntity.ok("Workloads have been updated successfully!");
+    }
+
 
     @Operation(
             summary = "Get trainer training hours",
@@ -89,12 +123,6 @@ public class TrainerRestController {
                 trainerWorkloadRequest.getLastName(),
                 trainerWorkloadRequest.getIsActive()
         );
-    }
-
-    private void createWorkloadIfNotExists(TrainerWorkloadRequest trainerWorkloadRequest) {
-        if (!trainerService.workloadExists(trainerWorkloadRequest.getUsername())) {
-            createTrainerWorkload(trainerWorkloadRequest);
-        }
     }
 
     private void changeTrainingHours(TrainerWorkloadRequest trainerWorkloadRequest) {

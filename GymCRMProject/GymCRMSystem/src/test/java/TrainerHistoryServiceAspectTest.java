@@ -1,12 +1,11 @@
 import app.aspects.microserviceInteraction.TrainerHistoryServiceAspect;
 import app.clients.TrainerHistoryServiceClient;
-import app.dto.api.request.TrainerWorkloadRequest;
 import app.dto.api.request.TrainingRequest;
-import app.entities.ActionType;
 import app.entities.Trainer;
 import app.entities.Training;
 import app.entities.User;
 import app.exceptions.AccessTimeoutException;
+import app.services.TraineeService;
 import app.services.TrainerService;
 import app.services.TrainingService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -14,7 +13,6 @@ import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -22,8 +20,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -39,174 +39,166 @@ class TrainerHistoryServiceAspectTest {
     private TrainingService trainingService;
 
     @Mock
+    private TraineeService traineeService;
+
+    @Mock
     private ProceedingJoinPoint pjp;
+
+    @Mock
+    private JoinPoint jp;
+
+    @Mock
+    private HttpServletRequest httpServletRequest;
 
     @InjectMocks
     private TrainerHistoryServiceAspect aspect;
 
-    private User buildUser(String username, String firstName, String lastName, boolean active) {
-        User user = new User();
-        user.setUsername(username);
-        user.setFirstName(firstName);
-        user.setLastName(lastName);
-        user.setActive(active);
-        return user;
+    private static final String AUTH_HEADER = "Bearer test-token";
+    private static final String TRAINER_USERNAME = "john.doe";
+    private static final LocalDate TRAINING_DATE = LocalDate.of(2025, 1, 15);
+    private static final int TRAINING_DURATION = 90;
+
+    private User buildUser() {
+        return new User(1L, "John", "Doe", TRAINER_USERNAME, "pass", true, null, null);
     }
 
     private Trainer buildTrainer(User user) {
-        Trainer trainer = new Trainer();
-        trainer.setUser(user);
-        return trainer;
+        return new Trainer(1L, null, user, null, null);
     }
 
-    private TrainingRequest buildTrainingRequest(String trainerUsername, LocalDate date, int duration) {
-        TrainingRequest req = new TrainingRequest();
-        req.setTrainerUsername(trainerUsername);
-        req.setDate(date);
-        req.setDuration(duration);
-        return req;
+    private Training buildTraining(Trainer trainer) {
+        return new Training(1L, null, trainer, "Yoga", null, TRAINING_DATE, TRAINING_DURATION);
     }
 
     @Test
     void testAddHoursToTrainerWorkloadSendsAddRequest() {
-        User user = buildUser("john.doe", "John", "Doe", true);
-        Trainer trainer = buildTrainer(user);
-        LocalDate date = LocalDate.of(2024, 6, 15);
-        TrainingRequest trainingRequest = buildTrainingRequest("john.doe", date, 2);
-        HttpServletRequest httpRequest = mock(HttpServletRequest.class);
-        JoinPoint jp = mock(JoinPoint.class);
+        TrainingRequest trainingRequest = mock(TrainingRequest.class);
+        when(trainingRequest.getTrainerUsername()).thenReturn(TRAINER_USERNAME);
+        when(trainingRequest.getDate()).thenReturn(TRAINING_DATE);
+        when(trainingRequest.getDuration()).thenReturn(TRAINING_DURATION);
 
-        when(jp.getArgs()).thenReturn(new Object[]{trainingRequest, httpRequest});
-        when(trainerService.selectTrainerProfileByUsername("john.doe")).thenReturn(trainer);
-        when(httpRequest.getHeader("Authorization")).thenReturn("Bearer token");
-        when(trainerHistoryServiceClient.updateTrainerWorkload(any(TrainerWorkloadRequest.class), eq("Bearer token")))
-                .thenReturn(ResponseEntity.ok("updated"));
+        User user = buildUser();
+        Trainer trainer = buildTrainer(user);
+
+        when(jp.getArgs()).thenReturn(new Object[]{trainingRequest, httpServletRequest});
+        when(trainerService.selectTrainerProfileByUsername(TRAINER_USERNAME)).thenReturn(trainer);
+        when(httpServletRequest.getHeader("Authorization")).thenReturn(AUTH_HEADER);
+        when(trainerHistoryServiceClient.updateTrainerWorkload(any(), eq(AUTH_HEADER)))
+                .thenReturn(ResponseEntity.ok("ok"));
 
         aspect.addHoursToTrainerWorkload(jp);
 
-        ArgumentCaptor<TrainerWorkloadRequest> captor = ArgumentCaptor.forClass(TrainerWorkloadRequest.class);
-        verify(trainerHistoryServiceClient).updateTrainerWorkload(captor.capture(), eq("Bearer token"));
-        TrainerWorkloadRequest sent = captor.getValue();
-        assertEquals("john.doe", sent.getUsername());
-        assertEquals("John", sent.getFirstName());
-        assertEquals("Doe", sent.getLastName());
-        assertTrue(sent.getIsActive());
-        assertEquals(date, sent.getTrainingDate());
-        assertEquals(2, sent.getDuration());
-        assertEquals(ActionType.ADD, sent.getActionType());
+        verify(trainerHistoryServiceClient).updateTrainerWorkload(any(), eq(AUTH_HEADER));
     }
 
     @Test
     void testAddHoursToTrainerWorkloadGatewayTimeoutThrowsAccessTimeoutException() {
-        User user = buildUser("jane.doe", "Jane", "Doe", true);
-        Trainer trainer = buildTrainer(user);
-        LocalDate date = LocalDate.of(2024, 7, 1);
-        TrainingRequest trainingRequest = buildTrainingRequest("jane.doe", date, 3);
-        HttpServletRequest httpRequest = mock(HttpServletRequest.class);
-        JoinPoint jp = mock(JoinPoint.class);
+        TrainingRequest trainingRequest = mock(TrainingRequest.class);
+        when(trainingRequest.getTrainerUsername()).thenReturn(TRAINER_USERNAME);
+        when(trainingRequest.getDate()).thenReturn(TRAINING_DATE);
+        when(trainingRequest.getDuration()).thenReturn(TRAINING_DURATION);
 
-        when(jp.getArgs()).thenReturn(new Object[]{trainingRequest, httpRequest});
-        when(trainerService.selectTrainerProfileByUsername("jane.doe")).thenReturn(trainer);
-        when(httpRequest.getHeader("Authorization")).thenReturn("Bearer token");
-        when(trainerHistoryServiceClient.updateTrainerWorkload(any(TrainerWorkloadRequest.class), any()))
-                .thenReturn(ResponseEntity.status(HttpStatus.GATEWAY_TIMEOUT).build());
+        User user = buildUser();
+        Trainer trainer = buildTrainer(user);
+
+        when(jp.getArgs()).thenReturn(new Object[]{trainingRequest, httpServletRequest});
+        when(trainerService.selectTrainerProfileByUsername(TRAINER_USERNAME)).thenReturn(trainer);
+        when(httpServletRequest.getHeader("Authorization")).thenReturn(AUTH_HEADER);
+        when(trainerHistoryServiceClient.updateTrainerWorkload(any(), eq(AUTH_HEADER)))
+                .thenReturn(ResponseEntity.status(HttpStatus.GATEWAY_TIMEOUT).body("timeout"));
 
         assertThrows(AccessTimeoutException.class, () -> aspect.addHoursToTrainerWorkload(jp));
     }
 
     @Test
-    void testRemoveHoursFromTrainerWorkloadProceedsAndSendsDeleteRequest() throws Throwable {
-        User user = buildUser("john.doe", "John", "Doe", true);
+    void testRemoveHoursFromTrainerWorkloadProceedReturnsResult() throws Throwable {
+        User user = buildUser();
         Trainer trainer = buildTrainer(user);
-        LocalDate date = LocalDate.of(2024, 5, 20);
-        Training training = new Training();
-        training.setTrainer(trainer);
-        training.setDate(date);
-        training.setDuration(1);
-        HttpServletRequest httpRequest = mock(HttpServletRequest.class);
+        Training training = buildTraining(trainer);
 
-        when(pjp.getArgs()).thenReturn(new Object[]{42L, httpRequest});
-        when(trainingService.selectTraining(42L)).thenReturn(training);
+        when(pjp.getArgs()).thenReturn(new Object[]{1L, httpServletRequest});
+        when(trainingService.selectTraining(1L)).thenReturn(training);
         when(pjp.proceed()).thenReturn("deleted");
-        when(httpRequest.getHeader("Authorization")).thenReturn("Bearer token");
-        when(trainerHistoryServiceClient.updateTrainerWorkload(any(TrainerWorkloadRequest.class), eq("Bearer token")))
-                .thenReturn(ResponseEntity.ok("updated"));
+        when(httpServletRequest.getHeader("Authorization")).thenReturn(AUTH_HEADER);
+        when(trainerHistoryServiceClient.updateTrainerWorkload(any(), eq(AUTH_HEADER)))
+                .thenReturn(ResponseEntity.ok("ok"));
 
         Object result = aspect.removeHoursFromTrainerWorkload(pjp);
 
         assertEquals("deleted", result);
-        verify(pjp).proceed();
-
-        ArgumentCaptor<TrainerWorkloadRequest> captor = ArgumentCaptor.forClass(TrainerWorkloadRequest.class);
-        verify(trainerHistoryServiceClient).updateTrainerWorkload(captor.capture(), eq("Bearer token"));
-        TrainerWorkloadRequest sent = captor.getValue();
-        assertEquals("john.doe", sent.getUsername());
-        assertEquals(date, sent.getTrainingDate());
-        assertEquals(1, sent.getDuration());
-        assertEquals(ActionType.DELETE, sent.getActionType());
-    }
-
-    @Test
-    void testRemoveHoursFromTrainerWorkloadProceedThrowsRethrows() throws Throwable {
-        User user = buildUser("john.doe", "John", "Doe", true);
-        Trainer trainer = buildTrainer(user);
-        Training training = new Training();
-        training.setTrainer(trainer);
-        training.setDate(LocalDate.of(2024, 5, 20));
-        training.setDuration(1);
-        HttpServletRequest httpRequest = mock(HttpServletRequest.class);
-
-        when(pjp.getArgs()).thenReturn(new Object[]{99L, httpRequest});
-        when(trainingService.selectTraining(99L)).thenReturn(training);
-        when(pjp.proceed()).thenThrow(new RuntimeException("db error"));
-
-        assertThrows(RuntimeException.class, () -> aspect.removeHoursFromTrainerWorkload(pjp));
-        verify(trainerHistoryServiceClient, never()).updateTrainerWorkload(any(), any());
+        verify(trainerHistoryServiceClient).updateTrainerWorkload(any(), eq(AUTH_HEADER));
     }
 
     @Test
     void testRemoveHoursFromTrainerWorkloadGatewayTimeoutThrowsAccessTimeoutException() throws Throwable {
-        User user = buildUser("john.doe", "John", "Doe", false);
+        User user = buildUser();
         Trainer trainer = buildTrainer(user);
-        LocalDate date = LocalDate.of(2024, 4, 10);
-        Training training = new Training();
-        training.setTrainer(trainer);
-        training.setDate(date);
-        training.setDuration(4);
-        HttpServletRequest httpRequest = mock(HttpServletRequest.class);
+        Training training = buildTraining(trainer);
 
-        when(pjp.getArgs()).thenReturn(new Object[]{7L, httpRequest});
-        when(trainingService.selectTraining(7L)).thenReturn(training);
-        when(pjp.proceed()).thenReturn("ok");
-        when(httpRequest.getHeader("Authorization")).thenReturn("Bearer token");
-        when(trainerHistoryServiceClient.updateTrainerWorkload(any(TrainerWorkloadRequest.class), any()))
-                .thenReturn(ResponseEntity.status(HttpStatus.GATEWAY_TIMEOUT).build());
+        when(pjp.getArgs()).thenReturn(new Object[]{1L, httpServletRequest});
+        when(trainingService.selectTraining(1L)).thenReturn(training);
+        when(pjp.proceed()).thenReturn("deleted");
+        when(httpServletRequest.getHeader("Authorization")).thenReturn(AUTH_HEADER);
+        when(trainerHistoryServiceClient.updateTrainerWorkload(any(), eq(AUTH_HEADER)))
+                .thenReturn(ResponseEntity.status(HttpStatus.GATEWAY_TIMEOUT).body("timeout"));
 
         assertThrows(AccessTimeoutException.class, () -> aspect.removeHoursFromTrainerWorkload(pjp));
     }
 
     @Test
-    void testRemoveHoursFromTrainerWorkloadProceedsBeforeSendingRequest() throws Throwable {
-        User user = buildUser("john.doe", "John", "Doe", true);
+    void testRemoveHoursFromTrainerWorkloadProceedThrowsClientNotCalled() throws Throwable {
+        User user = buildUser();
         Trainer trainer = buildTrainer(user);
-        Training training = new Training();
-        training.setTrainer(trainer);
-        training.setDate(LocalDate.of(2024, 3, 5));
-        training.setDuration(2);
-        HttpServletRequest httpRequest = mock(HttpServletRequest.class);
+        Training training = buildTraining(trainer);
 
-        when(pjp.getArgs()).thenReturn(new Object[]{5L, httpRequest});
-        when(trainingService.selectTraining(5L)).thenReturn(training);
-        when(httpRequest.getHeader("Authorization")).thenReturn("Bearer token");
-        when(trainerHistoryServiceClient.updateTrainerWorkload(any(), any()))
-                .thenReturn(ResponseEntity.ok("ok"));
+        when(pjp.getArgs()).thenReturn(new Object[]{1L, httpServletRequest});
+        when(trainingService.selectTraining(1L)).thenReturn(training);
+        when(pjp.proceed()).thenThrow(new RuntimeException("db error"));
 
-        var proceedOrder = inOrder(pjp, trainerHistoryServiceClient);
-        when(pjp.proceed()).thenReturn("done");
+        assertThrows(RuntimeException.class, () -> aspect.removeHoursFromTrainerWorkload(pjp));
+        verifyNoInteractions(trainerHistoryServiceClient);
+    }
 
-        aspect.removeHoursFromTrainerWorkload(pjp);
+    @Test
+    void testUpdateTrainerHoursAfterTrainerDeletionProceedReturnsResult() throws Throwable {
+        User user = buildUser();
+        Trainer trainer = buildTrainer(user);
+        Training training = buildTraining(trainer);
 
-        proceedOrder.verify(pjp).proceed();
-        proceedOrder.verify(trainerHistoryServiceClient).updateTrainerWorkload(any(), any());
+        when(pjp.getArgs()).thenReturn(new Object[]{TRAINER_USERNAME, httpServletRequest});
+        when(traineeService.getAllTrainingsForTrainee(TRAINER_USERNAME)).thenReturn(List.of(training));
+        when(pjp.proceed()).thenReturn("deleted");
+        when(httpServletRequest.getHeader("Authorization")).thenReturn(AUTH_HEADER);
+
+        Object result = aspect.updateTrainerHoursAfterTrainerDeletion(pjp);
+
+        assertEquals("deleted", result);
+        verify(trainerHistoryServiceClient).updateTrainersWorkloadInBatch(anyList(), eq(AUTH_HEADER));
+    }
+
+    @Test
+    void testUpdateTrainerHoursAfterTrainerDeletionEmptyListCallsBatchWithEmptyList() throws Throwable {
+        when(pjp.getArgs()).thenReturn(new Object[]{TRAINER_USERNAME, httpServletRequest});
+        when(traineeService.getAllTrainingsForTrainee(TRAINER_USERNAME)).thenReturn(List.of());
+        when(pjp.proceed()).thenReturn("deleted");
+        when(httpServletRequest.getHeader("Authorization")).thenReturn(AUTH_HEADER);
+
+        aspect.updateTrainerHoursAfterTrainerDeletion(pjp);
+
+        verify(trainerHistoryServiceClient).updateTrainersWorkloadInBatch(eq(List.of()), eq(AUTH_HEADER));
+    }
+
+    @Test
+    void testUpdateTrainerHoursAfterTrainerDeletionProceedThrowsClientNotCalled() throws Throwable {
+        User user = buildUser();
+        Trainer trainer = buildTrainer(user);
+        Training training = buildTraining(trainer);
+
+        when(pjp.getArgs()).thenReturn(new Object[]{TRAINER_USERNAME, httpServletRequest});
+        when(traineeService.getAllTrainingsForTrainee(TRAINER_USERNAME)).thenReturn(List.of(training));
+        when(pjp.proceed()).thenThrow(new RuntimeException("deletion failed"));
+
+        assertThrows(RuntimeException.class, () -> aspect.updateTrainerHoursAfterTrainerDeletion(pjp));
+        verifyNoInteractions(trainerHistoryServiceClient);
     }
 }

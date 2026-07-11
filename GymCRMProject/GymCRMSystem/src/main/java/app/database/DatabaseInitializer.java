@@ -1,5 +1,6 @@
 package app.database;
 
+import app.clients.TrainerHistoryServiceClient;
 import app.dto.internal.TraineeDTO;
 import app.dto.internal.TrainerDTO;
 import app.dto.internal.TrainingDTO;

@@ -101,21 +101,21 @@ public class TrainerHistoryServiceAspect {
 
         List<Training> trainings = traineeService.getAllTrainingsForTrainee(username);
 
-        System.out.println("number of trainings: " + trainings.size());
-
         Object obj = pjp.proceed();
 
-        trainings.forEach(tr ->
-                attemptSendingRequest(httpServletRequest, new TrainerWorkloadRequest(
-                        tr.getTrainer().getUser().getUsername(),
-                        tr.getTrainer().getUser().getFirstName(),
-                        tr.getTrainer().getUser().getLastName(),
-                        tr.getTrainer().getUser().isActive(),
-                        tr.getDate(),
-                        tr.getDuration(),
-                        ActionType.DELETE
-                        ))
-                );
+        trainerHistoryServiceClient.updateTrainersWorkloadInBatch(
+          trainings.stream().map(
+                  tr -> new
+                          TrainerWorkloadRequest(tr.getTrainer().getUser().getUsername(),
+                          tr.getTrainer().getUser().getFirstName(),
+                          tr.getTrainer().getUser().getLastName(),
+                          tr.getTrainer().getUser().isActive(),
+                          tr.getDate(),
+                          tr.getDuration(),
+                          ActionType.DELETE
+                  )
+          ).toList(), httpServletRequest.getHeader(AUTHORIZATION_HEADER)
+        );
 
         return obj;
     }
