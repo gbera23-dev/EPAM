@@ -115,7 +115,6 @@ public class TraineeRestController {
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content),
             @ApiResponse(responseCode = "404", description = "Trainee not found", content = @Content)
     })
-    
     @DeleteMapping
     public ResponseEntity<String> deleteTrainee(@NotBlank @RequestParam("username") String username,
                                                 HttpServletRequest httpServletRequest) {

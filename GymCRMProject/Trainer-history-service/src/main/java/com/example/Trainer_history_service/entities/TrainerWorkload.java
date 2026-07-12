@@ -12,6 +12,9 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "TrainerWorkload", indexes = {
+        @Index(name = "idx_trainer_workload_username", columnList = "username")
+})
 @Entity
 public class TrainerWorkload {
     @Id

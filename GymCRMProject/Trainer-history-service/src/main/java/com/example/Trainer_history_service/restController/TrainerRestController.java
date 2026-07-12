@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,9 +18,12 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.util.List;
 
+import static java.rmi.server.LogStream.log;
+
 @Tag(name = "Trainer Workload", description = "Endpoints for managing trainer workloads and training hours")
 @RestController
 @RequestMapping("/api/trainer")
+@Slf4j
 public class TrainerRestController {
 
     private final TrainerService trainerService;

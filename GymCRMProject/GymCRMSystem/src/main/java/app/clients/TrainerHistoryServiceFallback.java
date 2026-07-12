@@ -14,14 +14,14 @@ public class TrainerHistoryServiceFallback implements TrainerHistoryServiceClien
     public ResponseEntity<String> updateTrainerWorkload(TrainerWorkloadRequest trainerWorkloadRequest,
                                                         String authorizationHeader) {
         return ResponseEntity.status(HttpStatus.GATEWAY_TIMEOUT).
-                body("");
+                body("Request timed out, could not send update trainer request");
     }
 
     @Override
     public ResponseEntity<String> updateTrainersWorkloadInBatch(List<TrainerWorkloadRequest> trainerWorkloadRequests,
                                                                 String authorizationHeader) {
         return ResponseEntity.status(HttpStatus.GATEWAY_TIMEOUT).
-                body("");    }
+                body("Request timed out, could not send update trainers batch request");    }
 
     @Override
     public ResponseEntity<Integer> getTrainerHours(String username, LocalDate localDate,
