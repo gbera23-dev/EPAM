@@ -60,7 +60,7 @@ class TrainerServiceImplTest {
         MonthlySummary summary = new MonthlySummary(1L, LocalDate.of(2026, 7, 1), 120, workload);
 
         when(trainerWorkloadRepository.findByUsername("john")).thenReturn(Optional.of(workload));
-        when(monthlySummeryRepository.findByIdAndDate(eq(1L), eq(LocalDate.of(2026, 7, 1))))
+        when(monthlySummeryRepository.findByTrainerWorkloadIdAndDate(eq(1L), eq(LocalDate.of(2026, 7, 1))))
                 .thenReturn(Optional.of(summary));
 
         Integer hours = trainerService.getTrainingHours("john", LocalDate.of(2026, 7, 15));
@@ -80,7 +80,7 @@ class TrainerServiceImplTest {
     void testGetTrainingHoursThrowsMonthlySummaryNotFoundExceptionWhenSummaryNotFound() {
         TrainerWorkload workload = new TrainerWorkload(1L, "john", "John", "Doe", true, Collections.emptyList());
         when(trainerWorkloadRepository.findByUsername("john")).thenReturn(Optional.of(workload));
-        when(monthlySummeryRepository.findByIdAndDate(any(), any())).thenReturn(Optional.empty());
+        when(monthlySummeryRepository.findByTrainerWorkloadIdAndDate(any(), any())).thenReturn(Optional.empty());
 
         assertThrows(MonthlySummaryNotFoundException.class,
                 () -> trainerService.getTrainingHours("john", LocalDate.of(2026, 7, 15)));
@@ -92,7 +92,7 @@ class TrainerServiceImplTest {
         MonthlySummary summary = new MonthlySummary(1L, LocalDate.of(2026, 7, 1), 60, workload);
 
         when(trainerWorkloadRepository.findByUsername("john")).thenReturn(Optional.of(workload));
-        when(monthlySummeryRepository.findByIdAndDate(eq(1L), eq(LocalDate.of(2026, 7, 1))))
+        when(monthlySummeryRepository.findByTrainerWorkloadIdAndDate(eq(1L), eq(LocalDate.of(2026, 7, 1))))
                 .thenReturn(Optional.of(summary));
 
         trainerService.addTrainingHours("john", LocalDate.of(2026, 7, 10), 30);
@@ -107,7 +107,7 @@ class TrainerServiceImplTest {
         TrainerWorkload workload = new TrainerWorkload(1L, "john", "John", "Doe", true, Collections.emptyList());
 
         when(trainerWorkloadRepository.findByUsername("john")).thenReturn(Optional.of(workload));
-        when(monthlySummeryRepository.findByIdAndDate(any(), any())).thenReturn(Optional.empty());
+        when(monthlySummeryRepository.findByTrainerWorkloadIdAndDate(any(), any())).thenReturn(Optional.empty());
 
         trainerService.addTrainingHours("john", LocalDate.of(2026, 7, 10), 45);
 
@@ -130,7 +130,7 @@ class TrainerServiceImplTest {
         MonthlySummary summary = new MonthlySummary(1L, LocalDate.of(2026, 7, 1), 60, workload);
 
         when(trainerWorkloadRepository.findByUsername("john")).thenReturn(Optional.of(workload));
-        when(monthlySummeryRepository.findByIdAndDate(eq(1L), eq(LocalDate.of(2026, 7, 1))))
+        when(monthlySummeryRepository.findByTrainerWorkloadIdAndDate(eq(1L), eq(LocalDate.of(2026, 7, 1))))
                 .thenReturn(Optional.of(summary));
 
         trainerService.deleteTrainingHours("john", LocalDate.of(2026, 7, 10), 20);
@@ -146,7 +146,7 @@ class TrainerServiceImplTest {
         MonthlySummary summary = new MonthlySummary(1L, LocalDate.of(2026, 7, 1), 30, workload);
 
         when(trainerWorkloadRepository.findByUsername("john")).thenReturn(Optional.of(workload));
-        when(monthlySummeryRepository.findByIdAndDate(eq(1L), eq(LocalDate.of(2026, 7, 1))))
+        when(monthlySummeryRepository.findByTrainerWorkloadIdAndDate(eq(1L), eq(LocalDate.of(2026, 7, 1))))
                 .thenReturn(Optional.of(summary));
 
         trainerService.deleteTrainingHours("john", LocalDate.of(2026, 7, 10), 30);
@@ -161,7 +161,7 @@ class TrainerServiceImplTest {
         MonthlySummary summary = new MonthlySummary(1L, LocalDate.of(2026, 7, 1), 10, workload);
 
         when(trainerWorkloadRepository.findByUsername("john")).thenReturn(Optional.of(workload));
-        when(monthlySummeryRepository.findByIdAndDate(eq(1L), eq(LocalDate.of(2026, 7, 1))))
+        when(monthlySummeryRepository.findByTrainerWorkloadIdAndDate(eq(1L), eq(LocalDate.of(2026, 7, 1))))
                 .thenReturn(Optional.of(summary));
 
         assertThrows(NegativeDurationException.class,

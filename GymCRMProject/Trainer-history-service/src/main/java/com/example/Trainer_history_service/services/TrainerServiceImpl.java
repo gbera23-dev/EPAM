@@ -9,13 +9,16 @@ import com.example.Trainer_history_service.repository.MonthlySummeryRepository;
 import com.example.Trainer_history_service.repository.TrainerWorkloadRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.Collections;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class TrainerServiceImpl implements TrainerService {
 
     private final TrainerWorkloadRepository trainerWorkloadRepository;
@@ -40,7 +43,8 @@ public class TrainerServiceImpl implements TrainerService {
         TrainerWorkload trainerWorkload = trainerWorkloadRepository.findByUsername(username)
                 .orElseThrow(() -> new UserNotFoundException("could not find trainer workload!"));
 
-        MonthlySummary monthlySummary = monthlySummeryRepository.findByIdAndDate(trainerWorkload.getId(),
+        MonthlySummary monthlySummary = monthlySummeryRepository.findByTrainerWorkloadIdAndDate
+                        (trainerWorkload.getId(),
                         LocalDate.of(date.getYear(), date.getMonth(), 1))
                 .orElseThrow(
                         () -> new MonthlySummaryNotFoundException("could not find monthly summary!")
@@ -90,11 +94,17 @@ public class TrainerServiceImpl implements TrainerService {
                 .orElseThrow(() -> new UserNotFoundException("could not find trainer workload!"));
 
 
-        return monthlySummeryRepository.findByIdAndDate(trainerWorkload.getId(),
-                        LocalDate.of(date.getYear(), date.getMonth(), 1))
-                .orElse(new MonthlySummary(null,
-                        LocalDate.of(date.getYear(), date.getMonth(), 1), 0, trainerWorkload)
-                );
+        Optional<MonthlySummary> optionalMonthlySummary = monthlySummeryRepository.
+                findByTrainerWorkloadIdAndDate(trainerWorkload.getId(),
+                LocalDate.of(date.getYear(), date.getMonth(), 1));
+
+        if(optionalMonthlySummary.isEmpty()) {
+            log.error("monthly summary is null, you shall create one and it shall be created!..");
+        } else {
+            return optionalMonthlySummary.get();
+        }
+        return new MonthlySummary(null, LocalDate.of(date.getYear(), date.getMonth(), 1), 0,
+                trainerWorkload);
     }
 
 }

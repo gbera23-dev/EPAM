@@ -9,5 +9,5 @@ import java.util.Optional;
 
 public interface MonthlySummeryRepository extends JpaRepository<MonthlySummary,Long> {
 
-    Optional<MonthlySummary> findByIdAndDate(Long id, LocalDate date);
+    Optional<MonthlySummary> findByTrainerWorkloadIdAndDate(Long id, LocalDate date);
 }

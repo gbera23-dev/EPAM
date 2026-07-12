@@ -24,7 +24,6 @@ public class MonthlySummary {
     private LocalDate date;
     @Column(name="duration")
     private Integer duration;
-
     @ManyToOne
     @JoinColumn(name="Trainer_workload_id")
     private TrainerWorkload trainerWorkload;
