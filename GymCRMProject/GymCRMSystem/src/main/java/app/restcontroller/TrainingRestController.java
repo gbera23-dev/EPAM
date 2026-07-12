@@ -1,6 +1,9 @@
 package app.restcontroller;
 
+import app.annotations.InteractsWithTraineeHistoryService;
 import app.dto.api.request.TrainingRequest;
+import app.strategies.MicroserviceInteraction.AddHoursToTrainerStrategy;
+import app.strategies.MicroserviceInteraction.RemoveHoursFromTrainerStrategy;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -34,6 +37,7 @@ public class TrainingRestController {
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content),
             @ApiResponse(responseCode = "404", description = "Trainee or trainer not found", content = @Content)
     })
+    @InteractsWithTraineeHistoryService(chosenStrategy = AddHoursToTrainerStrategy.class)
     @PostMapping
     public ResponseEntity<String> addTraining(@Valid @RequestBody TrainingRequest trainingRequest,
                                               HttpServletRequest httpServletRequest) {
@@ -57,6 +61,7 @@ public class TrainingRestController {
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content),
             @ApiResponse(responseCode = "404", description = "Training not found", content = @Content)
     })
+    @InteractsWithTraineeHistoryService(chosenStrategy = RemoveHoursFromTrainerStrategy.class)
     @DeleteMapping("/{training-id}")
     public ResponseEntity<String> deleteTraining(@Valid @PathVariable("training-id") Long trainingId,
                                                  HttpServletRequest httpServletRequest) {

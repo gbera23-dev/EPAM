@@ -1,8 +1,10 @@
 package app.restcontroller;
 
+import app.annotations.InteractsWithTraineeHistoryService;
 import app.dto.api.request.*;
 import app.dto.api.response.*;
 import app.entities.*;
+import app.strategies.MicroserviceInteraction.BatchRemoveHoursFromTrainersStrategy;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -115,6 +117,7 @@ public class TraineeRestController {
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content),
             @ApiResponse(responseCode = "404", description = "Trainee not found", content = @Content)
     })
+    @InteractsWithTraineeHistoryService(chosenStrategy = BatchRemoveHoursFromTrainersStrategy.class)
     @DeleteMapping
     public ResponseEntity<String> deleteTrainee(@NotBlank @RequestParam("username") String username,
                                                 HttpServletRequest httpServletRequest) {

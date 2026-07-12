@@ -76,10 +76,9 @@ public class TrainerRestController {
             ),
             @ApiResponse(responseCode = "400", description = "Invalid request body", content = @Content),
     })
-    @PostMapping("/api/trainer/in-batch")
+    @PostMapping("/in-batch")
     public ResponseEntity<String> updateTrainersWorkloadInBatch(
             @RequestBody List<TrainerWorkloadRequest> trainerWorkloadRequests) {
-
         trainerWorkloadRequests.forEach(
                 twq -> {
                     if (!trainerService.workloadExists(twq.getUsername())) {
@@ -88,7 +87,6 @@ public class TrainerRestController {
                     changeTrainingHours(twq);
                 }
         );
-
         return ResponseEntity.ok("Workloads have been updated successfully!");
     }
 
