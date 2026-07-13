@@ -10,8 +10,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,7 +21,6 @@ import static java.rmi.server.LogStream.log;
 @Tag(name = "Trainer Workload", description = "Endpoints for managing trainer workloads and training hours")
 @RestController
 @RequestMapping("/api/trainer")
-@Slf4j
 public class TrainerRestController {
 
     private final TrainerService trainerService;
@@ -54,11 +51,7 @@ public class TrainerRestController {
             )
             @RequestBody TrainerWorkloadRequest trainerWorkloadRequest) {
 
-        if (!trainerService.workloadExists(trainerWorkloadRequest.getUsername())) {
-            createTrainerWorkload(trainerWorkloadRequest);
-        }
-
-        changeTrainingHours(trainerWorkloadRequest);
+        trainerService.updateTrainingHours(trainerWorkloadRequest);
 
         return ResponseEntity.ok("trainer workload updated successfully!");
     }
@@ -79,14 +72,9 @@ public class TrainerRestController {
     @PostMapping("/in-batch")
     public ResponseEntity<String> updateTrainersWorkloadInBatch(
             @RequestBody List<TrainerWorkloadRequest> trainerWorkloadRequests) {
-        trainerWorkloadRequests.forEach(
-                twq -> {
-                    if (!trainerService.workloadExists(twq.getUsername())) {
-                        createTrainerWorkload(twq);
-                    }
-                    changeTrainingHours(twq);
-                }
-        );
+
+        trainerService.updateTrainingHoursInBatch(trainerWorkloadRequests);
+
         return ResponseEntity.ok("Workloads have been updated successfully!");
     }
 
@@ -103,7 +91,6 @@ public class TrainerRestController {
             ),
             @ApiResponse(responseCode = "400", description = "Missing or invalid query parameters", content = @Content),
             @ApiResponse(responseCode = "404", description = "Trainer or training entry not found", content = @Content),
-            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
     })
     @GetMapping
     public ResponseEntity<Integer> getTrainerHours(
@@ -117,29 +104,4 @@ public class TrainerRestController {
         return ResponseEntity.ok(hours);
     }
 
-
-    private void createTrainerWorkload(TrainerWorkloadRequest trainerWorkloadRequest) {
-        trainerService.createNewWorkload(
-                trainerWorkloadRequest.getUsername(),
-                trainerWorkloadRequest.getFirstName(),
-                trainerWorkloadRequest.getLastName(),
-                trainerWorkloadRequest.getIsActive()
-        );
-    }
-
-    private void changeTrainingHours(TrainerWorkloadRequest trainerWorkloadRequest) {
-        if (trainerWorkloadRequest.getActionType().equals(ActionType.ADD)) {
-            trainerService.addTrainingHours(
-                    trainerWorkloadRequest.getUsername(),
-                    trainerWorkloadRequest.getTrainingDate(),
-                    trainerWorkloadRequest.getDuration()
-            );
-        } else {
-            trainerService.deleteTrainingHours(
-                    trainerWorkloadRequest.getUsername(),
-                    trainerWorkloadRequest.getTrainingDate(),
-                    trainerWorkloadRequest.getDuration()
-            );
-        }
-    }
 }

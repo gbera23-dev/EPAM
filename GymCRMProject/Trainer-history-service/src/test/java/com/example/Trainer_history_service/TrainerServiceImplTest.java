@@ -1,27 +1,29 @@
 package com.example.Trainer_history_service;
 
+import com.example.Trainer_history_service.dto.TrainerWorkloadRequest;
+import com.example.Trainer_history_service.entities.ActionType;
 import com.example.Trainer_history_service.entities.MonthlySummary;
 import com.example.Trainer_history_service.entities.TrainerWorkload;
 import com.example.Trainer_history_service.exceptions.MonthlySummaryNotFoundException;
 import com.example.Trainer_history_service.exceptions.NegativeDurationException;
 import com.example.Trainer_history_service.exceptions.UserNotFoundException;
-import com.example.Trainer_history_service.repository.MonthlySummeryRepository;
+import com.example.Trainer_history_service.repository.MonthlySummaryRepository;
 import com.example.Trainer_history_service.repository.TrainerWorkloadRepository;
 import com.example.Trainer_history_service.services.TrainerServiceImpl;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -31,148 +33,264 @@ class TrainerServiceImplTest {
     private TrainerWorkloadRepository trainerWorkloadRepository;
 
     @Mock
-    private MonthlySummeryRepository monthlySummeryRepository;
+    private MonthlySummaryRepository monthlySummaryRepository;
 
+    @InjectMocks
     private TrainerServiceImpl trainerService;
 
-    @BeforeEach
-    void setUp() {
-        trainerService = new TrainerServiceImpl(trainerWorkloadRepository, monthlySummeryRepository);
+    private static final String USERNAME = "john.doe";
+    private static final LocalDate DATE = LocalDate.of(2024, 6, 15);
+    private static final LocalDate MONTH_START = LocalDate.of(2024, 6, 1);
+
+    private TrainerWorkload buildWorkload() {
+        return new TrainerWorkload(1L, USERNAME, "John", "Doe", true, Collections.emptyList());
+    }
+
+    private MonthlySummary buildMonthlySummary(TrainerWorkload workload, int duration) {
+        return new MonthlySummary(1L, MONTH_START, duration, workload);
+    }
+
+    private TrainerWorkloadRequest buildRequest(ActionType actionType, int duration) {
+        TrainerWorkloadRequest request = new TrainerWorkloadRequest();
+        request.setUsername(USERNAME);
+        request.setFirstName("John");
+        request.setLastName("Doe");
+        request.setIsActive(true);
+        request.setTrainingDate(DATE);
+        request.setDuration(duration);
+        request.setActionType(actionType);
+        return request;
     }
 
     @Test
-    void testCreateNewWorkloadSavesTrainerWorkload() {
-        trainerService.createNewWorkload("john", "John", "Doe", true);
+    void testGetTrainingHoursSuccess() {
+        TrainerWorkload workload = buildWorkload();
+        MonthlySummary summary = buildMonthlySummary(workload, 10);
 
-        ArgumentCaptor<TrainerWorkload> captor = ArgumentCaptor.forClass(TrainerWorkload.class);
-        verify(trainerWorkloadRepository).save(captor.capture());
-
-        TrainerWorkload saved = captor.getValue();
-        assertEquals("john", saved.getUsername());
-        assertEquals("John", saved.getFirstName());
-        assertEquals("Doe", saved.getLastName());
-        assertTrue(saved.isActive());
-    }
-
-    @Test
-    void testGetTrainingHoursReturnsHoursWhenFound() {
-        TrainerWorkload workload = new TrainerWorkload(1L, "john", "John", "Doe", true, Collections.emptyList());
-        MonthlySummary summary = new MonthlySummary(1L, LocalDate.of(2026, 7, 1), 120, workload);
-
-        when(trainerWorkloadRepository.findByUsername("john")).thenReturn(Optional.of(workload));
-        when(monthlySummeryRepository.findByTrainerWorkloadIdAndDate(eq(1L), eq(LocalDate.of(2026, 7, 1))))
+        when(trainerWorkloadRepository.findByUsername(USERNAME)).thenReturn(Optional.of(workload));
+        when(monthlySummaryRepository.findByTrainerWorkloadIdAndDate(1L, MONTH_START))
                 .thenReturn(Optional.of(summary));
 
-        Integer hours = trainerService.getTrainingHours("john", LocalDate.of(2026, 7, 15));
+        Integer result = trainerService.getTrainingHours(USERNAME, DATE);
 
-        assertEquals(120, hours);
+        assertEquals(10, result);
     }
 
     @Test
-    void testGetTrainingHoursThrowsUserNotFoundExceptionWhenTrainerNotFound() {
-        when(trainerWorkloadRepository.findByUsername("john")).thenReturn(Optional.empty());
+    void testGetTrainingHoursUserNotFound() {
+        when(trainerWorkloadRepository.findByUsername(USERNAME)).thenReturn(Optional.empty());
 
         assertThrows(UserNotFoundException.class,
-                () -> trainerService.getTrainingHours("john", LocalDate.of(2026, 7, 15)));
+                () -> trainerService.getTrainingHours(USERNAME, DATE));
     }
 
     @Test
-    void testGetTrainingHoursThrowsMonthlySummaryNotFoundExceptionWhenSummaryNotFound() {
-        TrainerWorkload workload = new TrainerWorkload(1L, "john", "John", "Doe", true, Collections.emptyList());
-        when(trainerWorkloadRepository.findByUsername("john")).thenReturn(Optional.of(workload));
-        when(monthlySummeryRepository.findByTrainerWorkloadIdAndDate(any(), any())).thenReturn(Optional.empty());
+    void testGetTrainingHoursMonthlySummaryNotFound() {
+        TrainerWorkload workload = buildWorkload();
+
+        when(trainerWorkloadRepository.findByUsername(USERNAME)).thenReturn(Optional.of(workload));
+        when(monthlySummaryRepository.findByTrainerWorkloadIdAndDate(any(), any()))
+                .thenReturn(Optional.empty());
 
         assertThrows(MonthlySummaryNotFoundException.class,
-                () -> trainerService.getTrainingHours("john", LocalDate.of(2026, 7, 15)));
+                () -> trainerService.getTrainingHours(USERNAME, DATE));
     }
 
     @Test
-    void testAddTrainingHoursAddsToExistingSummary() {
-        TrainerWorkload workload = new TrainerWorkload(1L, "john", "John", "Doe", true, Collections.emptyList());
-        MonthlySummary summary = new MonthlySummary(1L, LocalDate.of(2026, 7, 1), 60, workload);
+    void testUpdateTrainingHoursNewWorkloadIsCreated() {
+        TrainerWorkloadRequest request = buildRequest(ActionType.ADD, 5);
+        TrainerWorkload workload = buildWorkload();
 
-        when(trainerWorkloadRepository.findByUsername("john")).thenReturn(Optional.of(workload));
-        when(monthlySummeryRepository.findByTrainerWorkloadIdAndDate(eq(1L), eq(LocalDate.of(2026, 7, 1))))
-                .thenReturn(Optional.of(summary));
+        when(trainerWorkloadRepository.existsByUsername(USERNAME)).thenReturn(false);
+        when(trainerWorkloadRepository.findByUsername(USERNAME)).thenReturn(Optional.of(workload));
+        when(monthlySummaryRepository.findByTrainerWorkloadIdAndDate(any(), any()))
+                .thenReturn(Optional.empty());
 
-        trainerService.addTrainingHours("john", LocalDate.of(2026, 7, 10), 30);
+        trainerService.updateTrainingHours(request);
+
+        verify(trainerWorkloadRepository).save(any(TrainerWorkload.class));
+    }
+
+    @Test
+    void testUpdateTrainingHoursExistingWorkloadNotCreatedAgain() {
+        TrainerWorkloadRequest request = buildRequest(ActionType.ADD, 5);
+        TrainerWorkload workload = buildWorkload();
+
+        when(trainerWorkloadRepository.existsByUsername(USERNAME)).thenReturn(true);
+        when(trainerWorkloadRepository.findByUsername(USERNAME)).thenReturn(Optional.of(workload));
+        when(monthlySummaryRepository.findByTrainerWorkloadIdAndDate(any(), any()))
+                .thenReturn(Optional.empty());
+
+        trainerService.updateTrainingHours(request);
+
+        verify(trainerWorkloadRepository, never()).save(any(TrainerWorkload.class));
+    }
+
+    @Test
+    void testUpdateTrainingHoursAddActionIncreasesExistingDuration() {
+        TrainerWorkloadRequest request = buildRequest(ActionType.ADD, 5);
+        TrainerWorkload workload = buildWorkload();
+        MonthlySummary existing = buildMonthlySummary(workload, 10);
+
+        when(trainerWorkloadRepository.existsByUsername(USERNAME)).thenReturn(true);
+        when(trainerWorkloadRepository.findByUsername(USERNAME)).thenReturn(Optional.of(workload));
+        when(monthlySummaryRepository.findByTrainerWorkloadIdAndDate(any(), any()))
+                .thenReturn(Optional.of(existing));
+
+        trainerService.updateTrainingHours(request);
+
+        assertEquals(15, existing.getDuration());
+        verify(monthlySummaryRepository).save(existing);
+    }
+
+    @Test
+    void testUpdateTrainingHoursAddActionSetsCorrectDurationForNewSummary() {
+        TrainerWorkloadRequest request = buildRequest(ActionType.ADD, 5);
+        TrainerWorkload workload = buildWorkload();
+
+        when(trainerWorkloadRepository.existsByUsername(USERNAME)).thenReturn(true);
+        when(trainerWorkloadRepository.findByUsername(USERNAME)).thenReturn(Optional.of(workload));
+        when(monthlySummaryRepository.findByTrainerWorkloadIdAndDate(any(), any()))
+                .thenReturn(Optional.empty());
+
+        trainerService.updateTrainingHours(request);
 
         ArgumentCaptor<MonthlySummary> captor = ArgumentCaptor.forClass(MonthlySummary.class);
-        verify(monthlySummeryRepository).save(captor.capture());
-        assertEquals(90, captor.getValue().getDuration());
+        verify(monthlySummaryRepository).save(captor.capture());
+        assertEquals(5, captor.getValue().getDuration());
     }
 
     @Test
-    void testAddTrainingHoursCreatesNewSummaryWhenNotFound() {
-        TrainerWorkload workload = new TrainerWorkload(1L, "john", "John", "Doe", true, Collections.emptyList());
+    void testUpdateTrainingHoursDeleteActionDecreasesExistingDuration() {
+        TrainerWorkloadRequest request = buildRequest(ActionType.DELETE, 3);
+        TrainerWorkload workload = buildWorkload();
+        MonthlySummary existing = buildMonthlySummary(workload, 10);
 
-        when(trainerWorkloadRepository.findByUsername("john")).thenReturn(Optional.of(workload));
-        when(monthlySummeryRepository.findByTrainerWorkloadIdAndDate(any(), any())).thenReturn(Optional.empty());
+        when(trainerWorkloadRepository.existsByUsername(USERNAME)).thenReturn(true);
+        when(trainerWorkloadRepository.findByUsername(USERNAME)).thenReturn(Optional.of(workload));
+        when(monthlySummaryRepository.findByTrainerWorkloadIdAndDate(any(), any()))
+                .thenReturn(Optional.of(existing));
 
-        trainerService.addTrainingHours("john", LocalDate.of(2026, 7, 10), 45);
+        trainerService.updateTrainingHours(request);
 
-        ArgumentCaptor<MonthlySummary> captor = ArgumentCaptor.forClass(MonthlySummary.class);
-        verify(monthlySummeryRepository).save(captor.capture());
-        assertEquals(45, captor.getValue().getDuration());
+        assertEquals(7, existing.getDuration());
+        verify(monthlySummaryRepository).save(existing);
     }
 
     @Test
-    void testAddTrainingHoursThrowsUserNotFoundExceptionWhenTrainerNotFound() {
-        when(trainerWorkloadRepository.findByUsername("john")).thenReturn(Optional.empty());
+    void testUpdateTrainingHoursDeleteActionResultingZeroDeletesSummary() {
+        TrainerWorkloadRequest request = buildRequest(ActionType.DELETE, 10);
+        TrainerWorkload workload = buildWorkload();
+        MonthlySummary existing = buildMonthlySummary(workload, 10);
 
-        assertThrows(UserNotFoundException.class,
-                () -> trainerService.addTrainingHours("john", LocalDate.of(2026, 7, 10), 30));
+        when(trainerWorkloadRepository.existsByUsername(USERNAME)).thenReturn(true);
+        when(trainerWorkloadRepository.findByUsername(USERNAME)).thenReturn(Optional.of(workload));
+        when(monthlySummaryRepository.findByTrainerWorkloadIdAndDate(any(), any()))
+                .thenReturn(Optional.of(existing));
+
+        trainerService.updateTrainingHours(request);
+
+        verify(monthlySummaryRepository).delete(existing);
+        verify(monthlySummaryRepository, never()).save(any());
     }
 
     @Test
-    void testDeleteTrainingHoursSubtractsFromExistingSummary() {
-        TrainerWorkload workload = new TrainerWorkload(1L, "john", "John", "Doe", true, Collections.emptyList());
-        MonthlySummary summary = new MonthlySummary(1L, LocalDate.of(2026, 7, 1), 60, workload);
+    void testUpdateTrainingHoursDeleteActionNegativeResultThrowsException() {
+        TrainerWorkloadRequest request = buildRequest(ActionType.DELETE, 15);
+        TrainerWorkload workload = buildWorkload();
+        MonthlySummary existing = buildMonthlySummary(workload, 10);
 
-        when(trainerWorkloadRepository.findByUsername("john")).thenReturn(Optional.of(workload));
-        when(monthlySummeryRepository.findByTrainerWorkloadIdAndDate(eq(1L), eq(LocalDate.of(2026, 7, 1))))
-                .thenReturn(Optional.of(summary));
-
-        trainerService.deleteTrainingHours("john", LocalDate.of(2026, 7, 10), 20);
-
-        ArgumentCaptor<MonthlySummary> captor = ArgumentCaptor.forClass(MonthlySummary.class);
-        verify(monthlySummeryRepository).save(captor.capture());
-        assertEquals(40, captor.getValue().getDuration());
-    }
-
-    @Test
-    void testDeleteTrainingHoursDeletesSummaryWhenDurationBecomesZero() {
-        TrainerWorkload workload = new TrainerWorkload(1L, "john", "John", "Doe", true, Collections.emptyList());
-        MonthlySummary summary = new MonthlySummary(1L, LocalDate.of(2026, 7, 1), 30, workload);
-
-        when(trainerWorkloadRepository.findByUsername("john")).thenReturn(Optional.of(workload));
-        when(monthlySummeryRepository.findByTrainerWorkloadIdAndDate(eq(1L), eq(LocalDate.of(2026, 7, 1))))
-                .thenReturn(Optional.of(summary));
-
-        trainerService.deleteTrainingHours("john", LocalDate.of(2026, 7, 10), 30);
-
-        verify(monthlySummeryRepository).delete(summary);
-        verify(monthlySummeryRepository, never()).save(any());
-    }
-
-    @Test
-    void testDeleteTrainingHoursThrowsNegativeDurationExceptionWhenDurationBecomesNegative() {
-        TrainerWorkload workload = new TrainerWorkload(1L, "john", "John", "Doe", true, Collections.emptyList());
-        MonthlySummary summary = new MonthlySummary(1L, LocalDate.of(2026, 7, 1), 10, workload);
-
-        when(trainerWorkloadRepository.findByUsername("john")).thenReturn(Optional.of(workload));
-        when(monthlySummeryRepository.findByTrainerWorkloadIdAndDate(eq(1L), eq(LocalDate.of(2026, 7, 1))))
-                .thenReturn(Optional.of(summary));
+        when(trainerWorkloadRepository.existsByUsername(USERNAME)).thenReturn(true);
+        when(trainerWorkloadRepository.findByUsername(USERNAME)).thenReturn(Optional.of(workload));
+        when(monthlySummaryRepository.findByTrainerWorkloadIdAndDate(any(), any()))
+                .thenReturn(Optional.of(existing));
 
         assertThrows(NegativeDurationException.class,
-                () -> trainerService.deleteTrainingHours("john", LocalDate.of(2026, 7, 10), 30));
+                () -> trainerService.updateTrainingHours(request));
     }
 
     @Test
-    void testDeleteTrainingHoursThrowsUserNotFoundExceptionWhenTrainerNotFound() {
-        when(trainerWorkloadRepository.findByUsername("john")).thenReturn(Optional.empty());
+    void testUpdateTrainingHoursNegativeHoursThrowsException() {
+        TrainerWorkloadRequest request = buildRequest(ActionType.ADD, -5);
+        TrainerWorkload workload = buildWorkload();
 
-        assertThrows(UserNotFoundException.class,
-                () -> trainerService.deleteTrainingHours("john", LocalDate.of(2026, 7, 10), 30));
+        when(trainerWorkloadRepository.existsByUsername(USERNAME)).thenReturn(true);
+
+        assertThrows(NegativeDurationException.class,
+                () -> trainerService.updateTrainingHours(request));
+    }
+
+    @Test
+    void testUpdateTrainingHoursZeroHoursThrowsException() {
+        TrainerWorkloadRequest request = buildRequest(ActionType.ADD, 0);
+        TrainerWorkload workload = buildWorkload();
+
+        when(trainerWorkloadRepository.existsByUsername(USERNAME)).thenReturn(true);
+
+        assertThrows(NegativeDurationException.class,
+                () -> trainerService.updateTrainingHours(request));
+    }
+
+    @Test
+    void testUpdateTrainingHoursInBatchProcessesAllRequests() {
+        TrainerWorkload workload = buildWorkload();
+        List<TrainerWorkloadRequest> requests = List.of(
+                buildRequest(ActionType.ADD, 5),
+                buildRequest(ActionType.ADD, 3)
+        );
+
+        when(trainerWorkloadRepository.existsByUsername(USERNAME)).thenReturn(true);
+        when(trainerWorkloadRepository.findByUsername(USERNAME)).thenReturn(Optional.of(workload));
+        when(monthlySummaryRepository.findByTrainerWorkloadIdAndDate(any(), any()))
+                .thenReturn(Optional.empty());
+
+        trainerService.updateTrainingHoursInBatch(requests);
+
+        verify(monthlySummaryRepository, times(1)).save(any(MonthlySummary.class));
+    }
+
+    @Test
+    void testUpdateTrainingHoursInBatchCreatesNewWorkloadForUnknownTrainer() {
+        TrainerWorkload workload = buildWorkload();
+        TrainerWorkloadRequest request = buildRequest(ActionType.ADD, 5);
+
+        when(trainerWorkloadRepository.existsByUsername(USERNAME)).thenReturn(false);
+        when(trainerWorkloadRepository.findByUsername(USERNAME)).thenReturn(Optional.of(workload));
+        when(monthlySummaryRepository.findByTrainerWorkloadIdAndDate(any(), any()))
+                .thenReturn(Optional.empty());
+
+        trainerService.updateTrainingHoursInBatch(List.of(request));
+
+        verify(trainerWorkloadRepository).save(any(TrainerWorkload.class));
+    }
+
+    @Test
+    void testUpdateTrainingHoursInBatchSkipsWorkloadCreationForExistingTrainer() {
+        TrainerWorkload workload = buildWorkload();
+        TrainerWorkloadRequest request = buildRequest(ActionType.ADD, 5);
+
+        when(trainerWorkloadRepository.existsByUsername(USERNAME)).thenReturn(true);
+        when(trainerWorkloadRepository.findByUsername(USERNAME)).thenReturn(Optional.of(workload));
+        when(monthlySummaryRepository.findByTrainerWorkloadIdAndDate(any(), any()))
+                .thenReturn(Optional.empty());
+
+        trainerService.updateTrainingHoursInBatch(List.of(request));
+
+        verify(trainerWorkloadRepository, never()).save(any(TrainerWorkload.class));
+    }
+
+    @Test
+    void testUpdateTrainingHoursMonthlySummaryDateNormalizedToFirstOfMonth() {
+        TrainerWorkloadRequest request = buildRequest(ActionType.ADD, 5);
+        TrainerWorkload workload = buildWorkload();
+
+        when(trainerWorkloadRepository.existsByUsername(USERNAME)).thenReturn(true);
+        when(trainerWorkloadRepository.findByUsername(USERNAME)).thenReturn(Optional.of(workload));
+        when(monthlySummaryRepository.findByTrainerWorkloadIdAndDate(any(), any()))
+                .thenReturn(Optional.empty());
+
+        trainerService.updateTrainingHours(request);
+
+        verify(monthlySummaryRepository).findByTrainerWorkloadIdAndDate(1L, MONTH_START);
     }
 }

@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.time.LocalDate;
 import java.util.Optional;
 
-public interface MonthlySummeryRepository extends JpaRepository<MonthlySummary,Long> {
+public interface MonthlySummaryRepository extends JpaRepository<MonthlySummary,Long> {
 
     Optional<MonthlySummary> findByTrainerWorkloadIdAndDate(Long id, LocalDate date);
 }

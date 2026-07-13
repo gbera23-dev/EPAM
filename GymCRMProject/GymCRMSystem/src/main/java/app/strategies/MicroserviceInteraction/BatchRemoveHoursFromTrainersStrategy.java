@@ -7,12 +7,14 @@ import app.entities.Training;
 import app.services.TraineeService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 @Component
 @AllArgsConstructor
+@Slf4j
 public class BatchRemoveHoursFromTrainersStrategy implements MicroserviceInteractionStrategy {
 
     private final TraineeService traineeService;
