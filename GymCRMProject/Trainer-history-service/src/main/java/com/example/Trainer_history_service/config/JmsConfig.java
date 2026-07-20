@@ -1,4 +1,4 @@
-package com.example.Trainer_history_service.consumers;
+package com.example.Trainer_history_service.config;
 
 import com.example.Trainer_history_service.dto.TrainerWorkloadBatchRequest;
 import com.example.Trainer_history_service.dto.TrainerWorkloadRequest;

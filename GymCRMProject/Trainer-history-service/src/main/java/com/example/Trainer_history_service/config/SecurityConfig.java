@@ -1,4 +1,4 @@
-package com.example.Trainer_history_service.security;
+package com.example.Trainer_history_service.config;
 
 import com.example.Trainer_history_service.filters.JWTFilter;
 import org.springframework.boot.security.autoconfigure.web.servlet.PathRequest;

@@ -66,5 +66,10 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
     }
 
+    @ExceptionHandler(CouldNotUpdateTrainerDataException.class)
+    public ResponseEntity<String> handleTrainerDataIssue(CouldNotUpdateTrainerDataException e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+    }
+
 
 }

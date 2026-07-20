@@ -11,7 +11,6 @@ import com.example.Trainer_history_service.repository.MonthlySummaryRepository;
 import com.example.Trainer_history_service.repository.TrainerWorkloadRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -123,7 +122,7 @@ public class TrainerServiceImpl implements TrainerService {
     }
 
     private MonthlySummary findOrCreateMonthlySummary(String username, LocalDate date, int hours) {
-        if(hours <= 0) {
+        if(hours < 0) {
             throw new NegativeDurationException("Number of hours cannot be negative!");
         }
 
