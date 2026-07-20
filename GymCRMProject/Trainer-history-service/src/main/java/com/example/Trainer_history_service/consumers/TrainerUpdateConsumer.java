@@ -42,7 +42,8 @@ public class TrainerUpdateConsumer {
                                              @Header("Authorization") String jwtToken) {
         ResponseEntity<String> res = null;
         try {
-            res = trainerFacade.updateTrainersWorkloadInBatch(trainerWorkloadBatchRequest.getTrainerWorkloadRequestList());
+            res = trainerFacade.updateTrainersWorkloadInBatch(
+                    trainerWorkloadBatchRequest.getTrainerWorkloadRequestList());
         } catch(Exception e) {
             log.error("Messaging request failed!");
         }

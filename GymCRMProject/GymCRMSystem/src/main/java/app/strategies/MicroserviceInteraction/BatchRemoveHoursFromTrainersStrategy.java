@@ -1,12 +1,11 @@
 package app.strategies.MicroserviceInteraction;
 
-import app.clients.TrainerHistoryServiceClient;
 import app.clients.TrainerHistoryServiceMessaging;
+import app.dto.api.request.TrainerWorkloadBatchRequest;
 import app.dto.api.request.TrainerWorkloadRequest;
 import app.entities.ActionType;
 import app.entities.Training;
 import app.services.TraineeService;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,7 +32,7 @@ public class BatchRemoveHoursFromTrainersStrategy implements MicroserviceInterac
 
         trainerHistoryServiceMessaging.sendMessage(
                 "training-batch-update-channel",
-                trainings.stream().map(
+                new TrainerWorkloadBatchRequest(trainings.stream().map(
                         tr -> new
                                 TrainerWorkloadRequest(tr.getTrainer().getUser().getUsername(),
                                 tr.getTrainer().getUser().getFirstName(),
@@ -43,7 +42,7 @@ public class BatchRemoveHoursFromTrainersStrategy implements MicroserviceInterac
                                 tr.getDuration(),
                                 ActionType.DELETE
                         )
-                ).toList(),
+                ).toList()),
                 httpServletRequest.getHeader(AUTHORIZATION_HEADER)
         );
         return obj;
