@@ -21,7 +21,8 @@ public class TrainerUpdateConsumer {
 
     @JmsListener(destination = "training-update-channel")
     public void getTrainerUpdateRequest(TrainerWorkloadRequest trainerWorkloadRequest,
-                                        @Header("Authorization") String jwtToken) {
+                                        @Header("Authorization") String jwtToken,
+                                        @Header("X-Transaction-ID") String transactionId) {
         ResponseEntity<String> resp = trainerFacade.updateTrainerWorkload(trainerWorkloadRequest);
 
         if(resp.getStatusCode() != HttpStatus.OK) throw new CouldNotUpdateTrainerDataException(
@@ -31,7 +32,8 @@ public class TrainerUpdateConsumer {
 
     @JmsListener(destination = "training-batch-update-channel")
     public void getTrainerBatchUpdateRequest(TrainerWorkloadBatchRequest trainerWorkloadBatchRequest,
-                                             @Header("Authorization") String jwtToken) {
+                                             @Header("Authorization") String jwtToken,
+                                             @Header("X-Transaction-ID") String transactionId) {
         ResponseEntity<String> resp = trainerFacade.updateTrainersWorkloadInBatch(
                 trainerWorkloadBatchRequest.getTrainerWorkloadRequestList());
 

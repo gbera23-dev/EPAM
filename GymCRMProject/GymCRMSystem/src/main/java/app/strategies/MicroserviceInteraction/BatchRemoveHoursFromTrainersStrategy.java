@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
+import org.jboss.logging.MDC;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -43,7 +44,8 @@ public class BatchRemoveHoursFromTrainersStrategy implements MicroserviceInterac
                                 ActionType.DELETE
                         )
                 ).toList()),
-                httpServletRequest.getHeader(AUTHORIZATION_HEADER)
+                httpServletRequest.getHeader(AUTHORIZATION_HEADER),
+                (String) MDC.get("transactionId")
         );
         return obj;
     }

@@ -11,6 +11,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import org.aspectj.lang.ProceedingJoinPoint;
+import org.jboss.logging.MDC;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -52,7 +53,8 @@ public class RemoveHoursFromTrainerStrategy implements MicroserviceInteractionSt
         trainerHistoryServiceMessaging.sendMessage(
                 "training-update-channel",
                 trainerWorkloadRequest,
-                httpServletRequest.getHeader(AUTHORIZATION_HEADER)
-                );
+                httpServletRequest.getHeader(AUTHORIZATION_HEADER),
+                (String) MDC.get("transactionId")
+        );
     }
 }

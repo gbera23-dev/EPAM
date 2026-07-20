@@ -10,11 +10,14 @@ import app.services.TrainerService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
+import org.jboss.logging.MDC;
 import org.springframework.stereotype.Component;
 
 @Component
 @AllArgsConstructor
+@Slf4j
 public class AddHoursToTrainerStrategy implements MicroserviceInteractionStrategy {
 
     private final TrainerService trainerService;
@@ -45,8 +48,8 @@ public class AddHoursToTrainerStrategy implements MicroserviceInteractionStrateg
     private void attemptSendingRequest(HttpServletRequest httpServletRequest, TrainerWorkloadRequest trainerWorkloadRequest)
             throws JsonProcessingException {
         trainerHistoryServiceMessaging.sendMessage("training-update-channel",
-                trainerWorkloadRequest, httpServletRequest.getHeader(AUTHORIZATION_HEADER));
-
+                trainerWorkloadRequest, httpServletRequest.getHeader(AUTHORIZATION_HEADER),
+                (String)MDC.get("transactionId"));
     }
 
 }
