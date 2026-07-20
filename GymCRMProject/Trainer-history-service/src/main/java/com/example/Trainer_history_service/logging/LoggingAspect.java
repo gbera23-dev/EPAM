@@ -31,52 +31,22 @@ public class LoggingAspect {
     public void persistenceLayer() {}
 
 
-    @Pointcut("execution(* com.example.Trainer_history_service.restController.*.*(..))")
-    public void restControllerLayer() {}
+    @Pointcut("execution(* com.example.Trainer_history_service.facade.*.*(..))")
+    public void facadeLayer() {}
 
 
 
-    @Around("restControllerLayer()")
-    public Object logRestControllerExecution(ProceedingJoinPoint joinPoint) throws Throwable {
-        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+    @Around("facadeLayer()")
+    public Object logFacadeLayerExecution(ProceedingJoinPoint joinPoint) throws Throwable {
+        String methodName = joinPoint.getSignature().getName();
+        String className = joinPoint.getSignature().getDeclaringTypeName();
 
-        if(attributes == null) {
-            log.error("Something went wrong!");
-            return joinPoint.proceed();
-        }
+        log.info("Facade method {} of {} started execution", methodName, className);
+        log.debug("Facade method {} called with arguments: {}", methodName, joinPoint.getArgs());
 
-        HttpServletRequest request = attributes.getRequest();
+        Object result = joinPoint.proceed();
 
-        String runtimeUri = request.getRequestURI();
-        String httpMethod = request.getMethod();
-
-        log.info("Request with uri {} has been received by API. HTTP method type {}", runtimeUri, httpMethod);
-
-        Object result = null;
-
-        try {
-             result = joinPoint.proceed();
-        } catch(Throwable throwable) {
-            log.error("Request with uri {} and HTTP method type {} ran into problems!", runtimeUri, httpMethod);
-
-            log.error("Exception {} was thrown with message: {}",
-                    throwable.getClass(), throwable.getMessage());
-
-            throw throwable;
-        }
-
-        HttpServletResponse httpServletResponse = attributes.getResponse();
-
-        if(httpServletResponse == null) {
-            log.error("Something went wrong!");
-            return joinPoint.proceed();
-        }
-
-        String responseStatusCode = HttpStatus.valueOf(httpServletResponse.getStatus()).name();
-        int status = httpServletResponse.getStatus();
-
-        log.info("Request with uri {} and HTTP method type {} has been resolved with status {} {} ",
-                runtimeUri, httpMethod, status, responseStatusCode);
+        log.info("Facade method {} of {} finished successfully", methodName, className);
 
         return result;
     }

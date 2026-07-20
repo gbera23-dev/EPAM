@@ -1,10 +1,12 @@
 package app.strategies.MicroserviceInteraction;
 
 import app.clients.TrainerHistoryServiceClient;
+import app.clients.TrainerHistoryServiceMessaging;
 import app.dto.api.request.TrainerWorkloadRequest;
 import app.entities.ActionType;
 import app.entities.Training;
 import app.services.TraineeService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +20,7 @@ import java.util.List;
 public class BatchRemoveHoursFromTrainersStrategy implements MicroserviceInteractionStrategy {
 
     private final TraineeService traineeService;
-    private final TrainerHistoryServiceClient trainerHistoryServiceClient;
+    private final TrainerHistoryServiceMessaging trainerHistoryServiceMessaging;
 
     @Override
     public Object sendTheRequest(ProceedingJoinPoint pjp) throws Throwable {
@@ -29,7 +31,8 @@ public class BatchRemoveHoursFromTrainersStrategy implements MicroserviceInterac
 
         Object obj = pjp.proceed();
 
-        trainerHistoryServiceClient.updateTrainersWorkloadInBatch(
+        trainerHistoryServiceMessaging.sendMessage(
+                "training-batch-update-channel",
                 trainings.stream().map(
                         tr -> new
                                 TrainerWorkloadRequest(tr.getTrainer().getUser().getUsername(),
@@ -40,7 +43,8 @@ public class BatchRemoveHoursFromTrainersStrategy implements MicroserviceInterac
                                 tr.getDuration(),
                                 ActionType.DELETE
                         )
-                ).toList(), httpServletRequest.getHeader(AUTHORIZATION_HEADER)
+                ).toList(),
+                httpServletRequest.getHeader(AUTHORIZATION_HEADER)
         );
         return obj;
     }

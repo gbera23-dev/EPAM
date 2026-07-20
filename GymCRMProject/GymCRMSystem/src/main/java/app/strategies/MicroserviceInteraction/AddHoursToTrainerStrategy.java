@@ -1,6 +1,7 @@
 package app.strategies.MicroserviceInteraction;
 
 import app.clients.TrainerHistoryServiceClient;
+import app.clients.TrainerHistoryServiceMessaging;
 import app.dto.api.request.TrainerWorkloadRequest;
 import app.dto.api.request.TrainingRequest;
 import app.entities.ActionType;
@@ -8,6 +9,8 @@ import app.entities.Trainer;
 import app.entities.User;
 import app.exceptions.AccessTimeoutException;
 import app.services.TrainerService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -20,7 +23,7 @@ import org.springframework.stereotype.Component;
 public class AddHoursToTrainerStrategy implements MicroserviceInteractionStrategy {
 
     private final TrainerService trainerService;
-    private final TrainerHistoryServiceClient trainerHistoryServiceClient;
+    private final TrainerHistoryServiceMessaging trainerHistoryServiceMessaging;
 
     @Override
     public Object sendTheRequest(ProceedingJoinPoint pjp) throws Throwable {
@@ -44,15 +47,11 @@ public class AddHoursToTrainerStrategy implements MicroserviceInteractionStrateg
         return pjp.proceed();
     }
 
-    private void attemptSendingRequest(HttpServletRequest httpServletRequest, TrainerWorkloadRequest trainerWorkloadRequest) {
-        ResponseEntity<String> resp =
-                trainerHistoryServiceClient.updateTrainerWorkload(trainerWorkloadRequest,
-                        httpServletRequest.getHeader(AUTHORIZATION_HEADER));
+    private void attemptSendingRequest(HttpServletRequest httpServletRequest, TrainerWorkloadRequest trainerWorkloadRequest)
+            throws JsonProcessingException {
+        trainerHistoryServiceMessaging.sendMessage("training-update-channel",
+                trainerWorkloadRequest, httpServletRequest.getHeader(AUTHORIZATION_HEADER));
 
-        if(resp.getStatusCode().equals(HttpStatus.GATEWAY_TIMEOUT)){
-            throw new AccessTimeoutException(
-                    "Could not connect to microservice...");
-        }
     }
 
 }

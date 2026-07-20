@@ -44,17 +44,15 @@ services:
       - gym_crm_network
 
   active_mq:
-      image: apache/activemq-classic:latest
-      container_name: activemqbroker
-      ports:
-        - "8161:8161"
-        - "61616:61616"
-      volumes:
-        - activemq-data:/opt/activemq/data
-      restart: unless-stopped
+    image: apache/activemq-classic:latest
+    container_name: activemqbroker
+    ports:
+      - "8161:8161"
+      - "61616:61616"
+    restart: unless-stopped
 
-      networks:
-      - gym_crm_network
+    networks:
+    - gym_crm_network
 
 
 networks:
