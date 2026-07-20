@@ -1,0 +1,48 @@
+services:
+  main_app:
+    build:
+      context: ./GymCRMSystem
+      dockerfile: Dockerfile
+    container_name: gymcrmmainapp
+    restart: unless-stopped
+    depends_on:
+      microservice_app:
+        condition: service_started
+      discovery_app:
+        condition: service_started
+    environment:
+      SPRING_PROFILES_ACTIVE: local
+    ports:
+      - "8080:8080"
+    networks:
+      - gym_crm_network
+
+  microservice_app:
+    build:
+      context: ./Trainer-history-service
+      dockerfile: Dockerfile
+    container_name: gymcrmmicroserviceapp
+    restart: unless-stopped
+    depends_on:
+      discovery_app:
+        condition: service_started
+    ports:
+      - "8081:8081"
+    networks:
+      - gym_crm_network
+
+  discovery_app:
+    build:
+      context: ./GymCRMSystemDiscovery
+      dockerfile: Dockerfile
+    container_name: gymcrmdiscoveryapp
+    restart: unless-stopped
+    ports:
+      - "8761:8761"
+    networks:
+      - gym_crm_network
+
+
+networks:
+  gym_crm_network:
+    driver: bridge
