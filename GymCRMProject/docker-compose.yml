@@ -11,8 +11,8 @@ services:
         condition: service_started
       discovery_app:
         condition: service_started
-    environment:
-      SPRING_PROFILES_ACTIVE: local
+      active_mq:
+        condition: service_started
     ports:
       - "8080:8080"
     networks:
@@ -26,6 +26,8 @@ services:
     restart: unless-stopped
     depends_on:
       discovery_app:
+        condition: service_started
+      active_mq:
         condition: service_started
     ports:
       - "8081:8081"
@@ -50,7 +52,6 @@ services:
       - "8161:8161"
       - "61616:61616"
     restart: unless-stopped
-
     networks:
     - gym_crm_network
 
