@@ -14,7 +14,6 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class TransactionAspect {
 
-    private final String TRANSACTION_HEADER_NAME = "X-Transaction-ID";
     private final String MDC_KEY = "transactionId";
 
 

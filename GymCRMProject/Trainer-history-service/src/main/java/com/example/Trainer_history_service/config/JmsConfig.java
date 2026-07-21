@@ -4,11 +4,15 @@ import com.example.Trainer_history_service.dto.TrainerWorkloadBatchRequest;
 import com.example.Trainer_history_service.dto.TrainerWorkloadRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import jakarta.jms.ConnectionFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.jms.config.DefaultJmsListenerContainerFactory;
 import org.springframework.jms.support.converter.JacksonJsonMessageConverter;
 import org.springframework.jms.support.converter.MessageConverter;
 import org.springframework.jms.support.converter.MessageType;
+import org.springframework.util.ErrorHandler;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -33,6 +37,21 @@ public class JmsConfig {
 
         converter.setTypeIdMappings(typeIdMappings);
         return converter;
+    }
+
+    @Bean
+    public DefaultJmsListenerContainerFactory jmsListenerContainerFactory(
+            @Qualifier("jmsConnectionFactory") ConnectionFactory connectionFactory,
+            ErrorHandler globalJmsErrorHandler, MessageConverter messageConverter) {
+
+        DefaultJmsListenerContainerFactory factory = new DefaultJmsListenerContainerFactory();
+        factory.setConnectionFactory(connectionFactory);
+
+        factory.setErrorHandler(globalJmsErrorHandler);
+
+        factory.setSessionTransacted(true);
+        factory.setMessageConverter(messageConverter);
+        return factory;
     }
 
 }
