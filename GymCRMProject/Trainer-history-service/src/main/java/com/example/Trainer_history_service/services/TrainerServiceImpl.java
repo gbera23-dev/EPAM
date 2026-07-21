@@ -33,7 +33,7 @@ public class TrainerServiceImpl implements TrainerService {
 
         MonthlySummary monthlySummary = monthlySummaryRepository.findByTrainerWorkloadIdAndDate
                         (trainerWorkload.getId(),
-                        LocalDate.of(date.getYear(), date.getMonth(), 1))
+                        normalizeDate(date))
                 .orElseThrow(
                         () -> new MonthlySummaryNotFoundException("could not find monthly summary!")
                 );
@@ -133,7 +133,7 @@ public class TrainerServiceImpl implements TrainerService {
         return monthlySummaryRepository.
                 findByTrainerWorkloadIdAndDate(trainerWorkload.getId(),
                 LocalDate.of(date.getYear(), date.getMonth(), 1))
-                .orElse(new MonthlySummary(null, LocalDate.of(date.getYear(), date.getMonth(), 1), 0,
+                .orElse(new MonthlySummary(null, normalizeDate(date), 0,
                         trainerWorkload));
     }
 
@@ -152,8 +152,7 @@ public class TrainerServiceImpl implements TrainerService {
     private List<TrainerWorkloadRequest> aggregateHours(List<TrainerWorkloadRequest> trainerWorkloadsRequests) {
         Map<String, TrainerWorkloadRequest> representativeRequests = trainerWorkloadsRequests.stream()
                 .collect(Collectors.toMap(
-                        t -> t.getUsername() + LocalDate.of(t.getTrainingDate().getYear(),
-                                t.getTrainingDate().getMonth(), 1),
+                        t -> t.getUsername() + normalizeDate(t.getTrainingDate()),
                         t -> t,
                         (existing, duplicate) -> existing
                 ));
@@ -175,5 +174,9 @@ public class TrainerServiceImpl implements TrainerService {
                     return r;
                 })
                 .toList();
+    }
+
+    private LocalDate normalizeDate(LocalDate date) {
+        return LocalDate.of(date.getYear(), date.getMonth(), 1);
     }
 }
