@@ -1,6 +1,6 @@
-import app.clients.TrainerHistoryServiceClient;
+import app.clients.TrainerHistoryServiceMessaging;
+import app.dto.api.request.TrainerWorkloadBatchRequest;
 import app.dto.api.request.TrainerWorkloadRequest;
-import app.entities.ActionType;
 import app.entities.Trainer;
 import app.entities.Training;
 import app.entities.User;
@@ -8,171 +8,99 @@ import app.services.TraineeService;
 import app.strategies.MicroserviceInteraction.BatchRemoveHoursFromTrainersStrategy;
 import jakarta.servlet.http.HttpServletRequest;
 import org.aspectj.lang.ProceedingJoinPoint;
+import org.jboss.logging.MDC;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.LocalDate;
-import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class BatchRemoveHoursFromTrainersStrategyTest {
 
-    @Mock
-    private TraineeService traineeService;
+    @Mock private TraineeService traineeService;
+    @Mock private TrainerHistoryServiceMessaging trainerHistoryServiceMessaging;
+    @Mock private ProceedingJoinPoint pjp;
+    @Mock private HttpServletRequest httpServletRequest;
+    @Mock private Training training;
+    @Mock private Trainer trainer;
+    @Mock private User user;
 
-    @Mock
-    private TrainerHistoryServiceClient trainerHistoryServiceClient;
-
-    @Mock
-    private ProceedingJoinPoint pjp;
-
-    @Mock
-    private HttpServletRequest httpServletRequest;
-
-    @InjectMocks
     private BatchRemoveHoursFromTrainersStrategy strategy;
 
-    private static final String AUTH_TOKEN = "Bearer test-token";
-
-    private Training buildTraining(String username, LocalDate date, int duration) {
-        User user = new User();
-        user.setUsername(username);
-        user.setFirstName("John");
-        user.setLastName("Doe");
-        user.setActive(true);
-
-        Trainer trainer = new Trainer();
-        trainer.setUser(user);
-
-        Training training = new Training();
-        training.setTrainer(trainer);
-        training.setDate(date);
-        training.setDuration(duration);
-        return training;
+    @BeforeEach
+    void setUp() {
+        strategy = new BatchRemoveHoursFromTrainersStrategy(traineeService, trainerHistoryServiceMessaging);
+        MDC.put("transactionId", "txn-3");
     }
 
     @Test
-    void testSendTheRequestOnValidTrainings() throws Throwable {
-        List<Training> trainings = List.of(
-                buildTraining("john.doe", LocalDate.of(2024, 6, 15), 60),
-                buildTraining("jane.doe", LocalDate.of(2024, 7, 10), 90)
-        );
-
-        when(pjp.getArgs()).thenReturn(new Object[]{"trainee.user", httpServletRequest});
-        when(traineeService.getAllTrainingsForTrainee("trainee.user")).thenReturn(trainings);
+    void testSendTheRequestProceedsThenSendsBatchMessage() throws Throwable {
+        when(pjp.getArgs()).thenReturn(new Object[]{"trainee.one", httpServletRequest});
+        when(traineeService.getAllTrainingsForTrainee("trainee.one")).thenReturn(List.of(training));
+        when(training.getTrainer()).thenReturn(trainer);
+        when(trainer.getUser()).thenReturn(user);
+        when(training.getDate()).thenReturn(java.time.LocalDate.of(2025, 8, 1));
+        when(training.getDuration()).thenReturn(30);
+        when(user.getUsername()).thenReturn("trainer.one");
+        when(user.getFirstName()).thenReturn("Jane");
+        when(user.getLastName()).thenReturn("Smith");
+        when(user.isActive()).thenReturn(false);
+        when(httpServletRequest.getHeader(anyString())).thenReturn("Bearer token");
         when(pjp.proceed()).thenReturn("proceeded");
-        when(httpServletRequest.getHeader("Authorization")).thenReturn(AUTH_TOKEN);
 
         Object result = strategy.sendTheRequest(pjp);
 
+        var inOrder = inOrder(pjp, trainerHistoryServiceMessaging);
+        inOrder.verify(pjp).proceed();
+        ArgumentCaptor<TrainerWorkloadBatchRequest> captor = ArgumentCaptor.forClass(TrainerWorkloadBatchRequest.class);
+        inOrder.verify(trainerHistoryServiceMessaging).sendMessage(
+                eq("training-batch-update-channel"), captor.capture(), eq("Bearer token"), eq("txn-3"));
+
+        TrainerWorkloadBatchRequest sent = captor.getValue();
+        assertEquals(1, sent.getTrainerWorkloadRequestList().size());
+        TrainerWorkloadRequest item = sent.getTrainerWorkloadRequestList().get(0);
+        assertEquals("trainer.one", item.getUsername());
+        assertEquals("Jane", item.getFirstName());
+        assertEquals("Smith", item.getLastName());
+        assertFalse(item.getIsActive());
+        assertEquals(java.time.LocalDate.of(2025, 8, 1), item.getTrainingDate());
+        assertEquals(30, item.getDuration());
+        assertEquals(app.entities.ActionType.DELETE, item.getActionType());
         assertEquals("proceeded", result);
-        verify(trainerHistoryServiceClient, times(1))
-                .updateTrainersWorkloadInBatch(anyList(), eq(AUTH_TOKEN));
     }
 
     @Test
-    void testSendTheRequestOnCorrectWorkloadRequestsBuilt() throws Throwable {
-        Training training = buildTraining("john.doe", LocalDate.of(2024, 6, 15), 60);
-
-        when(pjp.getArgs()).thenReturn(new Object[]{"trainee.user", httpServletRequest});
-        when(traineeService.getAllTrainingsForTrainee("trainee.user")).thenReturn(List.of(training));
-        when(pjp.proceed()).thenReturn(null);
-        when(httpServletRequest.getHeader("Authorization")).thenReturn(AUTH_TOKEN);
+    void testSendTheRequestLooksUpTrainingsForGivenUsernameBeforeProceeding() throws Throwable {
+        when(pjp.getArgs()).thenReturn(new Object[]{"trainee.two", httpServletRequest});
+        when(traineeService.getAllTrainingsForTrainee("trainee.two")).thenReturn(List.of());
+        when(httpServletRequest.getHeader(anyString())).thenReturn("token");
+        when(pjp.proceed()).thenReturn("ok");
 
         strategy.sendTheRequest(pjp);
 
-        ArgumentCaptor<List<TrainerWorkloadRequest>> captor = ArgumentCaptor.forClass(List.class);
-        verify(trainerHistoryServiceClient).updateTrainersWorkloadInBatch(captor.capture(), eq(AUTH_TOKEN));
-
-        TrainerWorkloadRequest captured = captor.getValue().get(0);
-        assertEquals("john.doe", captured.getUsername());
-        assertEquals("John", captured.getFirstName());
-        assertEquals("Doe", captured.getLastName());
-        assertTrue(captured.getIsActive());
-        assertEquals(LocalDate.of(2024, 6, 15), captured.getTrainingDate());
-        assertEquals(60, captured.getDuration());
-        assertEquals(ActionType.DELETE, captured.getActionType());
+        var inOrder = inOrder(traineeService, pjp);
+        inOrder.verify(traineeService).getAllTrainingsForTrainee("trainee.two");
+        inOrder.verify(pjp).proceed();
     }
 
     @Test
-    void testSendTheRequestOnEmptyTrainingList() throws Throwable {
-        when(pjp.getArgs()).thenReturn(new Object[]{"trainee.user", httpServletRequest});
-        when(traineeService.getAllTrainingsForTrainee("trainee.user")).thenReturn(Collections.emptyList());
-        when(pjp.proceed()).thenReturn(null);
-        when(httpServletRequest.getHeader("Authorization")).thenReturn(AUTH_TOKEN);
+    void testSendTheRequestWithEmptyTrainingsListStillSendsMessage() throws Throwable {
+        when(pjp.getArgs()).thenReturn(new Object[]{"trainee.three", httpServletRequest});
+        when(traineeService.getAllTrainingsForTrainee("trainee.three")).thenReturn(List.of());
+        when(httpServletRequest.getHeader(anyString())).thenReturn("token");
+        when(pjp.proceed()).thenReturn("ok");
 
         strategy.sendTheRequest(pjp);
 
-        ArgumentCaptor<List<TrainerWorkloadRequest>> captor = ArgumentCaptor.forClass(List.class);
-        verify(trainerHistoryServiceClient).updateTrainersWorkloadInBatch(captor.capture(), eq(AUTH_TOKEN));
-        assertTrue(captor.getValue().isEmpty());
-    }
-
-    @Test
-    void testSendTheRequestOnProceedCalledBeforeClientCall() throws Throwable {
-        Training training = buildTraining("john.doe", LocalDate.of(2024, 6, 15), 60);
-
-        when(pjp.getArgs()).thenReturn(new Object[]{"trainee.user", httpServletRequest});
-        when(traineeService.getAllTrainingsForTrainee("trainee.user")).thenReturn(List.of(training));
-        when(pjp.proceed()).thenReturn(null);
-        when(httpServletRequest.getHeader("Authorization")).thenReturn(AUTH_TOKEN);
-
-        strategy.sendTheRequest(pjp);
-
-        inOrder(pjp, trainerHistoryServiceClient).verify(pjp).proceed();
-        inOrder(pjp, trainerHistoryServiceClient).verify(trainerHistoryServiceClient)
-                .updateTrainersWorkloadInBatch(anyList(), any());
-    }
-
-    @Test
-    void testSendTheRequestOnProceedThrowsException() throws Throwable {
-        List<Training> trainings = List.of(
-                buildTraining("john.doe", LocalDate.of(2024, 6, 15), 60)
-        );
-
-        when(pjp.getArgs()).thenReturn(new Object[]{"trainee.user", httpServletRequest});
-        when(traineeService.getAllTrainingsForTrainee("trainee.user")).thenReturn(trainings);
-        when(pjp.proceed()).thenThrow(new RuntimeException("proceed failed"));
-
-        assertThrows(RuntimeException.class, () -> strategy.sendTheRequest(pjp));
-        verifyNoInteractions(trainerHistoryServiceClient);
-    }
-
-    @Test
-    void testSendTheRequestOnTraineeNotFound() {
-        when(pjp.getArgs()).thenReturn(new Object[]{"unknown.user", httpServletRequest});
-        when(traineeService.getAllTrainingsForTrainee("unknown.user"))
-                .thenThrow(new RuntimeException("Trainee not found"));
-
-        assertThrows(RuntimeException.class, () -> strategy.sendTheRequest(pjp));
-        verifyNoInteractions(trainerHistoryServiceClient);
-    }
-
-    @Test
-    void testSendTheRequestOnMultipleTrainersCorrectCount() throws Throwable {
-        List<Training> trainings = List.of(
-                buildTraining("trainer.one", LocalDate.of(2024, 1, 10), 30),
-                buildTraining("trainer.two", LocalDate.of(2024, 2, 20), 45),
-                buildTraining("trainer.three", LocalDate.of(2024, 3, 5), 90)
-        );
-
-        when(pjp.getArgs()).thenReturn(new Object[]{"trainee.user", httpServletRequest});
-        when(traineeService.getAllTrainingsForTrainee("trainee.user")).thenReturn(trainings);
-        when(pjp.proceed()).thenReturn(null);
-        when(httpServletRequest.getHeader("Authorization")).thenReturn(AUTH_TOKEN);
-
-        strategy.sendTheRequest(pjp);
-
-        ArgumentCaptor<List<TrainerWorkloadRequest>> captor = ArgumentCaptor.forClass(List.class);
-        verify(trainerHistoryServiceClient).updateTrainersWorkloadInBatch(captor.capture(), eq(AUTH_TOKEN));
-        assertEquals(3, captor.getValue().size());
+        verify(trainerHistoryServiceMessaging).sendMessage(
+                eq("training-batch-update-channel"), any(TrainerWorkloadBatchRequest.class), eq("token"), eq("txn-3"));
     }
 }

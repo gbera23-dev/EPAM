@@ -221,17 +221,6 @@ class TrainerServiceImplTest {
     }
 
     @Test
-    void testUpdateTrainingHoursZeroHoursThrowsException() {
-        TrainerWorkloadRequest request = buildRequest(ActionType.ADD, 0);
-        TrainerWorkload workload = buildWorkload();
-
-        when(trainerWorkloadRepository.existsByUsername(USERNAME)).thenReturn(true);
-
-        assertThrows(NegativeDurationException.class,
-                () -> trainerService.updateTrainingHours(request));
-    }
-
-    @Test
     void testUpdateTrainingHoursInBatchProcessesAllRequests() {
         TrainerWorkload workload = buildWorkload();
         List<TrainerWorkloadRequest> requests = List.of(

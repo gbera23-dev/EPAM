@@ -5,13 +5,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-public class TrainerWorkloadCreationRequest {
-    private String username;
-    private String firstName;
-    private String lastName;
-    private Boolean isActive;
+public class TrainerWorkloadBatchRequest {
+    private List<TrainerWorkloadRequest> trainerWorkloadRequestList;
 }

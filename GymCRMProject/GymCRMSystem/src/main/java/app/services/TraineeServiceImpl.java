@@ -1,6 +1,5 @@
 package app.services;
 
-import app.clients.TrainerHistoryServiceClient;
 import app.entities.*;
 import app.exceptions.UserAlreadyActiveException;
 import app.exceptions.UserAlreadyInactiveException;
@@ -32,8 +31,7 @@ public class TraineeServiceImpl implements TraineeService {
                               TrainerRepository trainerRepository,
                               TrainingRepository trainingRepository,
                               UserRepository userRepository,
-                              PasswordEncoder passwordEncoder,
-                              TrainerHistoryServiceClient trainerHistoryServiceClient) {
+                              PasswordEncoder passwordEncoder) {
         this.traineeRepository = traineeRepository;
         this.trainerRepository = trainerRepository;
         this.trainingRepository = trainingRepository;
