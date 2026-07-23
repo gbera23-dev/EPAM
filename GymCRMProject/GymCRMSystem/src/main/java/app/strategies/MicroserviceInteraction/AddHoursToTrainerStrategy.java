@@ -47,7 +47,7 @@ public class AddHoursToTrainerStrategy implements MicroserviceInteractionStrateg
 
     private void attemptSendingRequest(HttpServletRequest httpServletRequest, TrainerWorkloadRequest trainerWorkloadRequest)
             throws JsonProcessingException {
-        trainerHistoryServiceMessaging.sendMessage("training-update-channel",
+        trainerHistoryServiceMessaging.sendMessage(MicroserviceInteractionStrategy.TRAINING_UPDATE_CHANNEL,
                 trainerWorkloadRequest, httpServletRequest.getHeader(AUTHORIZATION_HEADER),
                 (String)MDC.get("transactionId"));
     }

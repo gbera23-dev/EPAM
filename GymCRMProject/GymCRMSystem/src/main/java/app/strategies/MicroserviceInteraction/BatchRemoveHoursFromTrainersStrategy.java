@@ -32,7 +32,7 @@ public class BatchRemoveHoursFromTrainersStrategy implements MicroserviceInterac
         Object obj = pjp.proceed();
 
         trainerHistoryServiceMessaging.sendMessage(
-                "training-batch-update-channel",
+                TRAINING_BATCH_UPDATE_CHANNEL,
                 new TrainerWorkloadBatchRequest(trainings.stream().map(
                         tr -> new
                                 TrainerWorkloadRequest(tr.getTrainer().getUser().getUsername(),

@@ -51,7 +51,7 @@ public class RemoveHoursFromTrainerStrategy implements MicroserviceInteractionSt
     private void attemptSendingRequest(HttpServletRequest httpServletRequest, TrainerWorkloadRequest trainerWorkloadRequest) throws JsonProcessingException {
 
         trainerHistoryServiceMessaging.sendMessage(
-                "training-update-channel",
+                TRAINING_UPDATE_CHANNEL,
                 trainerWorkloadRequest,
                 httpServletRequest.getHeader(AUTHORIZATION_HEADER),
                 (String) MDC.get("transactionId")
