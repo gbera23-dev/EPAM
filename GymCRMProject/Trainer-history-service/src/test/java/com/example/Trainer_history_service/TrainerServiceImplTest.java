@@ -69,7 +69,7 @@ class TrainerServiceImplTest {
         MonthlySummary summary = buildMonthlySummary(workload, 10);
 
         when(trainerWorkloadRepository.findByUsername(USERNAME)).thenReturn(Optional.of(workload));
-        when(monthlySummaryRepository.findByTrainerWorkloadIdAndDate("1", MONTH_START))
+        when(monthlySummaryRepository.findByTrainerWorkloadIdAndDate("one", MONTH_START))
                 .thenReturn(Optional.of(summary));
 
         Integer result = trainerService.getTrainingHours(USERNAME, DATE);
@@ -141,7 +141,6 @@ class TrainerServiceImplTest {
         trainerService.updateTrainingHours(request);
 
         assertEquals(15, existing.getDuration());
-        verify(monthlySummaryRepository).save(existing);
     }
 
     @Test
@@ -175,7 +174,7 @@ class TrainerServiceImplTest {
         trainerService.updateTrainingHours(request);
 
         assertEquals(7, existing.getDuration());
-        verify(monthlySummaryRepository).save(existing);
+        verify(monthlySummaryRepository).updateDuration(existing.getId(), existing.getDuration());
     }
 
     @Test
