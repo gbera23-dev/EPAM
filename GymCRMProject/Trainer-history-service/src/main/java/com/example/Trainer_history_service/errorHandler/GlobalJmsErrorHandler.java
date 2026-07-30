@@ -10,7 +10,7 @@ public class GlobalJmsErrorHandler implements ErrorHandler {
 
     @Override
     public void handleError(Throwable t) {
-        log.error("Message processing missicks failed: {}", t.getMessage());
+        log.error("Message processing failed: {}", t.getMessage());
     }
 
 }

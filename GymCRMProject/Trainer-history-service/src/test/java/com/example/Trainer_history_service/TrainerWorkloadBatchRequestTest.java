@@ -2,7 +2,7 @@ package com.example.Trainer_history_service;
 
 import com.example.Trainer_history_service.dto.TrainerWorkloadBatchRequest;
 import com.example.Trainer_history_service.dto.TrainerWorkloadRequest;
-import com.example.Trainer_history_service.entities.ActionType;
+import com.example.Trainer_history_service.documents.ActionType;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;

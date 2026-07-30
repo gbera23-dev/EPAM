@@ -1,9 +1,9 @@
 package com.example.Trainer_history_service.services;
 
 import com.example.Trainer_history_service.dto.TrainerWorkloadRequest;
-import com.example.Trainer_history_service.entities.ActionType;
-import com.example.Trainer_history_service.entities.MonthlySummary;
-import com.example.Trainer_history_service.entities.TrainerWorkload;
+import com.example.Trainer_history_service.documents.ActionType;
+import com.example.Trainer_history_service.documents.MonthlySummary;
+import com.example.Trainer_history_service.documents.TrainerWorkload;
 import com.example.Trainer_history_service.exceptions.MonthlySummaryNotFoundException;
 import com.example.Trainer_history_service.exceptions.NegativeDurationException;
 import com.example.Trainer_history_service.exceptions.UserNotFoundException;
@@ -33,7 +33,7 @@ public class TrainerServiceImpl implements TrainerService {
 
         MonthlySummary monthlySummary = monthlySummaryRepository.findByTrainerWorkloadIdAndDate
                         (trainerWorkload.getId(),
-                        normalizeDate(date))
+                                normalizeDate(date))
                 .orElseThrow(
                         () -> new MonthlySummaryNotFoundException("could not find monthly summary!")
                 );
@@ -55,7 +55,11 @@ public class TrainerServiceImpl implements TrainerService {
                     }
                     MonthlySummary monthlySummary = determineMonthlySummary(twr);
                     if(monthlySummary != null) {
-                        monthlySummaryRepository.save(monthlySummary);
+                        if(monthlySummary.getId() != null) {
+                            monthlySummaryRepository.updateDuration(monthlySummary.getId(), monthlySummary.getDuration());
+                        } else {
+                            monthlySummaryRepository.save(monthlySummary);
+                        }
                     }
                 }
         );
@@ -73,7 +77,11 @@ public class TrainerServiceImpl implements TrainerService {
 
         MonthlySummary resultingMonthlySummary = determineMonthlySummary(trainerWorkloadRequest);
         if(resultingMonthlySummary != null) {
-            monthlySummaryRepository.save(resultingMonthlySummary);
+            if(resultingMonthlySummary.getId() != null) {
+                monthlySummaryRepository.updateDuration(resultingMonthlySummary.getId(), resultingMonthlySummary.getDuration());
+            } else {
+                monthlySummaryRepository.save(resultingMonthlySummary);
+            }
         }
     }
 
@@ -132,7 +140,7 @@ public class TrainerServiceImpl implements TrainerService {
 
         return monthlySummaryRepository.
                 findByTrainerWorkloadIdAndDate(trainerWorkload.getId(),
-                LocalDate.of(date.getYear(), date.getMonth(), 1))
+                        LocalDate.of(date.getYear(), date.getMonth(), 1))
                 .orElse(new MonthlySummary(null, normalizeDate(date), 0,
                         trainerWorkload));
     }

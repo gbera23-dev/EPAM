@@ -1,5 +1,5 @@
 services:
-
+  # main application
   main_app:
     build:
       context: ./GymCRMSystem
@@ -18,6 +18,7 @@ services:
     networks:
       - gym_crm_network
 
+  # microservice up whose purpose is to maintain trainer's work information
   microservice_app:
     build:
       context: ./Trainer-history-service
@@ -34,6 +35,7 @@ services:
     networks:
       - gym_crm_network
 
+  # special service that eradicates tight coupling between microservices
   discovery_app:
     build:
       context: ./GymCRMSystemDiscovery
@@ -45,6 +47,7 @@ services:
     networks:
       - gym_crm_network
 
+  # messaging broker for async communication between microservices
   active_mq:
     image: apache/activemq-classic:latest
     container_name: activemqbroker
@@ -55,6 +58,15 @@ services:
     networks:
     - gym_crm_network
 
+  # nosql database used for storing trainer's work information(trainer history service uses it)
+  mongo_db:
+    image: mongo:latest
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    restart: unless-stopped
+    networks:
+      - gym_crm_network
 
 networks:
   gym_crm_network:

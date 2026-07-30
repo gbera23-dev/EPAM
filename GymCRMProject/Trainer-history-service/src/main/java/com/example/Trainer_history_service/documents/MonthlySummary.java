@@ -1,11 +1,10 @@
-package com.example.Trainer_history_service.entities;
+package com.example.Trainer_history_service.documents;
 
-
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.mongodb.core.mapping.*;
 
 import java.time.LocalDate;
 
@@ -14,17 +13,14 @@ import java.time.LocalDate;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
+@Document(collection="monthly_summaries")
 public class MonthlySummary {
-    @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
-    @Column(name="MonthlySummery_id")
-    private Long id;
-    @Column(name="date")
+    @MongoId
+    private String id;
+    @Field(name="date")
     private LocalDate date;
-    @Column(name="duration")
+    @Field(name="duration")
     private Integer duration;
-    @ManyToOne
-    @JoinColumn(name="Trainer_workload_id")
+    @DBRef
     private TrainerWorkload trainerWorkload;
 }

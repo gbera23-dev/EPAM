@@ -1,11 +1,10 @@
 package com.example.Trainer_history_service.dto;
 
-import com.example.Trainer_history_service.entities.ActionType;
+import com.example.Trainer_history_service.documents.ActionType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.web.bind.annotation.GetMapping;
 
 import java.time.LocalDate;
 

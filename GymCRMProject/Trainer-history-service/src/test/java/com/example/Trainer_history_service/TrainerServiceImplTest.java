@@ -1,9 +1,9 @@
 package com.example.Trainer_history_service;
 
 import com.example.Trainer_history_service.dto.TrainerWorkloadRequest;
-import com.example.Trainer_history_service.entities.ActionType;
-import com.example.Trainer_history_service.entities.MonthlySummary;
-import com.example.Trainer_history_service.entities.TrainerWorkload;
+import com.example.Trainer_history_service.documents.ActionType;
+import com.example.Trainer_history_service.documents.MonthlySummary;
+import com.example.Trainer_history_service.documents.TrainerWorkload;
 import com.example.Trainer_history_service.exceptions.MonthlySummaryNotFoundException;
 import com.example.Trainer_history_service.exceptions.NegativeDurationException;
 import com.example.Trainer_history_service.exceptions.UserNotFoundException;
@@ -17,6 +17,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.math.BigInteger;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
@@ -43,11 +44,11 @@ class TrainerServiceImplTest {
     private static final LocalDate MONTH_START = LocalDate.of(2024, 6, 1);
 
     private TrainerWorkload buildWorkload() {
-        return new TrainerWorkload(1L, USERNAME, "John", "Doe", true, Collections.emptyList());
+        return new TrainerWorkload("one", USERNAME, "John", "Doe", true, Collections.emptyList());
     }
 
     private MonthlySummary buildMonthlySummary(TrainerWorkload workload, int duration) {
-        return new MonthlySummary(1L, MONTH_START, duration, workload);
+        return new MonthlySummary("one", MONTH_START, duration, workload);
     }
 
     private TrainerWorkloadRequest buildRequest(ActionType actionType, int duration) {
@@ -68,7 +69,7 @@ class TrainerServiceImplTest {
         MonthlySummary summary = buildMonthlySummary(workload, 10);
 
         when(trainerWorkloadRepository.findByUsername(USERNAME)).thenReturn(Optional.of(workload));
-        when(monthlySummaryRepository.findByTrainerWorkloadIdAndDate(1L, MONTH_START))
+        when(monthlySummaryRepository.findByTrainerWorkloadIdAndDate("1", MONTH_START))
                 .thenReturn(Optional.of(summary));
 
         Integer result = trainerService.getTrainingHours(USERNAME, DATE);
@@ -280,6 +281,6 @@ class TrainerServiceImplTest {
 
         trainerService.updateTrainingHours(request);
 
-        verify(monthlySummaryRepository).findByTrainerWorkloadIdAndDate(1L, MONTH_START);
+        verify(monthlySummaryRepository).findByTrainerWorkloadIdAndDate("one", MONTH_START);
     }
 }
