@@ -22,7 +22,7 @@ public class JWTAspect {
 
     private final JWTService jwtService;
 
-    @Before("consumerLayer() && args(.., jwtToken, transactionId)")
+    @Before(value = "consumerLayer() && args(.., jwtToken, transactionId)", argNames = "jwtToken,transactionId")
     private void validateJWTToken(String jwtToken, String transactionId) {
         //strip Bearer from jwt token
         jwtToken = jwtToken.substring(JWT_TOKEN_PREFIX.length());
