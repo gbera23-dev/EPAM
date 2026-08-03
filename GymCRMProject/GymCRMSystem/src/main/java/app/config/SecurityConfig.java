@@ -1,6 +1,7 @@
 package app.config;
 
 import app.filters.JWTFilter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.ApplicationEventPublisher;
@@ -29,6 +30,7 @@ import java.util.List;
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
+@Slf4j
 public class SecurityConfig {
 
     private final JWTFilter jwtFilter;
@@ -49,6 +51,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> {
 
                     if (isH2Active) {
+                        log.info("h2 is active!..");
                         auth.requestMatchers(PathRequest.toH2Console()).permitAll()
                         .requestMatchers("/actuator/**").permitAll()
                                 .requestMatchers("/v3/api-docs",

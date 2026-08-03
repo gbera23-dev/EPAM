@@ -1,11 +1,11 @@
 package com.example.Trainer_history_service.repository;
 
-import com.example.Trainer_history_service.entities.TrainerWorkload;
-import org.springframework.data.jpa.repository.JpaRepository;
+import com.example.Trainer_history_service.documents.TrainerWorkload;
+import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.Optional;
 
-public interface TrainerWorkloadRepository extends JpaRepository<TrainerWorkload, Long> {
+public interface TrainerWorkloadRepository extends MongoRepository<TrainerWorkload, Long> {
 
     Optional<TrainerWorkload> findByUsername(String username);
 

@@ -1,5 +1,5 @@
 services:
-
+  # main application
   main_app:
     build:
       context: ./GymCRMSystem
@@ -15,9 +15,12 @@ services:
         condition: service_started
     ports:
       - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=${APP_ENV}
     networks:
       - gym_crm_network
 
+  # microservice up whose purpose is to maintain trainer's work information
   microservice_app:
     build:
       context: ./Trainer-history-service
@@ -34,6 +37,7 @@ services:
     networks:
       - gym_crm_network
 
+  # special service that eradicates tight coupling between microservices
   discovery_app:
     build:
       context: ./GymCRMSystemDiscovery
@@ -45,6 +49,7 @@ services:
     networks:
       - gym_crm_network
 
+  # messaging broker for async communication between microservices
   active_mq:
     image: apache/activemq-classic:latest
     container_name: activemqbroker
@@ -55,7 +60,41 @@ services:
     networks:
     - gym_crm_network
 
+  # nosql database used for storing trainer's work information(trainer history service uses it)
+  mongo_db:
+    image: mongo:latest
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin
+    restart: unless-stopped
+    networks:
+      - gym_crm_network
 
+  # mysql database for the stage and production environments
+  mysql_db:
+    image: mysql:latest
+    container_name: mysqldb
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: Gym_CRM_db
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: admin
+    restart: unless-stopped
+    depends_on:
+      main_app:
+        condition: service_started
+    profiles:
+      - stg
+      - prod
+    networks:
+      - gym_crm_network
+
+# network in which all the available services will be situated
 networks:
   gym_crm_network:
     driver: bridge
