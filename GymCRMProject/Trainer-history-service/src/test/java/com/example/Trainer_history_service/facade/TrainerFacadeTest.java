@@ -1,4 +1,4 @@
-package unit.facade;
+package com.example.Trainer_history_service.facade;
 
 import com.example.Trainer_history_service.dto.TrainerWorkloadRequest;
 import com.example.Trainer_history_service.facade.TrainerFacade;

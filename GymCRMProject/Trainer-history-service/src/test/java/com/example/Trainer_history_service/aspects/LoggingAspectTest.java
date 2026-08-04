@@ -1,4 +1,4 @@
-package unit.aspects;
+package com.example.Trainer_history_service.aspects;
 
 import com.example.Trainer_history_service.aspects.LoggingAspect;
 import org.aspectj.lang.JoinPoint;

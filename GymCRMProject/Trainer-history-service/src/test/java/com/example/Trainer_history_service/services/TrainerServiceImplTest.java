@@ -1,4 +1,4 @@
-package unit.services;
+package com.example.Trainer_history_service.services;
 
 import com.example.Trainer_history_service.documents.ActionType;
 import com.example.Trainer_history_service.documents.MonthlySummary;

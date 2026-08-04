@@ -2,14 +2,12 @@ package com.example.Trainer_history_service.cucumber;
 
 import com.example.Trainer_history_service.exceptions.UserCannotBeAuthorizedException;
 import com.example.Trainer_history_service.services.JWTService;
-import com.example.Trainer_history_service.services.JWTServiceImpl;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.cucumber.java.*;
 import io.jsonwebtoken.JwtException;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.time.Duration;

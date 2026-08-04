@@ -1,4 +1,4 @@
-package unit.dto;
+package com.example.Trainer_history_service.dto;
 
 import com.example.Trainer_history_service.documents.ActionType;
 import com.example.Trainer_history_service.dto.TrainerWorkloadRequest;

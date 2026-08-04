@@ -1,4 +1,4 @@
-package unit.errorHandler;
+package com.example.Trainer_history_service.errorHandler;
 
 import com.example.Trainer_history_service.errorHandler.GlobalJmsErrorHandler;
 import org.junit.jupiter.api.BeforeEach;

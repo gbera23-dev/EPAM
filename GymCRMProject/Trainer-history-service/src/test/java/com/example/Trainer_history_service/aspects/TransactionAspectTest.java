@@ -1,4 +1,4 @@
-package unit.aspects;
+package com.example.Trainer_history_service.aspects;
 
 import com.example.Trainer_history_service.aspects.TransactionAspect;
 import org.aspectj.lang.ProceedingJoinPoint;
