@@ -37,7 +37,7 @@ public class AuthServiceImpl implements AuthService {
     public void changeUserProfilePassword(String username, String oldPassword, String newPassword) {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(
-                        () -> new UsernameNotFoundException("Could not find user with username!")
+                        () -> new UserNotFoundException("Could not find user with username!")
                 );
 
         if(!passwordEncoder.matches(oldPassword, user.getPassword())) {

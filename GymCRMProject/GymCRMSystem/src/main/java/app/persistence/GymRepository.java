@@ -13,4 +13,5 @@ public class GymRepository {
     private final TrainingRepository trainingRepository;
     private final TrainingTypeRepository trainingTypeRepository;
     private final UserRepository userRepository;
+    private final JWTRepository jwtRepository;
 }
