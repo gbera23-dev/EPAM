@@ -196,7 +196,6 @@ public class AuthenticationSteps {
         if (token != null) {
             testContext.setToken(token);
         }
-        System.out.println("body is: " + mvcResult.getResponse().getContentAsString());
     }
 
     private void changePassword(String username, String oldPassword, String newPassword) throws Exception {
