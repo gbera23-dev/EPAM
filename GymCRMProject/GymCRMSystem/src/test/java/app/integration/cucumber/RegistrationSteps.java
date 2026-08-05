@@ -70,6 +70,12 @@ public class RegistrationSteps {
 
         testContext.setStatus(HttpStatus.valueOf(mvcResult.getResponse().getStatus()));
         testContext.setResponseBody(mvcResult.getResponse().getContentAsString());
+
+        String jsonBody = testContext.getResponseBody();
+        JsonNode jsonNode = objectMapper.readTree(jsonBody);
+        jsonNode = jsonNode.get("password");
+
+        if(jsonNode != null) testContext.setCurrentPassword(jsonNode.textValue());
     }
 
     @Then("the response status should be {int}")
@@ -82,7 +88,6 @@ public class RegistrationSteps {
         String jsonBody = testContext.getResponseBody();
         JsonNode jsonNode = objectMapper.readTree(jsonBody);
         String returnedUsername = jsonNode.get("username").textValue();
-        System.out.println("expected: " + username +  " , actual: "+returnedUsername );
         assertThat(returnedUsername).isEqualTo(username);
     }
 

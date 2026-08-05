@@ -31,8 +31,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 @RequiredArgsConstructor
 public class TrainingSearchSteps {
 
-    private static final String KNOWN_PASSWORD = "test-password";
-
     private final GymRepository gymRepository;
     private final MockMvc mockMvc;
     private final TestContext testContext;
@@ -71,17 +69,22 @@ public class TrainingSearchSteps {
         app.entities.User user = gymRepository.getUserRepository().findByUsername(username)
                 .orElseThrow(() -> new UserNotFoundException(
                         "Fixture failed: no user " + username));
-        user.setPassword(passwordEncoder.encode(KNOWN_PASSWORD));
+        user.setPassword(passwordEncoder.encode(TestUtils.KNOWN_PASSWORD));
         gymRepository.getUserRepository().save(user);
+        testContext.setCurrentPassword(TestUtils.KNOWN_PASSWORD);
 
         MvcResult mvcResult = mockMvc.perform(get("/api/user/login")
+                        .with(request -> {
+                            request.setRemoteAddr(testContext.getClientAddress());
+                            return request;
+                        })
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
                                   "username": "%s",
                                   "password": "%s"
                                 }
-                                """.formatted(username, KNOWN_PASSWORD)))
+                                """.formatted(username, TestUtils.KNOWN_PASSWORD)))
                 .andReturn();
 
         assertThat(mvcResult.getResponse().getStatus())

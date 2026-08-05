@@ -24,4 +24,6 @@ public class TestContext {
     private String responseBody;
     private HttpStatus status;
     private Long currentTrainingId;
+    private String currentPassword;
+    private String clientAddress = TestUtils.uniqueClientAddress();
 }
