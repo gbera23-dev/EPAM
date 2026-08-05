@@ -85,9 +85,6 @@ services:
       MYSQL_USER: admin
       MYSQL_PASSWORD: admin
     restart: unless-stopped
-    depends_on:
-      main_app:
-        condition: service_started
     profiles:
       - stg
       - prod
