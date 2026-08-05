@@ -305,7 +305,7 @@ class TraineeRestControllerTest {
         training.setTrainer(trainer);
         training.setTrainingType(trainingType);
 
-        TrainingResponse trainingResponse = new TrainingResponse(
+        TrainingResponse trainingResponse = new TrainingResponse(null,
                 "Morning Yoga", LocalDate.of(2025, 6, 1),
                 new TrainingTypeResponse("Yoga", 1L), 60, "Alice Smith"
         );

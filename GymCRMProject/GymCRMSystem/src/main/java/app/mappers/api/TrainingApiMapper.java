@@ -10,6 +10,7 @@ public class TrainingApiMapper {
 
     public TrainingResponse toTrainingResponse(Training training) {
         return new TrainingResponse(
+                training.getId(),
                 training.getName(),
                 training.getDate(),
                 new TrainingTypeResponse(training.getTrainingType().getName(), training.getTrainingType().getId()),

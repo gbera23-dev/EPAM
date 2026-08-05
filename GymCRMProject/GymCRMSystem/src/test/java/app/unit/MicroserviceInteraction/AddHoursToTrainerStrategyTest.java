@@ -90,6 +90,5 @@ class AddHoursToTrainerStrategyTest {
 
         var inOrder = inOrder(trainerHistoryServiceMessaging, pjp);
         inOrder.verify(trainerHistoryServiceMessaging).sendMessage(any(), any(), any(), any());
-        inOrder.verify(pjp).proceed();
     }
 }

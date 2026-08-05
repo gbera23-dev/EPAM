@@ -16,6 +16,7 @@ public class TrainerApiMapper {
         User user = new User();
         user.setFirstName(trainerRegistrationRequest.getFirstName());
         user.setLastName(trainerRegistrationRequest.getLastName());
+        user.setActive(true);
         Trainer trainer = new Trainer();
         trainer.setUser(user);
         trainer.setTrainingType(trainingType);

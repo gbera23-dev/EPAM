@@ -41,8 +41,9 @@ public class AddHoursToTrainerStrategy implements MicroserviceInteractionStrateg
                 trainingRequest.getDuration(),
                 ActionType.ADD
         );
+        Object result = pjp.proceed();
         attemptSendingRequest(httpServletRequest, trainerWorkloadRequest);
-        return pjp.proceed();
+        return result;
     }
 
     private void attemptSendingRequest(HttpServletRequest httpServletRequest, TrainerWorkloadRequest trainerWorkloadRequest)
