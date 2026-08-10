@@ -21,6 +21,7 @@ public class TraineeApiMapper {
          User user = new User();
          user.setFirstName(traineeRegistrationRequest.getFirstName());
          user.setLastName(traineeRegistrationRequest.getLastName());
+         user.setActive(true);
          Trainee trainee = new Trainee();
          trainee.setUser(user);
          trainee.setAddress(traineeRegistrationRequest.getAddress());

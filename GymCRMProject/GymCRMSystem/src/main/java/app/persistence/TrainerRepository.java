@@ -21,8 +21,7 @@ public interface TrainerRepository extends JpaRepository<Trainer, Long> {
     List<Trainer> findByUserUsernameIn(List<String> usernames);
 
     @Query("SELECT t FROM Trainer t " +
-            "WHERE t.user.active = true " +
-            "AND NOT EXISTS (" +
+            "WHERE NOT EXISTS (" +
             "    SELECT tr FROM t.trainees tr " +
             "    WHERE tr.user.username = :username" +
             ")")

@@ -5,8 +5,7 @@ import app.entities.Trainer;
 import app.entities.Training;
 import app.entities.TrainingType;
 import app.exceptions.TrainingNotFoundException;
-import jakarta.persistence.EntityNotFoundException;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import app.exceptions.UserNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import app.persistence.TraineeRepository;
@@ -45,12 +44,12 @@ public class TrainingServiceImpl implements TrainingService{
 
         Trainee trainee = traineeRepository.findByUserUsername(traineeUsername)
                 .orElseThrow(
-                        () -> new UsernameNotFoundException("Could not find user with username!")
+                        () -> new UserNotFoundException("Could not find user with username!")
                 );
 
         Trainer trainer = trainerRepository.findByUserUsername(trainerUsername)
                 .orElseThrow(
-                        () -> new UsernameNotFoundException("Could not find user with username!")
+                        () -> new UserNotFoundException("Could not find user with username!")
                 );;
 
 

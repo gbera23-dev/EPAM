@@ -7,7 +7,6 @@ import app.exceptions.UserAlreadyActiveException;
 import app.exceptions.UserAlreadyInactiveException;
 import app.exceptions.UserNotFoundException;
 import app.persistence.UserRepository;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -71,7 +70,7 @@ public class TrainerServiceImpl implements TrainerService {
     public Trainer selectTrainerProfileByUsername(String username) {
         return trainerRepository.findByUserUsername(username)
                 .orElseThrow(
-                        () -> new UsernameNotFoundException("Could not find user with username!")
+                        () -> new UserNotFoundException("Could not find user with username!")
                 );
     }
 

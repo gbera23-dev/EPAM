@@ -141,7 +141,6 @@ public class TraineeRestController {
             (@NotBlank @RequestParam("username") String username) {
 
         List<Trainer> trainerList = traineeService.getTrainersNotAssignedToTrainee(username);
-
         return ResponseEntity.ok().body(
                 trainerList.stream()
                         .map(trainerApiMapper::toTrainerSummaryResponse)

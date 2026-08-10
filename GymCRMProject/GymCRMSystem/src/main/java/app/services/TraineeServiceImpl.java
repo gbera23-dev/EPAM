@@ -5,7 +5,6 @@ import app.exceptions.UserAlreadyActiveException;
 import app.exceptions.UserAlreadyInactiveException;
 import app.exceptions.UserNotFoundException;
 import app.persistence.UserRepository;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -69,7 +68,7 @@ public class TraineeServiceImpl implements TraineeService {
     public Trainee selectTraineeProfileByUsername(String username) {
         return traineeRepository.findByUserUsername(username)
                 .orElseThrow(
-                        () -> new UsernameNotFoundException("Could not find user with username!")
+                        () -> new UserNotFoundException("Could not find user with username!")
                 );
     }
 
@@ -125,7 +124,7 @@ public class TraineeServiceImpl implements TraineeService {
     public void deleteTraineeProfileByUsername(String username) {
         Trainee trainee = traineeRepository.findByUserUsername(username)
                 .orElseThrow(
-                        () -> new UsernameNotFoundException("Could not find user with username!")
+                        () -> new UserNotFoundException("Could not find user with username!")
                 );
 
         for (Trainer trainer : trainee.getTrainers()) {

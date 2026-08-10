@@ -1,0 +1,128 @@
+
+services:
+
+  # main application under test
+  main_app:
+    build:
+      context: ./GymCRMSystem
+      dockerfile: Dockerfile
+    container_name: gymcrmmainapp-test
+    restart: "no"
+    depends_on:
+      active_mq:
+        condition: service_started
+      discovery_app:
+        condition: service_started
+      microservice_app:
+        condition: service_started
+    ports:
+      - "18080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=local
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:8080/actuator/health || exit 1"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+      start_period: 30s
+    networks:
+      gym_crm_test_network:
+        aliases:
+          - gymcrmmainapp
+
+  # trainer history microservice - consumes workload messages, writes to Mongo
+  microservice_app:
+    build:
+      context: ./Trainer-history-service
+      dockerfile: Dockerfile
+    container_name: gymcrmmicroserviceapp-test
+    restart: "no"
+    depends_on:
+      active_mq:
+        condition: service_started
+      discovery_app:
+        condition: service_started
+      mongo_db:
+        condition: service_healthy
+    ports:
+      - "18081:8081"
+    networks:
+      gym_crm_test_network:
+        aliases:
+          - gymcrmmicroserviceapp
+
+  # eureka discovery server
+  discovery_app:
+    build:
+      context: ./GymCRMSystemDiscovery
+      dockerfile: Dockerfile
+    container_name: gymcrmdiscoveryapp-test
+    restart: "no"
+    ports:
+      - "18761:8761"
+    networks:
+      gym_crm_test_network:
+        aliases:
+          - gymcrmdiscoveryapp
+
+  # messaging broker carrying the workload messages between the two services
+  active_mq:
+    image: apache/activemq-classic:latest
+    container_name: activemqbroker-test
+    restart: "no"
+    ports:
+      - "18161:8161"
+      - "61617:61616"
+    networks:
+      gym_crm_test_network:
+        aliases:
+          - activemqbroker
+
+  # workload store of the history service - the E2E assertions read from here
+  mongo_db:
+    image: mongo:latest
+    logging:
+      driver: "none"
+    container_name: mongodb-test
+    restart: "no"
+    ports:
+      - "27018:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin
+    healthcheck:
+      test: ["CMD-SHELL", "mongosh -u admin -p admin --authenticationDatabase admin --quiet --eval 'db.adminCommand({ ping: 1 })' || exit 1"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+      start_period: 10s
+    tmpfs:
+      - /data/db
+    networks:
+      gym_crm_test_network:
+        aliases:
+          - mongodb
+
+  e2e_tests:
+    build:
+      context: ./GymCRMSystem-e2e-integration-testing
+      dockerfile: Dockerfile
+    container_name: gymcrme2etests
+    depends_on:
+      main_app:
+        condition: service_healthy
+      mongo_db:
+        condition: service_healthy
+      microservice_app:
+        condition: service_started
+    environment:
+      - E2E_MAIN_APP_URL=http://gymcrmmainapp:8080
+      - E2E_MONGO_URI=mongodb://admin:admin@mongodb:27017/?authSource=admin
+      - E2E_MONGO_DATABASE=trainer_history_db
+      - E2E_BROKER_URL=tcp://activemqbroker:61616
+    networks:
+      - gym_crm_test_network
+
+networks:
+  gym_crm_test_network:
+    driver: bridge

@@ -14,6 +14,8 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class TrainingResponse {
 
+    private Long id;
+
     private String trainingName;
 
     private LocalDate date;
