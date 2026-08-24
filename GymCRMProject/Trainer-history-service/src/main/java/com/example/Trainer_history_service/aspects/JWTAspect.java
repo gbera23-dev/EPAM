@@ -9,13 +9,13 @@ import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
 
+import static com.example.Trainer_history_service.utils.SecurityConstants.JWT_TOKEN_PREFIX;
+
 @Aspect
 @AllArgsConstructor
 @Slf4j
 @Component
 public class JWTAspect {
-
-    private static final String JWT_TOKEN_PREFIX = "Bearer ";
 
     @Pointcut("execution(* com.example.Trainer_history_service.consumers.*.*(..))")
     public void consumerLayer() {}

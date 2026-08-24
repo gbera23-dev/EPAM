@@ -14,6 +14,10 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.jboss.logging.MDC;
 import org.springframework.stereotype.Component;
 
+import static app.utils.MessagingConstants.TRAINING_UPDATE_CHANNEL;
+import static app.utils.SecurityConstants.AUTHORIZATION_HEADER;
+import static app.utils.TransactionConstants.MDC_KEY;
+
 @Component
 @AllArgsConstructor
 public class RemoveHoursFromTrainerStrategy implements MicroserviceInteractionStrategy {
@@ -54,7 +58,7 @@ public class RemoveHoursFromTrainerStrategy implements MicroserviceInteractionSt
                 TRAINING_UPDATE_CHANNEL,
                 trainerWorkloadRequest,
                 httpServletRequest.getHeader(AUTHORIZATION_HEADER),
-                (String) MDC.get("transactionId")
+                (String) MDC.get(MDC_KEY)
         );
     }
 }

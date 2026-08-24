@@ -12,6 +12,11 @@ import org.springframework.jms.annotation.JmsListener;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.stereotype.Component;
 
+import static com.example.Trainer_history_service.utils.MessagingConstants.TRAINING_BATCH_UPDATE_CHANNEL;
+import static com.example.Trainer_history_service.utils.MessagingConstants.TRAINING_UPDATE_CHANNEL;
+import static com.example.Trainer_history_service.utils.SecurityConstants.AUTHORIZATION_HEADER;
+import static com.example.Trainer_history_service.utils.TransactionConstants.TRANSACTION_HEADER_NAME;
+
 @Component
 @Slf4j
 @AllArgsConstructor
@@ -19,10 +24,10 @@ public class TrainerUpdateConsumer {
 
     private final TrainerFacade trainerFacade;
 
-    @JmsListener(destination = "training-update-channel")
+    @JmsListener(destination = TRAINING_UPDATE_CHANNEL)
     public void getTrainerUpdateRequest(TrainerWorkloadRequest trainerWorkloadRequest,
-                                        @Header("Authorization") String jwtToken,
-                                        @Header("X-Transaction-ID") String transactionId) {
+                                        @Header(AUTHORIZATION_HEADER) String jwtToken,
+                                        @Header(TRANSACTION_HEADER_NAME) String transactionId) {
         ResponseEntity<String> resp = trainerFacade.updateTrainerWorkload(trainerWorkloadRequest);
 
         if(resp.getStatusCode() != HttpStatus.OK) throw new CouldNotUpdateTrainerDataException(
@@ -30,10 +35,10 @@ public class TrainerUpdateConsumer {
         );
     }
 
-    @JmsListener(destination = "training-batch-update-channel")
+    @JmsListener(destination = TRAINING_BATCH_UPDATE_CHANNEL)
     public void getTrainerBatchUpdateRequest(TrainerWorkloadBatchRequest trainerWorkloadBatchRequest,
-                                             @Header("Authorization") String jwtToken,
-                                             @Header("X-Transaction-ID") String transactionId) {
+                                             @Header(AUTHORIZATION_HEADER) String jwtToken,
+                                             @Header(TRANSACTION_HEADER_NAME) String transactionId) {
         ResponseEntity<String> resp = trainerFacade.updateTrainersWorkloadInBatch(
                 trainerWorkloadBatchRequest.getTrainerWorkloadRequestList());
 

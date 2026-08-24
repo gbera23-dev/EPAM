@@ -42,7 +42,7 @@ docker compose up --build
 A bash script is provided to test the whole application in a single run:
 
 ```bash
-bash TestAll.sh
+sudo bash TestAll.sh
 ```
 
 ### End-to-end integration tests

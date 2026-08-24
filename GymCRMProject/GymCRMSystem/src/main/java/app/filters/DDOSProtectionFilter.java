@@ -1,20 +1,19 @@
 package app.filters;
 
-import app.exceptions.DDOSProtectionException;
 import app.services.DDOSProtectionService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+
+import static app.utils.SecurityConstants.HTTP_LOGIN_REQUEST_ENDPOINT;
+
 @Component
 public class DDOSProtectionFilter extends OncePerRequestFilter {
-
-    private static final String HTTP_LOGIN_REQUEST_ENDPOINT = "/api/user/login";
 
     private final DDOSProtectionService ddosProtectionService;
 

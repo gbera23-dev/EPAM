@@ -15,6 +15,10 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.jboss.logging.MDC;
 import org.springframework.stereotype.Component;
 
+import static app.utils.SecurityConstants.AUTHORIZATION_HEADER;
+import static app.utils.MessagingConstants.TRAINING_UPDATE_CHANNEL;
+import static app.utils.TransactionConstants.MDC_KEY;
+
 @Component
 @AllArgsConstructor
 @Slf4j
@@ -48,9 +52,9 @@ public class AddHoursToTrainerStrategy implements MicroserviceInteractionStrateg
 
     private void attemptSendingRequest(HttpServletRequest httpServletRequest, TrainerWorkloadRequest trainerWorkloadRequest)
             throws JsonProcessingException {
-        trainerHistoryServiceMessaging.sendMessage(MicroserviceInteractionStrategy.TRAINING_UPDATE_CHANNEL,
+        trainerHistoryServiceMessaging.sendMessage(TRAINING_UPDATE_CHANNEL,
                 trainerWorkloadRequest, httpServletRequest.getHeader(AUTHORIZATION_HEADER),
-                (String)MDC.get("transactionId"));
+                (String)MDC.get(MDC_KEY));
     }
 
 }

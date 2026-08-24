@@ -17,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.crypto.SecretKey;
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -28,7 +27,6 @@ public class JWTServiceImpl implements JWTService {
 
     @Value("${security.jwt_expiration_time}")
     private Long expiration;
-
 
     private final JWTRepository jwtRepository;
 

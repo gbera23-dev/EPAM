@@ -1,7 +1,6 @@
 package app.services;
 
 import app.entities.User;
-import app.exceptions.UserNotFoundException;
 import app.persistence.UserRepository;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

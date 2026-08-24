@@ -12,8 +12,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.jboss.logging.MDC;
 import org.springframework.stereotype.Component;
+import app.utils.TransactionConstants.*;
 
 import java.util.List;
+
+import static app.utils.MessagingConstants.TRAINING_BATCH_UPDATE_CHANNEL;
+import static app.utils.SecurityConstants.AUTHORIZATION_HEADER;
+import static app.utils.TransactionConstants.MDC_KEY;
+
 @Component
 @AllArgsConstructor
 @Slf4j
@@ -45,7 +51,7 @@ public class BatchRemoveHoursFromTrainersStrategy implements MicroserviceInterac
                         )
                 ).toList()),
                 httpServletRequest.getHeader(AUTHORIZATION_HEADER),
-                (String) MDC.get("transactionId")
+                (String) MDC.get(MDC_KEY)
         );
         return obj;
     }

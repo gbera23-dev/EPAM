@@ -7,6 +7,6 @@ mvn -f GymCRMSystem/pom.xml test
 mvn -f Trainer-history-service/pom.xml test
 
 # End-to-end integration tests
-docker compose -f docker-compose.test.yaml up --build --exit-code-from e2e_tests --attach e2e_tests
+sudo docker compose -f docker-compose.test.yaml up --build --exit-code-from e2e_tests --attach e2e_tests
 
 echo "All tests were successful!"

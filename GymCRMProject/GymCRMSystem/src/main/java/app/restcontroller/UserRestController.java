@@ -2,8 +2,6 @@ package app.restcontroller;
 
 import app.dto.api.request.LoginRequest;
 import app.dto.api.request.PasswordChangeRequest;
-import app.exceptions.DDOSProtectionException;
-import app.services.DDOSProtectionService;
 import app.services.JWTService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -14,11 +12,13 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-        import app.services.AuthService;
-import org.thymeleaf.templateparser.markup.HTMLTemplateParser;
+import app.services.AuthService;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static app.utils.SecurityConstants.AUTHORIZATION_HEADER;
+import static app.utils.SecurityConstants.JWT_TOKEN_PREFIX;
 
 @RestController
 @RequestMapping("/api/user")
@@ -65,9 +65,9 @@ public class UserRestController {
     })
     @PostMapping("/logout")
     public ResponseEntity<String> logoutUser(HttpServletRequest httpServletRequest) {
-        String authHeader = httpServletRequest.getHeader("Authorization");
+        String authHeader = httpServletRequest.getHeader(AUTHORIZATION_HEADER);
 
-        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+        if (authHeader != null && authHeader.startsWith(JWT_TOKEN_PREFIX)) {
             String token = authHeader.substring(7);
             jwtService.addJWTTokenToBlacklist(token);
         }
