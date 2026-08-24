@@ -3,6 +3,7 @@ package app.builders;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import app.dto.internal.TrainerDTO;
 import app.dto.internal.UserDTO;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
@@ -18,12 +19,7 @@ public class TrainerBuilder implements Builder {
 
     @Override
     public TrainerDTO build(Map<String, Object> entry) {
-        return new TrainerDTO(
-                ((Number) entry.get("trainerPK")).longValue(),
-                (String)entry.get("specialization"),
-                objectMapper.convertValue(entry.get("user"), UserDTO.class)
-        );
+        return objectMapper.convertValue(entry, TrainerDTO.class);
     }
-
 
 }

@@ -26,7 +26,7 @@ class TrainerBuilderTest {
     @Test
     void testBuildReturnsTrainerWithCorrectPK() {
         Map<String, Object> entry = new HashMap<>();
-        entry.put("trainerPK", 1);
+        entry.put("trainerPk", 1);
         entry.put("specialization", "Yoga");
         entry.put("user", null);
 
@@ -38,7 +38,7 @@ class TrainerBuilderTest {
     @Test
     void testBuildReturnsTrainerWithCorrectSpecialization() {
         Map<String, Object> entry = new HashMap<>();
-        entry.put("trainerPK", 2);
+        entry.put("trainerPk", 2);
         entry.put("specialization", "Cardio");
         entry.put("user", null);
 
@@ -58,7 +58,7 @@ class TrainerBuilderTest {
         userMap.put("isActive", true);
 
         Map<String, Object> entry = new HashMap<>();
-        entry.put("trainerPK", 3);
+        entry.put("trainerPk", 3);
         entry.put("specialization", "Strength");
         entry.put("user", userMap);
 
@@ -71,7 +71,7 @@ class TrainerBuilderTest {
     @Test
     void testBuildHandlesLongPKValue() {
         Map<String, Object> entry = new HashMap<>();
-        entry.put("trainerPK", 100L);
+        entry.put("trainerPk", 100L);
         entry.put("specialization", "Pilates");
         entry.put("user", null);
 

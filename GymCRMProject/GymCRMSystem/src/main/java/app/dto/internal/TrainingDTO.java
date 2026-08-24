@@ -25,7 +25,7 @@ public class TrainingDTO implements GymDTO {
 
     @NotNull(message="Provided trainingTypeDTO must not be null!")
     @Valid
-    private TrainingTypeDTO trainingTypeDto;
+    private TrainingTypeDTO trainingType;
 
     @NotNull(message="Provided date must not be null!")
     private LocalDate date;

@@ -26,7 +26,7 @@ class TraineeBuilderTest {
     @Test
     void testBuildReturnsTraineeWithCorrectPK() {
         Map<String, Object> entry = new HashMap<>();
-        entry.put("traineePK", 1);
+        entry.put("traineePk", 1);
         entry.put("dateOfBirth", null);
         entry.put("address", "123 Main St");
         entry.put("user", null);
@@ -39,7 +39,7 @@ class TraineeBuilderTest {
     @Test
     void testBuildReturnsTraineeWithCorrectAddress() {
         Map<String, Object> entry = new HashMap<>();
-        entry.put("traineePK", 2);
+        entry.put("traineePk", 2);
         entry.put("dateOfBirth", null);
         entry.put("address", "456 Elm St");
         entry.put("user", null);
@@ -60,7 +60,7 @@ class TraineeBuilderTest {
         userMap.put("isActive", true);
 
         Map<String, Object> entry = new HashMap<>();
-        entry.put("traineePK", 3);
+        entry.put("traineePk", 3);
         entry.put("dateOfBirth", null);
         entry.put("address", "789 Oak Ave");
         entry.put("user", userMap);
@@ -74,7 +74,7 @@ class TraineeBuilderTest {
     @Test
     void testBuildHandlesLongValueForPK() {
         Map<String, Object> entry = new HashMap<>();
-        entry.put("traineePK", 999999999L);
+        entry.put("traineePk", 999999999L);
         entry.put("dateOfBirth", null);
         entry.put("address", "Test");
         entry.put("user", null);

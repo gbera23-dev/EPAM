@@ -138,7 +138,7 @@ class TrainingMapperTest {
 
         TrainingDTO dto = trainingMapper.toDTO(training);
 
-        assertSame(trainingTypeDTO, dto.getTrainingTypeDto());
+        assertSame(trainingTypeDTO, dto.getTrainingType());
     }
 
     @Test
@@ -250,7 +250,7 @@ class TrainingMapperTest {
         dto.setTraineeId(traineeId);
         dto.setTrainerId(trainerId);
         dto.setName(name);
-        dto.setTrainingTypeDto(typeDTO);
+        dto.setTrainingType(typeDTO);
         dto.setDate(date);
         dto.setDuration(duration);
         return dto;

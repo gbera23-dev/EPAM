@@ -3,6 +3,7 @@ package app.builders;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import app.dto.internal.TraineeDTO;
 import app.dto.internal.UserDTO;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -19,12 +20,8 @@ public class TraineeBuilder implements Builder {
 
     @Override
     public TraineeDTO build(Map<String, Object> entry) {
-        return new TraineeDTO(
-                ((Number) entry.get("traineePK")).longValue(),
-                objectMapper.convertValue(entry.get("dateOfBirth"), LocalDate.class),
-                (String)entry.get("address"),
-                objectMapper.convertValue(entry.get("user"), UserDTO.class)
-        );
+
+        return objectMapper.convertValue(entry, TraineeDTO.class);
     }
 
 }

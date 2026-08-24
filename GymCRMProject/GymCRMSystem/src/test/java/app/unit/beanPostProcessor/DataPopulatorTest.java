@@ -59,7 +59,7 @@ class DataPopulatorTest {
 
     @Test
     void testPostProcessBeforeInitializationPopulatesMapStorage() throws Exception {
-        String json = "[{\"traineePK\":1,\"dateOfBirth\":null,\"address\":\"Addr\",\"user\":{\"userId\":1,\"firstName\":\"A\",\"lastName\":\"B\",\"username\":\"a.b\",\"password\":\"pw\",\"isActive\":true}}]";
+        String json = "[{\"traineePk\":1,\"dateOfBirth\":null,\"address\":\"Addr\",\"user\":{\"userId\":1,\"firstName\":\"A\",\"lastName\":\"B\",\"username\":\"a.b\",\"password\":\"pw\",\"isActive\":true}}]";
         Resource resource = new ByteArrayResource(json.getBytes());
         dataMap.put("TraineeResource", resource);
         builderMap.put("TraineeBuilder", new TraineeBuilder(objectMapper));
@@ -88,7 +88,7 @@ class DataPopulatorTest {
 
     @Test
     void testPostProcessBeforeInitializationThrowsWhenBuilderNotFound() {
-        String json = "[{\"traineePK\":1}]";
+        String json = "[{\"traineePk\":1}]";
         Resource resource = new ByteArrayResource(json.getBytes());
         dataMap.put("TraineeResource", resource);
         when(objectMapperProvider.getObject()).thenReturn(objectMapper);
@@ -102,8 +102,8 @@ class DataPopulatorTest {
     @Test
     void testPostProcessBeforeInitializationPopulatesMultipleEntities() throws Exception {
         String json = "[" +
-                "{\"traineePK\":1,\"dateOfBirth\":null,\"address\":\"A1\",\"user\":null}," +
-                "{\"traineePK\":2,\"dateOfBirth\":null,\"address\":\"A2\",\"user\":null}" +
+                "{\"traineePk\":1,\"dateOfBirth\":null,\"address\":\"A1\",\"user\":null}," +
+                "{\"traineePk\":2,\"dateOfBirth\":null,\"address\":\"A2\",\"user\":null}" +
                 "]";
         Resource resource = new ByteArrayResource(json.getBytes());
         dataMap.put("TraineeResource", resource);

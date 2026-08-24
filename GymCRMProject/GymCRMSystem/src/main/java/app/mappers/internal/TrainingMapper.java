@@ -20,7 +20,7 @@ public class TrainingMapper implements Mapper<TrainingDTO, Training> {
         dto.setTraineeId(training.getTrainee().getId());
         dto.setTrainerId(training.getTrainer().getId());
         dto.setName(training.getName());
-        dto.setTrainingTypeDto(trainingTypeMapper.toDTO(training.getTrainingType()));
+        dto.setTrainingType(trainingTypeMapper.toDTO(training.getTrainingType()));
         dto.setDate(training.getDate());
         dto.setDuration(training.getDuration());
         return dto;
@@ -33,7 +33,7 @@ public class TrainingMapper implements Mapper<TrainingDTO, Training> {
         training.setTrainee(null);
         training.setTrainer(null);
         training.setName(dto.getName());
-        training.setTrainingType(trainingTypeMapper.toEntity(dto.getTrainingTypeDto()));
+        training.setTrainingType(trainingTypeMapper.toEntity(dto.getTrainingType()));
         training.setDate(dto.getDate());
         training.setDuration(dto.getDuration());
         return training;

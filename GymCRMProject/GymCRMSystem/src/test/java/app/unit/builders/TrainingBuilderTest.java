@@ -79,13 +79,13 @@ class TrainingBuilderTest {
 
         TrainingDTO result = trainingBuilder.build(entry);
 
-        assertNotNull(result.getTrainingTypeDto());
-        assertEquals("Cardio", result.getTrainingTypeDto().getName());
+        assertNotNull(result.getTrainingType());
+        assertEquals("Cardio", result.getTrainingType().getName());
     }
 
     private Map<String, Object> buildBaseEntry(int pk, int traineeId, int trainerId, String name, int duration) {
         Map<String, Object> entry = new HashMap<>();
-        entry.put("trainingPK", pk);
+        entry.put("trainingPk", pk);
         entry.put("traineeId", traineeId);
         entry.put("trainerId", trainerId);
         entry.put("name", name);

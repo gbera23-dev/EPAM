@@ -2,11 +2,13 @@ package app.dto.internal;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Setter
 @Getter
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString
 public class TrainingTypeDTO {
     private long id;
     @NotBlank(message = "Provided name must not be Blank!")

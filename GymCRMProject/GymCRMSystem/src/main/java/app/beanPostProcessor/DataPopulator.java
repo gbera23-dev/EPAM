@@ -4,6 +4,7 @@ import app.builders.Builder;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import app.dto.internal.GymDTO;
+import lombok.extern.slf4j.Slf4j;
 import org.jspecify.annotations.NonNull;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.config.BeanPostProcessor;
@@ -48,6 +49,7 @@ public class DataPopulator implements BeanPostProcessor {
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
+
 
             Map<Long, GymDTO> beanMap = (Map<Long, GymDTO>)bean;
 

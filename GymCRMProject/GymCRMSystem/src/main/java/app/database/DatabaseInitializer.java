@@ -6,6 +6,7 @@ import app.dto.internal.TrainingDTO;
 import app.entities.*;
 import app.mappers.internal.GymMapper;
 import app.mappers.internal.Mapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
@@ -21,6 +22,7 @@ import java.util.stream.Collectors;
  * Initializes the database with data on application startup, when database is empty
  */
 @Component
+@Slf4j
 public class DatabaseInitializer implements ApplicationListener<ContextRefreshedEvent> {
 
     private final GymRepository repositories;
