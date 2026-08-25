@@ -1,28 +1,23 @@
-package com.example.Trainer_history_service.aspects;
+package com.example.Trainer_history_service.methodInterceptors;
 
 import com.example.Trainer_history_service.exceptions.UserCannotBeAuthorizedException;
 import com.example.Trainer_history_service.services.JWTService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.aopalliance.intercept.MethodInterceptor;
+import org.aopalliance.intercept.MethodInvocation;
 import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Before;
-import org.aspectj.lang.annotation.Pointcut;
-import org.springframework.stereotype.Component;
+import org.jspecify.annotations.Nullable;
 
 import static com.example.Trainer_history_service.utils.SecurityConstants.JWT_TOKEN_PREFIX;
 
 @Aspect
 @AllArgsConstructor
 @Slf4j
-@Component
-public class JWTAspect {
-
-    @Pointcut("execution(* com.example.Trainer_history_service.consumers.*.*(..))")
-    public void consumerLayer() {}
+public class JWTMethodInterceptor implements MethodInterceptor {
 
     private final JWTService jwtService;
 
-    @Before(value = "consumerLayer() && args(.., jwtToken, transactionId)", argNames = "jwtToken,transactionId")
     private void validateJWTToken(String jwtToken, String transactionId) {
         //strip Bearer from jwt token
         jwtToken = jwtToken.substring(JWT_TOKEN_PREFIX.length());
@@ -30,11 +25,18 @@ public class JWTAspect {
         //validate jwt token
         boolean tokenIsValid = false;
         try {
-           tokenIsValid = jwtService.tokenIsValid(jwtToken);
-           log.info("Token was validated, proceeding with message processing...");
+            tokenIsValid = jwtService.tokenIsValid(jwtToken);
+            log.info("Token was validated, proceeding with message processing...");
         } catch(UserCannotBeAuthorizedException e) {
             log.error("User could not be authorized, jwt validation failed!..");
         }
 
+    }
+
+    @Override
+    public @Nullable Object invoke(MethodInvocation invocation) throws Throwable {
+        Object[] args = invocation.getArguments();
+        validateJWTToken((String)args[args.length-2], (String)args[args.length-1]);
+        return invocation.proceed();
     }
 }
