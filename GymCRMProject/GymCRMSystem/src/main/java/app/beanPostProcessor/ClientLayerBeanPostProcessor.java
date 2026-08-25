@@ -1,5 +1,6 @@
 package app.beanPostProcessor;
 
+import app.annotations.ClientLayer;
 import app.methodInterceptors.LoggingMethodInterceptor;
 import org.springframework.aop.framework.ProxyFactory;
 import org.springframework.beans.BeansException;
@@ -24,14 +25,13 @@ public class ClientLayerBeanPostProcessor implements BeanPostProcessor {
 
     @Override
     public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
-        String packageName = bean.getClass().getPackageName();
 
-        if (!packageName.equals("app.clients")) {
+        if(!bean.getClass().isAnnotationPresent(ClientLayer.class)) {
             return bean;
         }
 
         ProxyFactory factory = new ProxyFactory(bean);
-        factory.addAdvice(new LoggingMethodInterceptor(layerRegistry.get(packageName),
+        factory.addAdvice(new LoggingMethodInterceptor(layerRegistry.get(ClientLayer.class.getSimpleName()),
                 slowExecutionThresholdMs));
         return factory.getProxy();
     }

@@ -1,5 +1,6 @@
 package app.beanPostProcessor;
 
+import app.annotations.ServiceLayer;
 import app.methodInterceptors.LoggingMethodInterceptor;
 import app.methodInterceptors.MetricsMethodInterceptor;
 import io.micrometer.core.instrument.MeterRegistry;
@@ -30,14 +31,13 @@ public class ServiceLayerBeanPostProcessor implements BeanPostProcessor {
     @Override
     public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
 
-        String packageName = bean.getClass().getPackageName();
-
-        if (!packageName.equals("app.services")) {
+        if (!bean.getClass().isAnnotationPresent(ServiceLayer.class)) {
             return bean;
         }
 
         ProxyFactory factory = new ProxyFactory(bean);
-        factory.addAdvice(new LoggingMethodInterceptor(layerRegistry.get(packageName),
+        factory.addAdvice(new LoggingMethodInterceptor(layerRegistry.get
+                (ServiceLayer.class.getSimpleName()),
                 slowExecutionThresholdMs));
         factory.addAdvice(new MetricsMethodInterceptor(meterRegistry));
         return factory.getProxy();

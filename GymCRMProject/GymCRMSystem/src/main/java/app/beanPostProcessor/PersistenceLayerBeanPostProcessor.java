@@ -1,5 +1,6 @@
 package app.beanPostProcessor;
 
+import app.annotations.PersistenceLayer;
 import app.methodInterceptors.LoggingMethodInterceptor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.aop.framework.ProxyFactory;
@@ -26,26 +27,21 @@ public class PersistenceLayerBeanPostProcessor implements BeanPostProcessor {
 
     @Override
     public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
-        String packageName = "app.persistence";
 
         if (!isPersistenceLayerBean(bean)) {
             return bean;
         }
 
-        log.info("Persistence bean class: {} package:  {}", bean.getClass(), packageName);
-
         ProxyFactory factory = new ProxyFactory(bean);
-        factory.addAdvice(new LoggingMethodInterceptor(layerRegistry.get(packageName),
+        factory.addAdvice(new LoggingMethodInterceptor
+                (layerRegistry.get(PersistenceLayer.class.getSimpleName()),
                 slowExecutionThresholdMs));
         return factory.getProxy();
     }
 
     private boolean isPersistenceLayerBean(Object bean) {
-        if (bean.getClass().getPackageName().equals("app.persistence")) {
-            return true;
-        }
         for (Class<?> iface : bean.getClass().getInterfaces()) {
-            if (iface.getPackageName().equals("app.persistence")) {
+            if (iface.isAnnotationPresent(PersistenceLayer.class)) {
                 return true;
             }
         }

@@ -1,6 +1,7 @@
 package app.persistence;
 
 
+import app.annotations.PersistenceLayer;
 import app.entities.Training;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -11,6 +12,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Repository("TrainingRepository")
+@PersistenceLayer
 public interface TrainingRepository extends JpaRepository<Training, Long> {
 
     @Query("SELECT t FROM Training t WHERE t.trainee.user.username = :username " +

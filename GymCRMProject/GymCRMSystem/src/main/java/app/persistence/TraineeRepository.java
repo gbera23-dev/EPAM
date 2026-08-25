@@ -1,5 +1,6 @@
 package app.persistence;
 
+import app.annotations.PersistenceLayer;
 import app.entities.Trainee;
 import app.entities.Training;
 import org.springframework.data.jpa.repository.Query;
@@ -11,6 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository("TraineeRepository")
+@PersistenceLayer
 public interface TraineeRepository extends JpaRepository<Trainee, Long>{
 
     @Query("SELECT t FROM Trainee t " +

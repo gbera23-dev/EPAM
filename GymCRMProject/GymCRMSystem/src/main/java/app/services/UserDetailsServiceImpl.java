@@ -1,5 +1,6 @@
 package app.services;
 
+import app.annotations.ServiceLayer;
 import app.entities.User;
 import app.persistence.UserRepository;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -12,6 +13,7 @@ import java.util.List;
 
 
 @Service
+@ServiceLayer
 public class UserDetailsServiceImpl implements UserDetailsService {
 
     private final UserRepository userRepository;

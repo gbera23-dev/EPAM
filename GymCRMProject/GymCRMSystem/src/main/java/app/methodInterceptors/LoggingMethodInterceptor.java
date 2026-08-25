@@ -1,5 +1,6 @@
 package app.methodInterceptors;
 
+import app.annotations.PersistenceLayer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aopalliance.intercept.MethodInterceptor;
@@ -47,7 +48,7 @@ public class LoggingMethodInterceptor implements MethodInterceptor {
     private String resolveTargetClassName(Object target) throws Exception {
 
         for (Class<?> iface : target.getClass().getInterfaces()) {
-            if (iface.getPackageName().equals("app.persistence")) {
+            if (iface.isAnnotationPresent(PersistenceLayer.class)) {
                 return iface.getSimpleName();
             }
         }

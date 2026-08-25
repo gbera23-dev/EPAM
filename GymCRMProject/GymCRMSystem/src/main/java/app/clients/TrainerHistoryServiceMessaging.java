@@ -1,5 +1,6 @@
 package app.clients;
 
+import app.annotations.ClientLayer;
 import lombok.AllArgsConstructor;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Service;
@@ -9,6 +10,7 @@ import static app.utils.TransactionConstants.TRANSACTION_HEADER_NAME;
 
 @AllArgsConstructor
 @Service
+@ClientLayer
 public class TrainerHistoryServiceMessaging {
 
     private final JmsTemplate jmsTemplate;

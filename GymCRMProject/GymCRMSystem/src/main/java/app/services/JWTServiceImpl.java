@@ -1,5 +1,6 @@
 package app.services;
 
+import app.annotations.ServiceLayer;
 import app.entities.BlacklistedJWT;
 import app.exceptions.UserCannotBeAuthorizedException;
 import app.persistence.JWTRepository;
@@ -20,6 +21,7 @@ import java.time.Instant;
 import java.util.*;
 
 @Service
+@ServiceLayer
 public class JWTServiceImpl implements JWTService {
 
     @Value("${security.jwt_secret_key}")

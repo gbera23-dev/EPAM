@@ -1,5 +1,6 @@
 package app.persistence;
 
+import app.annotations.PersistenceLayer;
 import app.entities.Trainer;
 import app.entities.User;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -10,6 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository("TrainerRepository")
+@PersistenceLayer
 public interface TrainerRepository extends JpaRepository<Trainer, Long> {
 
     @Query("SELECT t FROM Trainer t " +

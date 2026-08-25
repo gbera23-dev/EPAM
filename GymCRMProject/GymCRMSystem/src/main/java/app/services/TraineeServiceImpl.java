@@ -1,5 +1,6 @@
 package app.services;
 
+import app.annotations.ServiceLayer;
 import app.entities.*;
 import app.exceptions.UserAlreadyActiveException;
 import app.exceptions.UserAlreadyInactiveException;
@@ -18,6 +19,7 @@ import java.util.List;
 
 
 @Service
+@ServiceLayer
 public class TraineeServiceImpl implements TraineeService {
 
     private final TraineeRepository traineeRepository;

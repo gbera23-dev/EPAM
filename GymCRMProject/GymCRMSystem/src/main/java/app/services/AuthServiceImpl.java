@@ -1,5 +1,6 @@
 package app.services;
 
+import app.annotations.ServiceLayer;
 import app.entities.User;
 import app.exceptions.*;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -12,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import app.persistence.UserRepository;
 
 @Component
+@ServiceLayer
 public class AuthServiceImpl implements AuthService {
 
     private final UserRepository userRepository;

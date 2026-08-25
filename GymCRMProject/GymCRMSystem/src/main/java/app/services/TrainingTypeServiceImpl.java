@@ -1,5 +1,6 @@
 package app.services;
 
+import app.annotations.ServiceLayer;
 import app.entities.TrainingType;
 import app.exceptions.TrainingTypeNotFoundException;
 import org.springframework.stereotype.Service;
@@ -8,6 +9,7 @@ import app.persistence.TrainingTypeRepository;
 import java.util.List;
 
 @Service
+@ServiceLayer
 public class TrainingTypeServiceImpl implements TrainingTypeService {
 
 

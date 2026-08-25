@@ -1,5 +1,8 @@
 package app.config;
 
+import app.annotations.ClientLayer;
+import app.annotations.PersistenceLayer;
+import app.annotations.ServiceLayer;
 import app.dto.internal.TraineeDTO;
 import app.dto.internal.TrainerDTO;
 import app.dto.internal.TrainingDTO;
@@ -54,10 +57,9 @@ public class ApplicationConfig {
     @Bean(name="LayerRegistry")
     public Map<String, String> layerRegistry() {
         Map<String, String> reg = new HashMap<>();
-        reg.put("app.services", "Service");
-        reg.put("app.persistence", "Persistence");
-        reg.put("app.clients", "Client");
-        reg.put("app.restcontroller", "Controller");
+        reg.put(ServiceLayer.class.getSimpleName(), "Service");
+        reg.put(PersistenceLayer.class.getSimpleName(), "Persistence");
+        reg.put(ClientLayer.class.getSimpleName(), "Client");
         return reg;
     }
 

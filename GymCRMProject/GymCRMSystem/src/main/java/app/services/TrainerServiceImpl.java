@@ -1,5 +1,6 @@
 package app.services;
 
+import app.annotations.ServiceLayer;
 import app.entities.Trainer;
 import app.entities.Training;
 import app.entities.User;
@@ -18,6 +19,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Service
+@ServiceLayer
 public class TrainerServiceImpl implements TrainerService {
 
     private final TrainerRepository trainerRepository;
