@@ -40,3 +40,7 @@ eureka:
     fetch-registry: true
   instance:
     prefer-ip-address: false
+
+
+slow-execution-treshold:
+  1000

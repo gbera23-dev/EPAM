@@ -1,5 +1,7 @@
 package app.services;
 
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalTime;
@@ -8,16 +10,27 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Component
+@Slf4j
 public class DDOSProtectionServiceImpl implements DDOSProtectionService {
 
-    private static final Integer NUM_LOGIN_ATTEMPTS = 3;
-    private static final Integer LOCK_DURATION = 5;
+    private final Integer NUM_LOGIN_ATTEMPTS;
+    private final Integer LOCK_DURATION;
 
     private final Map<String, LocalTime> lockedUsers = new ConcurrentHashMap<>();
     private final Map<String, Integer> userAttemptCounts = new ConcurrentHashMap<>();
 
+    public DDOSProtectionServiceImpl(@Value("${ddos-protection.num-login-attempts}")
+                                     Integer numLoginAttempts,
+                                     @Value("${ddos-protection.lock-duration}")
+                                     Integer lockDuration
+                                     ) {
+        NUM_LOGIN_ATTEMPTS=numLoginAttempts;
+        LOCK_DURATION=lockDuration;
+    }
+
     @Override
     public void blockUser(String userIdentifier) {
+        log.info("lock duration: {}", LOCK_DURATION);
         lockedUsers.put(userIdentifier, LocalTime.now().plusMinutes(LOCK_DURATION));
         userAttemptCounts.remove(userIdentifier);
     }
@@ -70,6 +83,7 @@ public class DDOSProtectionServiceImpl implements DDOSProtectionService {
     }
 
     private boolean numAttemptsExceedLimit(String userIdentifier) {
+        log.info("num login attempts: {}", NUM_LOGIN_ATTEMPTS);
         return userAttemptCounts.containsKey(userIdentifier) &&
                 userAttemptCounts.get(userIdentifier) >= NUM_LOGIN_ATTEMPTS;
     }

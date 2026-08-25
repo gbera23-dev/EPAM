@@ -16,7 +16,7 @@ public class DDOSProtectionServiceImplTest {
 
     @BeforeEach
     public void setup() {
-        service = new DDOSProtectionServiceImpl();
+        service = new DDOSProtectionServiceImpl(3, 5);
     }
 
     @Test

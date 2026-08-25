@@ -7,6 +7,7 @@ import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 /**
@@ -17,7 +18,8 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class LoggingAspect {
 
-    private static final long SLOW_EXECUTION_THRESHOLD_MS = 1000;
+    @Value("${slow-execution-treshold}")
+    private static long SLOW_EXECUTION_THRESHOLD_MS;
 
     @Pointcut("execution(* com.example.Trainer_history_service.services.*.*(..))")
     public void serviceLayer() {}

@@ -7,6 +7,9 @@ import java.util.Random;
  * Class combines Utilities that are used by the application regarding Strings
  */
 public class StringUtils {
+
+    private static final long generatedPasswordLen=10;
+
     /**
      * Generates a random password using allowed Characters and password length is equal to 10
      * @return Generated random password
@@ -16,7 +19,7 @@ public class StringUtils {
         Random random = new Random();
         StringBuilder sb = new StringBuilder();
 
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < generatedPasswordLen; i++) {
             int index = random.nextInt(allowedChars.length());
             sb.append(allowedChars.charAt(index));
         }

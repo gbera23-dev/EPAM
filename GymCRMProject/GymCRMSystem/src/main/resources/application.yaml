@@ -48,3 +48,10 @@ eureka:
     register-with-eureka: false
     service-url:
       defaultZone: 'http://gymcrmdiscoveryapp:8761/eureka/'
+
+slow-execution-treshold:
+  1000
+
+ddos-protection:
+  num-login-attempts: 3
+  lock-duration: 5

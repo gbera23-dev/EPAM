@@ -19,7 +19,6 @@ import java.util.concurrent.ConcurrentHashMap;
 @EnableScheduling
 public class ApplicationConfig {
 
-
     @Bean(name="TraineeStorage")
     public Map<Long, TraineeDTO> createTraineeDB() {
         return new ConcurrentHashMap<>();
