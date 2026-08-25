@@ -1,11 +1,7 @@
 package app.integration.cucumber;
 
-import app.entities.Trainee;
-import app.entities.Trainer;
-import app.exceptions.UserNotFoundException;
-import app.persistence.GymRepository;
-import app.persistence.TraineeRepository;
-import app.persistence.TrainerRepository;
+import app.domain.exceptions.UserNotFoundException;
+import app.domain.persistence.GymRepository;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;

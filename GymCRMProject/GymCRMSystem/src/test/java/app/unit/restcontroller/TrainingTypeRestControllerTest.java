@@ -1,9 +1,9 @@
 package app.unit.restcontroller;
 
-import app.dto.api.response.TrainingTypeResponse;
-import app.entities.TrainingType;
-import app.mappers.api.TrainingTypeApiMapper;
-import app.restcontroller.TrainingTypeRestController;
+import app.api.dto.response.TrainingTypeResponse;
+import app.domain.entities.TrainingType;
+import app.api.mappers.TrainingTypeApiMapper;
+import app.api.restcontroller.TrainingTypeRestController;
 import app.services.security.interfaces.AuthService;
 import app.services.business.interfaces.TrainingTypeService;
 import org.junit.jupiter.api.BeforeEach;

@@ -1,13 +1,13 @@
 package app.unit.restcontroller;
 
-import app.dto.api.request.TrainerRegistrationRequest;
-import app.dto.api.response.TrainerProfileResponse;
-import app.dto.api.response.TrainingResponse;
-import app.dto.api.response.TrainingTypeResponse;
-import app.entities.*;
-import app.mappers.api.TrainerApiMapper;
-import app.mappers.api.TrainingApiMapper;
-import app.restcontroller.TrainerRestController;
+import app.api.dto.request.TrainerRegistrationRequest;
+import app.api.dto.response.TrainerProfileResponse;
+import app.api.dto.response.TrainingResponse;
+import app.api.dto.response.TrainingTypeResponse;
+import app.domain.entities.*;
+import app.api.mappers.TrainerApiMapper;
+import app.api.mappers.TrainingApiMapper;
+import app.api.restcontroller.TrainerRestController;
 import app.services.security.interfaces.AuthService;
 import app.services.business.interfaces.TrainerService;
 import app.services.business.interfaces.TrainingTypeService;

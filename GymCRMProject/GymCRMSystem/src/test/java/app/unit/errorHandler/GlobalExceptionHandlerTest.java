@@ -1,7 +1,10 @@
 package app.unit.errorHandler;
 
-import app.errorHandler.GlobalExceptionHandler;
-import app.exceptions.*;
+import app.api.errorHandler.GlobalExceptionHandler;
+import app.api.exceptions.SessionNotFoundException;
+import app.api.exceptions.UserAlreadyLoggedInException;
+import app.domain.exceptions.*;
+import app.infrastructure.exceptions.UserNotLoggedInException;
 import jakarta.validation.UnexpectedTypeException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

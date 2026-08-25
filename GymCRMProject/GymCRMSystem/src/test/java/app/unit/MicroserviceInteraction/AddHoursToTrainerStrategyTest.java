@@ -1,13 +1,13 @@
 package app.unit.MicroserviceInteraction;
 
-import app.clients.TrainerHistoryServiceMessaging;
-import app.dto.api.request.TrainerWorkloadRequest;
-import app.dto.api.request.TrainingRequest;
-import app.entities.ActionType;
-import app.entities.Trainer;
-import app.entities.User;
+import app.messaging.microserviceCommunication.TrainerHistoryServiceCommunication;
+import app.api.dto.request.TrainerWorkloadRequest;
+import app.api.dto.request.TrainingRequest;
+import app.domain.entities.ActionType;
+import app.domain.entities.Trainer;
+import app.domain.entities.User;
 import app.services.business.interfaces.TrainerService;
-import app.strategies.MicroserviceInteraction.AddHoursToTrainerStrategy;
+import app.messaging.strategies.impl.AddHoursToTrainerStrategy;
 import jakarta.servlet.http.HttpServletRequest;
 import org.aopalliance.intercept.MethodInvocation;
 import org.jboss.logging.MDC;
@@ -29,7 +29,7 @@ import static org.mockito.Mockito.*;
 class AddHoursToTrainerStrategyTest {
 
     @Mock private TrainerService trainerService;
-    @Mock private TrainerHistoryServiceMessaging trainerHistoryServiceMessaging;
+    @Mock private TrainerHistoryServiceCommunication trainerHistoryServiceCommunication;
     @Mock private MethodInvocation invocation;
     @Mock private HttpServletRequest httpServletRequest;
     @Mock private TrainingRequest trainingRequest;
@@ -40,7 +40,7 @@ class AddHoursToTrainerStrategyTest {
 
     @BeforeEach
     void setUp() {
-        strategy = new AddHoursToTrainerStrategy(trainerService, trainerHistoryServiceMessaging);
+        strategy = new AddHoursToTrainerStrategy(trainerService, trainerHistoryServiceCommunication);
         MDC.put("transactionId", "txn-1");
     }
 
@@ -62,7 +62,7 @@ class AddHoursToTrainerStrategyTest {
         Object result = strategy.sendTheRequest(invocation);
 
         ArgumentCaptor<TrainerWorkloadRequest> captor = ArgumentCaptor.forClass(TrainerWorkloadRequest.class);
-        verify(trainerHistoryServiceMessaging).sendMessage(
+        verify(trainerHistoryServiceCommunication).sendMessage(
                 eq("training-update-channel"), captor.capture(), eq("Bearer token"), eq("txn-1"));
 
         TrainerWorkloadRequest sent = captor.getValue();
@@ -88,7 +88,7 @@ class AddHoursToTrainerStrategyTest {
 
         strategy.sendTheRequest(invocation);
 
-        var inOrder = inOrder(trainerHistoryServiceMessaging, invocation);
-        inOrder.verify(trainerHistoryServiceMessaging).sendMessage(any(), any(), any(), any());
+        var inOrder = inOrder(trainerHistoryServiceCommunication, invocation);
+        inOrder.verify(trainerHistoryServiceCommunication).sendMessage(any(), any(), any(), any());
     }
 }

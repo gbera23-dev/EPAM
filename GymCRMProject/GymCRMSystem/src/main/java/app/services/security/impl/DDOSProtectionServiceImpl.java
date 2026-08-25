@@ -1,6 +1,6 @@
 package app.services.security.impl;
 
-import app.annotations.ServiceLayer;
+import app.aop.annotations.ServiceLayer;
 import app.services.security.interfaces.DDOSProtectionService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;

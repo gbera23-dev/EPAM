@@ -1,7 +1,7 @@
 package app.unit.utils;
 
-import app.entities.User;
-import app.utils.UserUtils;
+import app.domain.entities.User;
+import app.infrastructure.utils.UserUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

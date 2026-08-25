@@ -1,6 +1,6 @@
 package app.unit.healthIndicators;
 
-import app.healthIndicators.TomcatHealthIndicator;
+import app.infrastructure.healthIndicators.TomcatHealthIndicator;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

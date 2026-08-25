@@ -1,8 +1,8 @@
 package app.unit.beanPostProcessor;
 
-import app.annotations.InteractsWithTraineeHistoryService;
-import app.beanPostProcessor.TrainerHistoryBeanPostProcessor;
-import app.strategies.MicroserviceInteraction.MicroserviceInteractionStrategy;
+import app.aop.annotations.InteractsWithTraineeHistoryService;
+import app.aop.beanPostProcessor.TrainerHistoryBeanPostProcessor;
+import app.messaging.strategies.interfaces.MicroserviceInteractionStrategy;
 import org.junit.jupiter.api.Test;
 import org.springframework.aop.framework.Advised;
 import org.springframework.context.ApplicationContext;

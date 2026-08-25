@@ -1,6 +1,6 @@
 package com.example.Trainer_history_service.integration.cucumber;
 
-import com.example.Trainer_history_service.exceptions.UserCannotBeAuthorizedException;
+import com.example.Trainer_history_service.api.exceptions.UserCannotBeAuthorizedException;
 import com.example.Trainer_history_service.services.security.interfaces.JWTService;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;

@@ -1,6 +1,6 @@
 package com.example.Trainer_history_service.unit.methodInterceptors;
 
-import com.example.Trainer_history_service.methodInterceptors.LoggingMethodInterceptor;
+import com.example.Trainer_history_service.aop.methodInterceptors.LoggingMethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.junit.jupiter.api.Test;
 

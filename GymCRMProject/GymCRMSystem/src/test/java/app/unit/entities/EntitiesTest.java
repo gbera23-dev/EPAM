@@ -1,6 +1,6 @@
 package app.unit.entities;
 
-import app.entities.*;
+import app.domain.entities.*;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;

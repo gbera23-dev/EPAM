@@ -1,7 +1,7 @@
 package app.unit.beanPostProcessor;
 
-import app.annotations.ClientLayer;
-import app.beanPostProcessor.ClientLayerBeanPostProcessor;
+import app.aop.annotations.ClientLayer;
+import app.aop.beanPostProcessor.ClientLayerBeanPostProcessor;
 import org.junit.jupiter.api.Test;
 import org.springframework.aop.framework.Advised;
 

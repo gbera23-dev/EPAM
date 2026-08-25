@@ -1,11 +1,11 @@
 package app.unit.services.business;
 
-import app.entities.*;
-import app.exceptions.TrainingNotFoundException;
-import app.exceptions.UserNotFoundException;
-import app.persistence.TraineeRepository;
-import app.persistence.TrainerRepository;
-import app.persistence.TrainingRepository;
+import app.domain.entities.*;
+import app.domain.exceptions.TrainingNotFoundException;
+import app.domain.exceptions.UserNotFoundException;
+import app.domain.persistence.TraineeRepository;
+import app.domain.persistence.TrainerRepository;
+import app.domain.persistence.TrainingRepository;
 import app.services.business.impl.TrainingServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

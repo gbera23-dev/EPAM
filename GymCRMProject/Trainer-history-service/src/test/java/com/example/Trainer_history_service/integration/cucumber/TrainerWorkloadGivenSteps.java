@@ -1,10 +1,10 @@
 package com.example.Trainer_history_service.integration.cucumber;
 
-import com.example.Trainer_history_service.documents.MonthlySummary;
-import com.example.Trainer_history_service.documents.TrainerWorkload;
-import com.example.Trainer_history_service.exceptions.MonthlySummaryFoundException;
-import com.example.Trainer_history_service.repository.MonthlySummaryRepository;
-import com.example.Trainer_history_service.repository.TrainerWorkloadRepository;
+import com.example.Trainer_history_service.domain.documents.MonthlySummary;
+import com.example.Trainer_history_service.domain.documents.TrainerWorkload;
+import com.example.Trainer_history_service.domain.exceptions.MonthlySummaryFoundException;
+import com.example.Trainer_history_service.domain.repository.MonthlySummaryRepository;
+import com.example.Trainer_history_service.domain.repository.TrainerWorkloadRepository;
 import io.cucumber.java.en.Given;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

@@ -1,6 +1,6 @@
 package com.example.Trainer_history_service.unit.errorHandler;
 
-import com.example.Trainer_history_service.errorHandler.GlobalJmsErrorHandler;
+import com.example.Trainer_history_service.api.errorHandler.GlobalJmsErrorHandler;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

@@ -1,6 +1,6 @@
 package app.unit.filters;
 
-import app.filters.TransactionFilter;
+import app.infrastructure.filters.TransactionFilter;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import org.junit.jupiter.api.Test;

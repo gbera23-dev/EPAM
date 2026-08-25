@@ -1,6 +1,6 @@
 package app.unit.methodInterceptors;
 
-import app.methodInterceptors.MetricsMethodInterceptor;
+import app.aop.methodInterceptors.MetricsMethodInterceptor;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import org.aopalliance.intercept.MethodInvocation;

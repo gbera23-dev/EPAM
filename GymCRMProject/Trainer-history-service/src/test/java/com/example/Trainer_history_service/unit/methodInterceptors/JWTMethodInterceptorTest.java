@@ -1,12 +1,12 @@
 package com.example.Trainer_history_service.unit.methodInterceptors;
 
-import com.example.Trainer_history_service.exceptions.UserCannotBeAuthorizedException;
-import com.example.Trainer_history_service.methodInterceptors.JWTMethodInterceptor;
+import com.example.Trainer_history_service.api.exceptions.UserCannotBeAuthorizedException;
+import com.example.Trainer_history_service.aop.methodInterceptors.JWTMethodInterceptor;
 import com.example.Trainer_history_service.services.security.interfaces.JWTService;
 import org.aopalliance.intercept.MethodInvocation;
 import org.junit.jupiter.api.Test;
 
-import static com.example.Trainer_history_service.utils.SecurityConstants.JWT_TOKEN_PREFIX;
+import static com.example.Trainer_history_service.infrastructure.constants.SecurityConstants.JWT_TOKEN_PREFIX;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 

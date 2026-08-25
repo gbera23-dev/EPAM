@@ -1,8 +1,8 @@
 package app.services.security.impl;
 
-import app.annotations.ServiceLayer;
-import app.entities.User;
-import app.persistence.UserRepository;
+import app.aop.annotations.ServiceLayer;
+import app.domain.entities.User;
+import app.domain.persistence.UserRepository;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

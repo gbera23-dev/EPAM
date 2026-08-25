@@ -1,8 +1,8 @@
 package app.unit.mappers;
 
-import app.dto.internal.TrainingTypeDTO;
-import app.entities.TrainingType;
-import app.mappers.internal.TrainingTypeMapper;
+import app.infrastructure.dto.TrainingTypeDTO;
+import app.domain.entities.TrainingType;
+import app.infrastructure.mappers.TrainingTypeMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

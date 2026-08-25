@@ -1,8 +1,10 @@
 package app.services.security.impl;
 
-import app.annotations.ServiceLayer;
-import app.entities.User;
-import app.exceptions.*;
+import app.aop.annotations.ServiceLayer;
+import app.domain.entities.User;
+import app.domain.exceptions.PasswordDoesNotMatchException;
+import app.domain.exceptions.UserCannotBeAuthorizedException;
+import app.domain.exceptions.UserNotFoundException;
 import app.services.security.interfaces.AuthService;
 import app.services.security.interfaces.DDOSProtectionService;
 import app.services.security.interfaces.JWTService;
@@ -12,7 +14,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import app.persistence.UserRepository;
+import app.domain.persistence.UserRepository;
 
 @Service
 @ServiceLayer

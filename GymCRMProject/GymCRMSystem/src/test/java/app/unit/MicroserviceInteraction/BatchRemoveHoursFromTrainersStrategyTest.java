@@ -1,13 +1,14 @@
 package app.unit.MicroserviceInteraction;
 
-import app.clients.TrainerHistoryServiceMessaging;
-import app.dto.api.request.TrainerWorkloadBatchRequest;
-import app.dto.api.request.TrainerWorkloadRequest;
-import app.entities.Trainer;
-import app.entities.Training;
-import app.entities.User;
+import app.messaging.microserviceCommunication.TrainerHistoryServiceCommunication;
+import app.api.dto.request.TrainerWorkloadBatchRequest;
+import app.api.dto.request.TrainerWorkloadRequest;
+import app.domain.entities.ActionType;
+import app.domain.entities.Trainer;
+import app.domain.entities.Training;
+import app.domain.entities.User;
 import app.services.business.interfaces.TraineeService;
-import app.strategies.MicroserviceInteraction.BatchRemoveHoursFromTrainersStrategy;
+import app.messaging.strategies.impl.BatchRemoveHoursFromTrainersStrategy;
 import jakarta.servlet.http.HttpServletRequest;
 import org.aopalliance.intercept.MethodInvocation;
 import org.jboss.logging.MDC;
@@ -29,7 +30,7 @@ import static org.mockito.Mockito.*;
 class BatchRemoveHoursFromTrainersStrategyTest {
 
     @Mock private TraineeService traineeService;
-    @Mock private TrainerHistoryServiceMessaging trainerHistoryServiceMessaging;
+    @Mock private TrainerHistoryServiceCommunication trainerHistoryServiceCommunication;
     @Mock private MethodInvocation invocation;
     @Mock private HttpServletRequest httpServletRequest;
     @Mock private Training training;
@@ -40,7 +41,7 @@ class BatchRemoveHoursFromTrainersStrategyTest {
 
     @BeforeEach
     void setUp() {
-        strategy = new BatchRemoveHoursFromTrainersStrategy(traineeService, trainerHistoryServiceMessaging);
+        strategy = new BatchRemoveHoursFromTrainersStrategy(traineeService, trainerHistoryServiceCommunication);
         MDC.put("transactionId", "txn-3");
     }
 
@@ -61,10 +62,10 @@ class BatchRemoveHoursFromTrainersStrategyTest {
 
         Object result = strategy.sendTheRequest(invocation);
 
-        var inOrder = inOrder(invocation, trainerHistoryServiceMessaging);
+        var inOrder = inOrder(invocation, trainerHistoryServiceCommunication);
         inOrder.verify(invocation).proceed();
         ArgumentCaptor<TrainerWorkloadBatchRequest> captor = ArgumentCaptor.forClass(TrainerWorkloadBatchRequest.class);
-        inOrder.verify(trainerHistoryServiceMessaging).sendMessage(
+        inOrder.verify(trainerHistoryServiceCommunication).sendMessage(
                 eq("training-batch-update-channel"), captor.capture(), eq("Bearer token"), eq("txn-3"));
 
         TrainerWorkloadBatchRequest sent = captor.getValue();
@@ -76,7 +77,7 @@ class BatchRemoveHoursFromTrainersStrategyTest {
         assertFalse(item.getIsActive());
         assertEquals(java.time.LocalDate.of(2025, 8, 1), item.getTrainingDate());
         assertEquals(30, item.getDuration());
-        assertEquals(app.entities.ActionType.DELETE, item.getActionType());
+        assertEquals(ActionType.DELETE, item.getActionType());
         assertEquals("proceeded", result);
     }
 
@@ -103,7 +104,7 @@ class BatchRemoveHoursFromTrainersStrategyTest {
 
         strategy.sendTheRequest(invocation);
 
-        verify(trainerHistoryServiceMessaging).sendMessage(
+        verify(trainerHistoryServiceCommunication).sendMessage(
                 eq("training-batch-update-channel"), any(TrainerWorkloadBatchRequest.class), eq("token"), eq("txn-3"));
     }
 }

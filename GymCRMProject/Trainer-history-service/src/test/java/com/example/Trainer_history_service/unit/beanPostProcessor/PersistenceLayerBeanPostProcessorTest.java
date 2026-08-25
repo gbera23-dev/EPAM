@@ -1,7 +1,7 @@
 package com.example.Trainer_history_service.unit.beanPostProcessor;
 
-import com.example.Trainer_history_service.annotations.PersistenceLayer;
-import com.example.Trainer_history_service.beanPostProcessor.PersistenceLayerBeanPostProcessor;
+import com.example.Trainer_history_service.aop.annotations.PersistenceLayer;
+import com.example.Trainer_history_service.aop.beanPostProcessor.PersistenceLayerBeanPostProcessor;
 import org.junit.jupiter.api.Test;
 import org.springframework.aop.framework.Advised;
 

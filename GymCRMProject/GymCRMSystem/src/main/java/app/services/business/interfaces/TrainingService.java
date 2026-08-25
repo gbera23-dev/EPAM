@@ -1,9 +1,9 @@
 package app.services.business.interfaces;
 
-import app.entities.Training;
+import app.domain.entities.Training;
 import java.time.LocalDate;
 /**
- * Operations for creating and retrieving {@link app.entities.Training} records.
+ * Operations for creating and retrieving {@link Training} records.
  */
 public interface TrainingService {
 

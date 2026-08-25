@@ -1,7 +1,7 @@
 package app.integration.cucumber;
 
 import app.Application;
-import app.clients.TrainerHistoryServiceMessaging;
+import app.messaging.microserviceCommunication.TrainerHistoryServiceCommunication;
 import io.cucumber.spring.CucumberContextConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -13,5 +13,6 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
 public class CucumberSpringConfiguration {
-    @MockitoBean TrainerHistoryServiceMessaging trainerHistoryServiceMessaging;
+    @MockitoBean
+    TrainerHistoryServiceCommunication trainerHistoryServiceCommunication;
 }

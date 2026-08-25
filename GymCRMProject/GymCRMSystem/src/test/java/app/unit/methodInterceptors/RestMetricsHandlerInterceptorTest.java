@@ -1,6 +1,6 @@
 package app.unit.methodInterceptors;
 
-import app.methodInterceptors.RestMetricsHandlerInterceptor;
+import app.aop.methodInterceptors.RestMetricsHandlerInterceptor;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import jakarta.servlet.http.HttpServletRequest;

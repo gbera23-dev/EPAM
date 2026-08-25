@@ -1,14 +1,14 @@
 package com.example.Trainer_history_service.unit.services.business;
 
-import com.example.Trainer_history_service.documents.ActionType;
-import com.example.Trainer_history_service.documents.MonthlySummary;
-import com.example.Trainer_history_service.documents.TrainerWorkload;
-import com.example.Trainer_history_service.dto.TrainerWorkloadRequest;
-import com.example.Trainer_history_service.exceptions.MonthlySummaryNotFoundException;
-import com.example.Trainer_history_service.exceptions.NegativeDurationException;
-import com.example.Trainer_history_service.exceptions.UserNotFoundException;
-import com.example.Trainer_history_service.repository.MonthlySummaryRepository;
-import com.example.Trainer_history_service.repository.TrainerWorkloadRepository;
+import com.example.Trainer_history_service.domain.documents.ActionType;
+import com.example.Trainer_history_service.domain.documents.MonthlySummary;
+import com.example.Trainer_history_service.domain.documents.TrainerWorkload;
+import com.example.Trainer_history_service.api.dto.TrainerWorkloadRequest;
+import com.example.Trainer_history_service.domain.exceptions.MonthlySummaryNotFoundException;
+import com.example.Trainer_history_service.domain.exceptions.NegativeDurationException;
+import com.example.Trainer_history_service.domain.exceptions.UserNotFoundException;
+import com.example.Trainer_history_service.domain.repository.MonthlySummaryRepository;
+import com.example.Trainer_history_service.domain.repository.TrainerWorkloadRepository;
 import com.example.Trainer_history_service.services.business.impl.TrainerServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

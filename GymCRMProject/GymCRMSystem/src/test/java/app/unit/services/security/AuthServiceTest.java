@@ -1,9 +1,9 @@
 package app.unit.services.security;
 
-import app.entities.User;
-import app.exceptions.UserCannotBeAuthorizedException;
-import app.exceptions.UserNotFoundException;
-import app.persistence.UserRepository;
+import app.domain.entities.User;
+import app.domain.exceptions.UserCannotBeAuthorizedException;
+import app.domain.exceptions.UserNotFoundException;
+import app.domain.persistence.UserRepository;
 import app.services.security.impl.AuthServiceImpl;
 import app.services.security.interfaces.DDOSProtectionService;
 import app.services.security.interfaces.JWTService;

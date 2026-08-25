@@ -1,7 +1,7 @@
 package app.unit.services.business;
 
-import app.entities.TrainingType;
-import app.persistence.TrainingTypeRepository;
+import app.domain.entities.TrainingType;
+import app.domain.persistence.TrainingTypeRepository;
 import app.services.business.impl.TrainingTypeServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

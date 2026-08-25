@@ -1,8 +1,8 @@
 package app.unit.mappers;
 
-import app.dto.internal.UserDTO;
-import app.entities.User;
-import app.mappers.internal.UserMapper;
+import app.infrastructure.dto.UserDTO;
+import app.domain.entities.User;
+import app.infrastructure.mappers.UserMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

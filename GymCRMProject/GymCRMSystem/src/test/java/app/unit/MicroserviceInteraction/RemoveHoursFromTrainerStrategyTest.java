@@ -1,12 +1,13 @@
 package app.unit.MicroserviceInteraction;
 
-import app.clients.TrainerHistoryServiceMessaging;
-import app.dto.api.request.TrainerWorkloadRequest;
-import app.entities.Trainer;
-import app.entities.Training;
-import app.entities.User;
+import app.messaging.microserviceCommunication.TrainerHistoryServiceCommunication;
+import app.api.dto.request.TrainerWorkloadRequest;
+import app.domain.entities.ActionType;
+import app.domain.entities.Trainer;
+import app.domain.entities.Training;
+import app.domain.entities.User;
 import app.services.business.interfaces.TrainingService;
-import app.strategies.MicroserviceInteraction.RemoveHoursFromTrainerStrategy;
+import app.messaging.strategies.impl.RemoveHoursFromTrainerStrategy;
 import jakarta.servlet.http.HttpServletRequest;
 import org.aopalliance.intercept.MethodInvocation;
 import org.jboss.logging.MDC;
@@ -27,7 +28,7 @@ import static org.mockito.Mockito.*;
 class RemoveHoursFromTrainerStrategyTest {
 
     @Mock private TrainingService trainingService;
-    @Mock private TrainerHistoryServiceMessaging trainerHistoryServiceMessaging;
+    @Mock private TrainerHistoryServiceCommunication trainerHistoryServiceCommunication;
     @Mock private MethodInvocation invocation;
     @Mock private HttpServletRequest httpServletRequest;
     @Mock private Training training;
@@ -38,7 +39,7 @@ class RemoveHoursFromTrainerStrategyTest {
 
     @BeforeEach
     void setUp() {
-        strategy = new RemoveHoursFromTrainerStrategy(trainingService, trainerHistoryServiceMessaging);
+        strategy = new RemoveHoursFromTrainerStrategy(trainingService, trainerHistoryServiceCommunication);
         MDC.put("transactionId", "txn-2");
     }
 
@@ -59,10 +60,10 @@ class RemoveHoursFromTrainerStrategyTest {
 
         Object result = strategy.sendTheRequest(invocation);
 
-        var inOrder = inOrder(invocation, trainerHistoryServiceMessaging);
+        var inOrder = inOrder(invocation, trainerHistoryServiceCommunication);
         inOrder.verify(invocation).proceed();
         ArgumentCaptor<TrainerWorkloadRequest> captor = ArgumentCaptor.forClass(TrainerWorkloadRequest.class);
-        inOrder.verify(trainerHistoryServiceMessaging).sendMessage(
+        inOrder.verify(trainerHistoryServiceCommunication).sendMessage(
                 eq("training-update-channel"), captor.capture(), eq("Bearer token"), eq("txn-2"));
 
         TrainerWorkloadRequest sent = captor.getValue();
@@ -72,7 +73,7 @@ class RemoveHoursFromTrainerStrategyTest {
         assertTrue(sent.getIsActive());
         assertEquals(java.time.LocalDate.of(2025, 7, 1), sent.getTrainingDate());
         assertEquals(45, sent.getDuration());
-        assertEquals(app.entities.ActionType.DELETE, sent.getActionType());
+        assertEquals(ActionType.DELETE, sent.getActionType());
         assertEquals("proceeded", result);
     }
 

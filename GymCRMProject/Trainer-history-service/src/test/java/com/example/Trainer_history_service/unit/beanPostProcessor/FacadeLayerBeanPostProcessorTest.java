@@ -1,7 +1,7 @@
 package com.example.Trainer_history_service.unit.beanPostProcessor;
 
-import com.example.Trainer_history_service.annotations.FacadeLayer;
-import com.example.Trainer_history_service.beanPostProcessor.FacadeLayerBeanPostProcessor;
+import com.example.Trainer_history_service.aop.annotations.FacadeLayer;
+import com.example.Trainer_history_service.aop.beanPostProcessor.FacadeLayerBeanPostProcessor;
 import org.junit.jupiter.api.Test;
 import org.springframework.aop.framework.Advised;
 

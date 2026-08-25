@@ -1,18 +1,18 @@
 package app.services.business.impl;
 
-import app.annotations.ServiceLayer;
-import app.entities.Trainee;
-import app.entities.Trainer;
-import app.entities.Training;
-import app.entities.TrainingType;
-import app.exceptions.TrainingNotFoundException;
-import app.exceptions.UserNotFoundException;
+import app.aop.annotations.ServiceLayer;
+import app.domain.entities.Trainee;
+import app.domain.entities.Trainer;
+import app.domain.entities.Training;
+import app.domain.entities.TrainingType;
+import app.domain.exceptions.TrainingNotFoundException;
+import app.domain.exceptions.UserNotFoundException;
 import app.services.business.interfaces.TrainingService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import app.persistence.TraineeRepository;
-import app.persistence.TrainerRepository;
-import app.persistence.TrainingRepository;
+import app.domain.persistence.TraineeRepository;
+import app.domain.persistence.TrainerRepository;
+import app.domain.persistence.TrainingRepository;
 
 import java.time.LocalDate;
 

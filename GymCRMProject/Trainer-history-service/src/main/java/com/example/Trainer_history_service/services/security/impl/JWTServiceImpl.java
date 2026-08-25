@@ -1,8 +1,8 @@
 package com.example.Trainer_history_service.services.security.impl;
 
 
-import com.example.Trainer_history_service.annotations.ServiceLayer;
-import com.example.Trainer_history_service.exceptions.UserCannotBeAuthorizedException;
+import com.example.Trainer_history_service.aop.annotations.ServiceLayer;
+import com.example.Trainer_history_service.api.exceptions.UserCannotBeAuthorizedException;
 import com.example.Trainer_history_service.services.security.interfaces.JWTService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;

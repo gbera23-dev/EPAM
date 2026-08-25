@@ -1,7 +1,7 @@
 package app.unit.services.security;
 
-import app.entities.User;
-import app.persistence.UserRepository;
+import app.domain.entities.User;
+import app.domain.persistence.UserRepository;
 import app.services.security.impl.UserDetailsServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

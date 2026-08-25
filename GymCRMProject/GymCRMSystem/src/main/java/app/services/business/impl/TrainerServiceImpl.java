@@ -1,20 +1,20 @@
 package app.services.business.impl;
 
-import app.annotations.ServiceLayer;
-import app.entities.Trainer;
-import app.entities.Training;
-import app.entities.User;
-import app.exceptions.UserAlreadyActiveException;
-import app.exceptions.UserAlreadyInactiveException;
-import app.exceptions.UserNotFoundException;
-import app.persistence.UserRepository;
+import app.aop.annotations.ServiceLayer;
+import app.domain.entities.Trainer;
+import app.domain.entities.Training;
+import app.domain.entities.User;
+import app.domain.exceptions.UserAlreadyActiveException;
+import app.domain.exceptions.UserAlreadyInactiveException;
+import app.domain.exceptions.UserNotFoundException;
+import app.domain.persistence.UserRepository;
 import app.services.business.interfaces.TrainerService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import app.persistence.TrainerRepository;
-import app.persistence.TrainingRepository;
-import app.utils.UserUtils;
+import app.domain.persistence.TrainerRepository;
+import app.domain.persistence.TrainingRepository;
+import app.infrastructure.utils.UserUtils;
 
 import java.time.LocalDate;
 import java.util.List;

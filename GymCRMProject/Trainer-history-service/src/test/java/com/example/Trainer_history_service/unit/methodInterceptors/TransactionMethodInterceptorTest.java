@@ -1,11 +1,11 @@
 package com.example.Trainer_history_service.unit.methodInterceptors;
 
-import com.example.Trainer_history_service.methodInterceptors.TransactionMethodInterceptor;
+import com.example.Trainer_history_service.aop.methodInterceptors.TransactionMethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.junit.jupiter.api.Test;
 import org.slf4j.MDC;
 
-import static com.example.Trainer_history_service.utils.TransactionConstants.MDC_KEY;
+import static com.example.Trainer_history_service.infrastructure.constants.TransactionConstants.MDC_KEY;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 

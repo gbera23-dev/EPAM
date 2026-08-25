@@ -1,7 +1,7 @@
 package app.unit.beanPostProcessor;
 
-import app.annotations.PersistenceLayer;
-import app.beanPostProcessor.PersistenceLayerBeanPostProcessor;
+import app.aop.annotations.PersistenceLayer;
+import app.aop.beanPostProcessor.PersistenceLayerBeanPostProcessor;
 import org.junit.jupiter.api.Test;
 import org.springframework.aop.framework.Advised;
 

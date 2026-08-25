@@ -1,7 +1,7 @@
 package com.example.Trainer_history_service.unit.facade;
 
-import com.example.Trainer_history_service.dto.TrainerWorkloadRequest;
-import com.example.Trainer_history_service.facade.TrainerFacade;
+import com.example.Trainer_history_service.api.dto.TrainerWorkloadRequest;
+import com.example.Trainer_history_service.api.facade.TrainerFacade;
 import com.example.Trainer_history_service.services.business.interfaces.TrainerService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

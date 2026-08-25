@@ -1,8 +1,8 @@
 package app.unit.services.security;
 
-import app.entities.BlacklistedJWT;
-import app.exceptions.UserCannotBeAuthorizedException;
-import app.persistence.JWTRepository;
+import app.domain.entities.BlacklistedJWT;
+import app.domain.exceptions.UserCannotBeAuthorizedException;
+import app.domain.persistence.JWTRepository;
 import app.services.security.impl.JWTServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

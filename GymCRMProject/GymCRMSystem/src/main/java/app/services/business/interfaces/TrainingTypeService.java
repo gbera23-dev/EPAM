@@ -1,6 +1,6 @@
 package app.services.business.interfaces;
 
-import app.entities.TrainingType;
+import app.domain.entities.TrainingType;
 
 import java.util.List;
 

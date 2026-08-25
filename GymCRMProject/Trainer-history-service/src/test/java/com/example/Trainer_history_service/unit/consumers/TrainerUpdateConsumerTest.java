@@ -1,10 +1,10 @@
 package com.example.Trainer_history_service.unit.consumers;
 
-import com.example.Trainer_history_service.consumers.TrainerUpdateConsumer;
-import com.example.Trainer_history_service.dto.TrainerWorkloadBatchRequest;
-import com.example.Trainer_history_service.dto.TrainerWorkloadRequest;
-import com.example.Trainer_history_service.exceptions.CouldNotUpdateTrainerDataException;
-import com.example.Trainer_history_service.facade.TrainerFacade;
+import com.example.Trainer_history_service.api.consumers.TrainerUpdateConsumer;
+import com.example.Trainer_history_service.api.dto.TrainerWorkloadBatchRequest;
+import com.example.Trainer_history_service.api.dto.TrainerWorkloadRequest;
+import com.example.Trainer_history_service.api.exceptions.CouldNotUpdateTrainerDataException;
+import com.example.Trainer_history_service.api.facade.TrainerFacade;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

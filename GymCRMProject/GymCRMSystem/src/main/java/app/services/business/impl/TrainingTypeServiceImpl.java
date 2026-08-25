@@ -1,11 +1,11 @@
 package app.services.business.impl;
 
-import app.annotations.ServiceLayer;
-import app.entities.TrainingType;
-import app.exceptions.TrainingTypeNotFoundException;
+import app.aop.annotations.ServiceLayer;
+import app.domain.entities.TrainingType;
+import app.domain.exceptions.TrainingTypeNotFoundException;
 import app.services.business.interfaces.TrainingTypeService;
 import org.springframework.stereotype.Service;
-import app.persistence.TrainingTypeRepository;
+import app.domain.persistence.TrainingTypeRepository;
 
 import java.util.List;
 

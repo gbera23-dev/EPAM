@@ -1,6 +1,6 @@
 package app.unit.methodInterceptors;
 
-import app.methodInterceptors.RestLoggingHandlerInterceptor;
+import app.aop.methodInterceptors.RestLoggingHandlerInterceptor;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.junit.jupiter.api.BeforeEach;

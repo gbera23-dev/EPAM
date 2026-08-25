@@ -1,12 +1,12 @@
 package app.unit.mappers;
 
-import app.dto.internal.TrainerDTO;
-import app.dto.internal.UserDTO;
-import app.entities.Trainer;
-import app.entities.TrainingType;
-import app.entities.User;
-import app.mappers.internal.TrainerMapper;
-import app.mappers.internal.UserMapper;
+import app.infrastructure.dto.TrainerDTO;
+import app.infrastructure.dto.UserDTO;
+import app.domain.entities.Trainer;
+import app.domain.entities.TrainingType;
+import app.domain.entities.User;
+import app.infrastructure.mappers.TrainerMapper;
+import app.infrastructure.mappers.UserMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

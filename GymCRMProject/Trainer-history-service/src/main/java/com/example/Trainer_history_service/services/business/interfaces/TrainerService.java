@@ -1,6 +1,6 @@
 package com.example.Trainer_history_service.services.business.interfaces;
 
-import com.example.Trainer_history_service.dto.TrainerWorkloadRequest;
+import com.example.Trainer_history_service.api.dto.TrainerWorkloadRequest;
 
 import java.time.LocalDate;
 import java.util.List;

@@ -1,10 +1,11 @@
 package app.integration.cucumber;
 
-import app.entities.Trainee;
-import app.entities.Trainer;
-import app.entities.Training;
-import app.exceptions.UserNotFoundException;
-import app.persistence.GymRepository;
+import app.domain.entities.User;
+import app.domain.entities.Trainee;
+import app.domain.entities.Trainer;
+import app.domain.entities.Training;
+import app.domain.exceptions.UserNotFoundException;
+import app.domain.persistence.GymRepository;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -66,7 +67,7 @@ public class TrainingSearchSteps {
 
     @Given("{string} is logged in")
     public void is_logged_in(String username) throws Exception {
-        app.entities.User user = gymRepository.getUserRepository().findByUsername(username)
+        User user = gymRepository.getUserRepository().findByUsername(username)
                 .orElseThrow(() -> new UserNotFoundException(
                         "Fixture failed: no user " + username));
         user.setPassword(passwordEncoder.encode(TestUtils.KNOWN_PASSWORD));

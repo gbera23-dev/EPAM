@@ -1,13 +1,13 @@
 package app.unit.mappers;
 
-import app.dto.api.request.TraineeRegistrationRequest;
-import app.dto.api.request.TrainerRegistrationRequest;
-import app.dto.api.response.*;
-import app.entities.*;
-import app.mappers.api.TraineeApiMapper;
-import app.mappers.api.TrainerApiMapper;
-import app.mappers.api.TrainingApiMapper;
-import app.mappers.api.TrainingTypeApiMapper;
+import app.api.dto.request.TraineeRegistrationRequest;
+import app.api.dto.request.TrainerRegistrationRequest;
+import app.api.dto.response.*;
+import app.domain.entities.*;
+import app.api.mappers.TraineeApiMapper;
+import app.api.mappers.TrainerApiMapper;
+import app.api.mappers.TrainingApiMapper;
+import app.api.mappers.TrainingTypeApiMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

@@ -1,6 +1,6 @@
 package app.unit.restcontroller;
 
-import app.restcontroller.UserRestController;
+import app.api.restcontroller.UserRestController;
 import app.services.security.interfaces.AuthService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

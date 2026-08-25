@@ -1,6 +1,6 @@
 package app.unit.methodInterceptors;
 
-import app.methodInterceptors.LoggingMethodInterceptor;
+import app.aop.methodInterceptors.LoggingMethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.junit.jupiter.api.Test;
 

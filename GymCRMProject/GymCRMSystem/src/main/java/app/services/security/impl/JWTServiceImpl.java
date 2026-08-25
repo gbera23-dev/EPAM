@@ -1,9 +1,9 @@
 package app.services.security.impl;
 
-import app.annotations.ServiceLayer;
-import app.entities.BlacklistedJWT;
-import app.exceptions.UserCannotBeAuthorizedException;
-import app.persistence.JWTRepository;
+import app.aop.annotations.ServiceLayer;
+import app.domain.entities.BlacklistedJWT;
+import app.domain.exceptions.UserCannotBeAuthorizedException;
+import app.domain.persistence.JWTRepository;
 import app.services.security.interfaces.JWTService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;

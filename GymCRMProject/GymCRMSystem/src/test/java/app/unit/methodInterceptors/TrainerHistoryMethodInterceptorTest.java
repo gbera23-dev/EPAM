@@ -1,8 +1,8 @@
 package app.unit.methodInterceptors;
 
-import app.annotations.InteractsWithTraineeHistoryService;
-import app.methodInterceptors.TrainerHistoryMethodInterceptor;
-import app.strategies.MicroserviceInteraction.MicroserviceInteractionStrategy;
+import app.aop.annotations.InteractsWithTraineeHistoryService;
+import app.aop.methodInterceptors.TrainerHistoryMethodInterceptor;
+import app.messaging.strategies.interfaces.MicroserviceInteractionStrategy;
 import org.aopalliance.intercept.MethodInvocation;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.ApplicationContext;

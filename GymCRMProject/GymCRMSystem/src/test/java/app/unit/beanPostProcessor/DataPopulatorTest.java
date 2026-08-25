@@ -1,9 +1,9 @@
 package app.unit.beanPostProcessor;
 
-import app. beanPostProcessor.DataPopulator;
-import app. builders.Builder;
-import app. builders.TraineeBuilder;
-import app.entities.GymEntity;
+import app.infrastructure.beanPostProcessor.DataPopulator;
+import app.infrastructure.builders.Builder;
+import app.infrastructure.builders.TraineeBuilder;
+import app.domain.entities.GymEntity;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

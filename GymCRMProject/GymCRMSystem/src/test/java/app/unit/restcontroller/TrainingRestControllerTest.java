@@ -1,6 +1,6 @@
 package app.unit.restcontroller;
 
-import app.restcontroller.TrainingRestController;
+import app.api.restcontroller.TrainingRestController;
 import app.services.security.interfaces.AuthService;
 import app.services.business.interfaces.TrainingService;
 import org.junit.jupiter.api.BeforeEach;

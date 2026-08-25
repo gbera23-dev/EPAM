@@ -1,7 +1,7 @@
 package app.unit.beanPostProcessor;
 
-import app.annotations.ServiceLayer;
-import app.beanPostProcessor.ServiceLayerBeanPostProcessor;
+import app.aop.annotations.ServiceLayer;
+import app.aop.beanPostProcessor.ServiceLayerBeanPostProcessor;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import org.junit.jupiter.api.Test;

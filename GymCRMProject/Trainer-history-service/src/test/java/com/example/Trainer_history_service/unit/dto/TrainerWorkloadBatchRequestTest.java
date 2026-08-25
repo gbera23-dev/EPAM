@@ -1,8 +1,8 @@
 package com.example.Trainer_history_service.unit.dto;
 
-import com.example.Trainer_history_service.documents.ActionType;
-import com.example.Trainer_history_service.dto.TrainerWorkloadBatchRequest;
-import com.example.Trainer_history_service.dto.TrainerWorkloadRequest;
+import com.example.Trainer_history_service.domain.documents.ActionType;
+import com.example.Trainer_history_service.api.dto.TrainerWorkloadBatchRequest;
+import com.example.Trainer_history_service.api.dto.TrainerWorkloadRequest;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;

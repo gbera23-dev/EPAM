@@ -1,6 +1,6 @@
 package app.unit.utils;
 
-import app.utils.StringUtils;
+import app.infrastructure.utils.StringUtils;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collections;

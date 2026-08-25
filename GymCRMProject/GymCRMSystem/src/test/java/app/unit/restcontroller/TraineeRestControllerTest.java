@@ -1,15 +1,15 @@
 package app.unit.restcontroller;
 
-import app.dto.api.request.TraineeRegistrationRequest;
-import app.dto.api.response.TraineeProfileResponse;
-import app.dto.api.response.TrainerSummaryResponse;
-import app.dto.api.response.TrainingResponse;
-import app.dto.api.response.TrainingTypeResponse;
-import app.entities.*;
-import app.mappers.api.TraineeApiMapper;
-import app.mappers.api.TrainerApiMapper;
-import app.mappers.api.TrainingApiMapper;
-import app.restcontroller.TraineeRestController;
+import app.api.dto.request.TraineeRegistrationRequest;
+import app.api.dto.response.TraineeProfileResponse;
+import app.api.dto.response.TrainerSummaryResponse;
+import app.api.dto.response.TrainingResponse;
+import app.api.dto.response.TrainingTypeResponse;
+import app.domain.entities.*;
+import app.api.mappers.TraineeApiMapper;
+import app.api.mappers.TrainerApiMapper;
+import app.api.mappers.TrainingApiMapper;
+import app.api.restcontroller.TraineeRestController;
 import app.services.security.interfaces.AuthService;
 import app.services.business.interfaces.TraineeService;
 import org.junit.jupiter.api.BeforeEach;

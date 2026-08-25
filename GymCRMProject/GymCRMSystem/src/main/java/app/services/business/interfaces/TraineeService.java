@@ -1,8 +1,8 @@
 package app.services.business.interfaces;
 
-import app.entities.Trainee;
-import app.entities.Trainer;
-import app.entities.Training;
+import app.domain.entities.Trainee;
+import app.domain.entities.Trainer;
+import app.domain.entities.Training;
 
 import java.time.LocalDate;
 import java.util.List;

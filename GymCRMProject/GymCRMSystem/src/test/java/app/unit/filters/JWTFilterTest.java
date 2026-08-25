@@ -1,6 +1,6 @@
 package app.unit.filters;
 
-import app.filters.JWTFilter;
+import app.infrastructure.filters.JWTFilter;
 import app.services.security.interfaces.JWTService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
