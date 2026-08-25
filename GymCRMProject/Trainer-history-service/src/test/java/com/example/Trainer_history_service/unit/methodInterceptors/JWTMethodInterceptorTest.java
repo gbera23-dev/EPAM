@@ -2,7 +2,7 @@ package com.example.Trainer_history_service.unit.methodInterceptors;
 
 import com.example.Trainer_history_service.exceptions.UserCannotBeAuthorizedException;
 import com.example.Trainer_history_service.methodInterceptors.JWTMethodInterceptor;
-import com.example.Trainer_history_service.services.JWTService;
+import com.example.Trainer_history_service.services.security.interfaces.JWTService;
 import org.aopalliance.intercept.MethodInvocation;
 import org.junit.jupiter.api.Test;
 

@@ -1,7 +1,7 @@
 package com.example.Trainer_history_service.methodInterceptors;
 
 import com.example.Trainer_history_service.exceptions.UserCannotBeAuthorizedException;
-import com.example.Trainer_history_service.services.JWTService;
+import com.example.Trainer_history_service.services.security.interfaces.JWTService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aopalliance.intercept.MethodInterceptor;

@@ -1,7 +1,7 @@
 package app.listeners;
 
 import app.exceptions.DDOSProtectionException;
-import app.services.DDOSProtectionService;
+import app.services.security.interfaces.DDOSProtectionService;
 import org.springframework.context.event.EventListener;
 import org.springframework.security.authentication.event.AuthenticationFailureBadCredentialsEvent;
 import org.springframework.security.core.Authentication;

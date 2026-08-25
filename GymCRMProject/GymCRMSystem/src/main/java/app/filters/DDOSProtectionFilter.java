@@ -1,6 +1,6 @@
 package app.filters;
 
-import app.services.DDOSProtectionService;
+import app.services.security.interfaces.DDOSProtectionService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

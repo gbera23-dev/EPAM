@@ -2,7 +2,7 @@ package app.restcontroller;
 
 import app.dto.api.request.LoginRequest;
 import app.dto.api.request.PasswordChangeRequest;
-import app.services.JWTService;
+import app.services.security.interfaces.JWTService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -12,7 +12,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import app.services.AuthService;
+import app.services.security.interfaces.AuthService;
 
 import java.util.HashMap;
 import java.util.Map;

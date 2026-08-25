@@ -24,8 +24,8 @@ import app.mappers.api.TrainingApiMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import app.services.TrainerService;
-import app.services.TrainingTypeService;
+import app.services.business.interfaces.TrainerService;
+import app.services.business.interfaces.TrainingTypeService;
 
 import java.util.List;
 

@@ -1,8 +1,8 @@
 package app.unit.restcontroller;
 
 import app.restcontroller.TrainingRestController;
-import app.services.AuthService;
-import app.services.TrainingService;
+import app.services.security.interfaces.AuthService;
+import app.services.business.interfaces.TrainingService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

@@ -2,10 +2,9 @@ package com.example.Trainer_history_service.facade;
 
 import com.example.Trainer_history_service.annotations.FacadeLayer;
 import com.example.Trainer_history_service.dto.TrainerWorkloadRequest;
-import com.example.Trainer_history_service.services.TrainerService;
+import com.example.Trainer_history_service.services.business.interfaces.TrainerService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;

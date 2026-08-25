@@ -5,15 +5,13 @@ import app.dto.api.request.TrainerWorkloadBatchRequest;
 import app.dto.api.request.TrainerWorkloadRequest;
 import app.entities.ActionType;
 import app.entities.Training;
-import app.services.TraineeService;
+import app.services.business.interfaces.TraineeService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aopalliance.intercept.MethodInvocation;
-import org.aspectj.lang.ProceedingJoinPoint;
 import org.jboss.logging.MDC;
 import org.springframework.stereotype.Component;
-import app.utils.TransactionConstants.*;
 
 import java.util.List;
 

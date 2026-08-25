@@ -2,7 +2,7 @@ package com.example.Trainer_history_service.unit.beanPostProcessor;
 
 import com.example.Trainer_history_service.annotations.ConsumerLayer;
 import com.example.Trainer_history_service.beanPostProcessor.ConsumerLayerBeanPostProcessor;
-import com.example.Trainer_history_service.services.JWTService;
+import com.example.Trainer_history_service.services.security.interfaces.JWTService;
 import org.junit.jupiter.api.Test;
 import org.springframework.aop.framework.Advised;
 

@@ -6,12 +6,11 @@ import app.entities.ActionType;
 import app.entities.Trainer;
 import app.entities.Training;
 import app.entities.User;
-import app.services.TrainingService;
+import app.services.business.interfaces.TrainingService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import org.aopalliance.intercept.MethodInvocation;
-import org.aspectj.lang.ProceedingJoinPoint;
 import org.jboss.logging.MDC;
 import org.springframework.stereotype.Component;
 

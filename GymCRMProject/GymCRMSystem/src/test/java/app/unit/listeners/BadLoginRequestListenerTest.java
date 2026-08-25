@@ -1,7 +1,7 @@
 package app.unit.listeners;
 
 import app.listeners.BadLoginRequestListener;
-import app.services.DDOSProtectionService;
+import app.services.security.interfaces.DDOSProtectionService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.authentication.BadCredentialsException;

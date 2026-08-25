@@ -22,7 +22,7 @@ import app.mappers.api.TrainingApiMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import app.services.TraineeService;
+import app.services.business.interfaces.TraineeService;
 
 import java.util.List;
 

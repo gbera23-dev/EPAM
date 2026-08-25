@@ -3,16 +3,13 @@ package com.example.Trainer_history_service.beanPostProcessor;
 import com.example.Trainer_history_service.annotations.ConsumerLayer;
 import com.example.Trainer_history_service.methodInterceptors.JWTMethodInterceptor;
 import com.example.Trainer_history_service.methodInterceptors.TransactionMethodInterceptor;
-import com.example.Trainer_history_service.services.JWTService;
+import com.example.Trainer_history_service.services.security.interfaces.JWTService;
 import org.springframework.aop.framework.AopProxyUtils;
 import org.springframework.aop.framework.ProxyFactory;
 import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
-
-import java.util.Map;
 
 @Component
 public class ConsumerLayerBeanPostProcessor implements BeanPostProcessor {

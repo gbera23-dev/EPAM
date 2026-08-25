@@ -1,7 +1,7 @@
 package app.filters;
 
 import app.exceptions.UserCannotBeAuthorizedException;
-import app.services.JWTService;
+import app.services.security.interfaces.JWTService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
