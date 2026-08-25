@@ -20,7 +20,7 @@ public class TrainerHistoryServiceAspect {
     public Object sendRequestToMicroservice(ProceedingJoinPoint pjp,
                                             InteractsWithTraineeHistoryService interactsWithTraineeHistoryService)
             throws Throwable {
-        Class cls = interactsWithTraineeHistoryService.chosenStrategy();
+        Class<?> cls = interactsWithTraineeHistoryService.chosenStrategy();
         MicroserviceInteractionStrategy microserviceInteractionStrategy = (MicroserviceInteractionStrategy)
                 applicationContext.getBean(cls);
         return microserviceInteractionStrategy.sendTheRequest(pjp);
