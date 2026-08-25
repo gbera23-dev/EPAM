@@ -1,6 +1,7 @@
 package com.example.Trainer_history_service.services;
 
 
+import com.example.Trainer_history_service.annotations.ServiceLayer;
 import com.example.Trainer_history_service.exceptions.UserCannotBeAuthorizedException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
@@ -15,6 +16,7 @@ import javax.crypto.SecretKey;
 import java.util.Date;
 
 @Service
+@ServiceLayer
 public class JWTServiceImpl implements JWTService {
 
     @Value("${security.jwt_secret_key}")

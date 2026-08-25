@@ -1,6 +1,10 @@
 package com.example.Trainer_history_service.beanPostProcessor;
 
+import com.example.Trainer_history_service.annotations.PersistenceLayer;
+import com.example.Trainer_history_service.annotations.ServiceLayer;
 import com.example.Trainer_history_service.methodInterceptors.LoggingMethodInterceptor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.aop.framework.AopProxyUtils;
 import org.springframework.aop.framework.ProxyFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -11,6 +15,7 @@ import org.springframework.stereotype.Component;
 import java.util.Map;
 
 @Component
+@Slf4j
 public class ServiceLayerBeanPostProcessor implements BeanPostProcessor {
 
     private final long slowExecutionThresholdMs;
@@ -25,14 +30,15 @@ public class ServiceLayerBeanPostProcessor implements BeanPostProcessor {
     @Override
     public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
 
-        String packageName = bean.getClass().getPackageName();
+        Class<?> targetClass = AopProxyUtils.ultimateTargetClass(bean);
 
-        if (!packageName.equals("com.example.Trainer_history_service.services")) {
+        if (!targetClass.isAnnotationPresent(ServiceLayer.class)) {
             return bean;
         }
 
         ProxyFactory factory = new ProxyFactory(bean);
-        factory.addAdvice(new LoggingMethodInterceptor(layerRegistry.get(packageName),
+        factory.addAdvice(new LoggingMethodInterceptor(layerRegistry.get
+                (ServiceLayer.class.getSimpleName()),
                 slowExecutionThresholdMs));
         return factory.getProxy();
     }

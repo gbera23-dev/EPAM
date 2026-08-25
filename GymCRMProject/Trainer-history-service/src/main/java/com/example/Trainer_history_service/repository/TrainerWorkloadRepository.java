@@ -1,10 +1,12 @@
 package com.example.Trainer_history_service.repository;
 
+import com.example.Trainer_history_service.annotations.PersistenceLayer;
 import com.example.Trainer_history_service.documents.TrainerWorkload;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.Optional;
 
+@PersistenceLayer
 public interface TrainerWorkloadRepository extends MongoRepository<TrainerWorkload, Long> {
 
     Optional<TrainerWorkload> findByUsername(String username);

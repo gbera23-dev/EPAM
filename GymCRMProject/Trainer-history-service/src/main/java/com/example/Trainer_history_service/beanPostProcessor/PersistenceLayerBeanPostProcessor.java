@@ -1,5 +1,6 @@
 package com.example.Trainer_history_service.beanPostProcessor;
 
+import com.example.Trainer_history_service.annotations.PersistenceLayer;
 import com.example.Trainer_history_service.methodInterceptors.LoggingMethodInterceptor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.aop.framework.ProxyFactory;
@@ -26,29 +27,25 @@ public class PersistenceLayerBeanPostProcessor implements BeanPostProcessor {
 
     @Override
     public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
-        String packageName = "com.example.Trainer_history_service.repository";
 
         if (!isPersistenceLayerBean(bean)) {
             return bean;
         }
 
-        log.info("Persistence bean class: {} package:  {}", bean.getClass(), packageName);
-
         ProxyFactory factory = new ProxyFactory(bean);
-        factory.addAdvice(new LoggingMethodInterceptor(layerRegistry.get(packageName),
+        factory.addAdvice(new LoggingMethodInterceptor(layerRegistry.get(PersistenceLayer.class.getSimpleName()),
                 slowExecutionThresholdMs));
         return factory.getProxy();
     }
 
     private boolean isPersistenceLayerBean(Object bean) {
-        if (bean.getClass().getPackageName().equals("com.example.Trainer_history_service.repository")) {
-            return true;
-        }
+
         for (Class<?> iface : bean.getClass().getInterfaces()) {
-            if (iface.getPackageName().equals("com.example.Trainer_history_service.repository")) {
+            if (iface.isAnnotationPresent(PersistenceLayer.class)) {
                 return true;
             }
         }
+
         return false;
     }
 }

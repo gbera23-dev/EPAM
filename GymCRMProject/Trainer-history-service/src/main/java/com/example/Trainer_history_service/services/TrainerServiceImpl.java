@@ -1,5 +1,6 @@
 package com.example.Trainer_history_service.services;
 
+import com.example.Trainer_history_service.annotations.ServiceLayer;
 import com.example.Trainer_history_service.dto.TrainerWorkloadRequest;
 import com.example.Trainer_history_service.documents.ActionType;
 import com.example.Trainer_history_service.documents.MonthlySummary;
@@ -21,6 +22,7 @@ import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
+@ServiceLayer
 public class TrainerServiceImpl implements TrainerService {
 
     private final TrainerWorkloadRepository trainerWorkloadRepository;

@@ -2,6 +2,7 @@ package app.beanPostProcessor;
 
 import app.annotations.ClientLayer;
 import app.methodInterceptors.LoggingMethodInterceptor;
+import org.springframework.aop.framework.AopProxyUtils;
 import org.springframework.aop.framework.ProxyFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -26,7 +27,9 @@ public class ClientLayerBeanPostProcessor implements BeanPostProcessor {
     @Override
     public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
 
-        if(!bean.getClass().isAnnotationPresent(ClientLayer.class)) {
+        Class<?> targetClass = AopProxyUtils.ultimateTargetClass(bean);
+
+        if(!targetClass.isAnnotationPresent(ClientLayer.class)) {
             return bean;
         }
 

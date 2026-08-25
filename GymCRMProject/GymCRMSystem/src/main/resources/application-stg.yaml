@@ -35,6 +35,6 @@ logging:
     root: INFO
     org:
       hibernate:
-        SQL: DEBUG
+        SQL: INFO
       springframework:
-        web: DEBUG
+        web: INFO

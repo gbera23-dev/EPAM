@@ -1,5 +1,6 @@
 package com.example.Trainer_history_service.consumers;
 
+import com.example.Trainer_history_service.annotations.ConsumerLayer;
 import com.example.Trainer_history_service.dto.TrainerWorkloadBatchRequest;
 import com.example.Trainer_history_service.dto.TrainerWorkloadRequest;
 import com.example.Trainer_history_service.exceptions.CouldNotUpdateTrainerDataException;
@@ -20,6 +21,7 @@ import static com.example.Trainer_history_service.utils.TransactionConstants.TRA
 @Component
 @Slf4j
 @AllArgsConstructor
+@ConsumerLayer
 public class TrainerUpdateConsumer {
 
     private final TrainerFacade trainerFacade;

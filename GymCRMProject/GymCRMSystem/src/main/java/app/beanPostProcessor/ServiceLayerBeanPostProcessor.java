@@ -4,6 +4,7 @@ import app.annotations.ServiceLayer;
 import app.methodInterceptors.LoggingMethodInterceptor;
 import app.methodInterceptors.MetricsMethodInterceptor;
 import io.micrometer.core.instrument.MeterRegistry;
+import org.springframework.aop.framework.AopProxyUtils;
 import org.springframework.aop.framework.ProxyFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -31,7 +32,9 @@ public class ServiceLayerBeanPostProcessor implements BeanPostProcessor {
     @Override
     public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
 
-        if (!bean.getClass().isAnnotationPresent(ServiceLayer.class)) {
+        Class<?> targetClass = AopProxyUtils.ultimateTargetClass(bean);
+
+        if (!targetClass.isAnnotationPresent(ServiceLayer.class)) {
             return bean;
         }
 

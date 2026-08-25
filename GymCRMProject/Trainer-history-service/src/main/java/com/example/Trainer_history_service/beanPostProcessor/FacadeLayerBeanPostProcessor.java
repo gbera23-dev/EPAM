@@ -1,7 +1,9 @@
 package com.example.Trainer_history_service.beanPostProcessor;
 
+import com.example.Trainer_history_service.annotations.FacadeLayer;
 import com.example.Trainer_history_service.methodInterceptors.LoggingMethodInterceptor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.aop.framework.AopProxyUtils;
 import org.springframework.aop.framework.ProxyFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -25,14 +27,16 @@ public class FacadeLayerBeanPostProcessor implements BeanPostProcessor {
 
     @Override
     public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
-        String packageName = bean.getClass().getPackageName();
 
-        if (!packageName.equals("com.example.Trainer_history_service.facade")) {
+        Class<?> targetClass = AopProxyUtils.ultimateTargetClass(bean);
+
+        if (!targetClass.isAnnotationPresent(FacadeLayer.class)) {
             return bean;
         }
 
         ProxyFactory factory = new ProxyFactory(bean);
-        factory.addAdvice(new LoggingMethodInterceptor(layerRegistry.get(packageName),
+        factory.addAdvice(new LoggingMethodInterceptor(layerRegistry.
+                get(FacadeLayer.class.getSimpleName()),
                 slowExecutionThresholdMs));
         return factory.getProxy();
     }

@@ -1,5 +1,6 @@
 package com.example.Trainer_history_service.facade;
 
+import com.example.Trainer_history_service.annotations.FacadeLayer;
 import com.example.Trainer_history_service.dto.TrainerWorkloadRequest;
 import com.example.Trainer_history_service.services.TrainerService;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +11,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Component
+@FacadeLayer
 public class TrainerFacade {
 
     private final TrainerService trainerService;
