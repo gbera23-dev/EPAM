@@ -1,0 +1,40 @@
+spring:
+  datasource:
+    # database credentials
+    url: 'jdbc:mysql://mysqldb:3306/Gym_CRM_db'
+    username: admin
+    password: admin
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      auto-commit: false
+      maximum-pool-size: 10
+      minimum-idle: 3
+      connection-timeout: 30000
+  h2:
+    console:
+      enabled: false
+  jpa:
+    # JPA properties
+    show-sql: false
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+  jms:
+    cache:
+      # JMS Config
+      enabled: true
+    listener:
+      session:
+        acknowledge-mode: client
+      min-concurrency: 2
+      max-concurrency: 5
+    pub-sub-domain: false
+logging:
+  level:
+    # logging
+    root: INFO
+    org:
+      hibernate:
+        SQL: DEBUG
+      springframework:
+        web: DEBUG

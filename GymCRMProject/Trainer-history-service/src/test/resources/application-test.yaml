@@ -1,0 +1,21 @@
+eureka:
+  client:
+    enabled: false
+    register-with-eureka: false
+    fetch-registry: false
+spring:
+  activemq:
+    broker-url: 'vm://localhost?broker.persistent=false'
+  mongodb:
+    uri: ''
+    host: localhost
+    port: 0
+    database: trainer_history_test_db
+de:
+  flapdoodle:
+    mongodb:
+      embedded:
+        version: 7.0.14
+security:
+  jwt_secret_key: 98828a5361ff22f71844d7b16bf881af6e7870e013e79a323c0cd93893efece2
+  jwt_expiration_time: 3600000

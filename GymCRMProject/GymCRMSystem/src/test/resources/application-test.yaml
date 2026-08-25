@@ -1,0 +1,53 @@
+spring:
+  application:
+    name: gym-crm-test
+  main:
+    banner-mode: 'off'
+  datasource:
+    # database credentials
+    url: 'jdbc:h2:mem:Gym_CRM_db;DB_CLOSE_DELAY=-1;MODE=MySQL;NON_KEYWORDS=USER'
+    username: sa
+    password: ''
+    driver-class-name: org.h2.Driver
+    hikari:
+      auto-commit: true
+  h2:
+    console:
+      enabled: false
+  jpa:
+    # JPA properties
+    show-sql: false
+    hibernate:
+      ddl-auto: update
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    open-in-view: false
+  activemq:
+    broker-url: 'tcp://localhost:61616'
+  jms:
+    template:
+      receive-timeout: 1000
+  cloud:
+    discovery:
+      enabled: false
+security:
+  jwt_secret_key: dGVzdC1vbmx5LWp3dC1zaWduaW5nLWtleS1mb3ItY3VjdW1iZXItY29tcG9uZW50LXRlc3RzLTAxMjM0NTY3ODk=
+  jwt_expiration_time: 3600000
+data:
+  TrainerDataPath: testdata/TrainerData.json
+  TraineeDataPath: testdata/TraineeData.json
+  TrainingDataPath: testdata/TrainingData.json
+eureka:
+  client:
+    enabled: false
+    register-with-eureka: false
+    fetch-registry: false
+logging:
+  level:
+    root: WARN
+    app: WARN
+    org:
+      hibernate:
+        SQL: WARN
+      springframework:
+        web: WARN
