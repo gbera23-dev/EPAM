@@ -9,6 +9,7 @@ import app.services.TraineeService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.aopalliance.intercept.MethodInvocation;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.jboss.logging.MDC;
 import org.springframework.stereotype.Component;
@@ -29,13 +30,13 @@ public class BatchRemoveHoursFromTrainersStrategy implements MicroserviceInterac
     private final TrainerHistoryServiceMessaging trainerHistoryServiceMessaging;
 
     @Override
-    public Object sendTheRequest(ProceedingJoinPoint pjp) throws Throwable {
-        String username = (String) pjp.getArgs()[0];
-        HttpServletRequest httpServletRequest = (HttpServletRequest) pjp.getArgs()[1];
+    public Object sendTheRequest(MethodInvocation invocation) throws Throwable {
+        String username = (String) invocation.getArguments()[0];
+        HttpServletRequest httpServletRequest = (HttpServletRequest) invocation.getArguments()[1];
 
         List<Training> trainings = traineeService.getAllTrainingsForTrainee(username);
 
-        Object obj = pjp.proceed();
+        Object obj = invocation.proceed();
 
         trainerHistoryServiceMessaging.sendMessage(
                 TRAINING_BATCH_UPDATE_CHANNEL,

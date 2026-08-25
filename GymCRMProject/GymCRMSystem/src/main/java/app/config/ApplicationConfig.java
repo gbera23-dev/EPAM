@@ -8,6 +8,8 @@ import org.springframework.context.annotation.*;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.scheduling.annotation.EnableScheduling;
+
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -47,6 +49,16 @@ public class ApplicationConfig {
     @Bean(name="TrainingResource")
     public Resource trainingResource(@Value("${data.TrainingDataPath}") String path) {
         return new ClassPathResource(path);
+    }
+
+    @Bean(name="LayerRegistry")
+    public Map<String, String> layerRegistry() {
+        Map<String, String> reg = new HashMap<>();
+        reg.put("app.services", "Service");
+        reg.put("app.persistence", "Persistence");
+        reg.put("app.clients", "Client");
+        reg.put("app.restcontroller", "Controller");
+        return reg;
     }
 
 }

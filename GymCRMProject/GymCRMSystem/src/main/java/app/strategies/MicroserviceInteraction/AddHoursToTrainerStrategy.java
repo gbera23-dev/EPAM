@@ -11,6 +11,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.aopalliance.intercept.MethodInvocation;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.jboss.logging.MDC;
 import org.springframework.stereotype.Component;
@@ -28,9 +29,9 @@ public class AddHoursToTrainerStrategy implements MicroserviceInteractionStrateg
     private final TrainerHistoryServiceMessaging trainerHistoryServiceMessaging;
 
     @Override
-    public Object sendTheRequest(ProceedingJoinPoint pjp) throws Throwable {
-        TrainingRequest trainingRequest = (TrainingRequest) pjp.getArgs()[0];
-        HttpServletRequest httpServletRequest = (HttpServletRequest) pjp.getArgs()[1];
+    public Object sendTheRequest(MethodInvocation invocation) throws Throwable {
+        TrainingRequest trainingRequest = (TrainingRequest) invocation.getArguments()[0];
+        HttpServletRequest httpServletRequest = (HttpServletRequest) invocation.getArguments()[1];
 
         Trainer trainer = trainerService.
                 selectTrainerProfileByUsername(trainingRequest.getTrainerUsername());
@@ -45,7 +46,7 @@ public class AddHoursToTrainerStrategy implements MicroserviceInteractionStrateg
                 trainingRequest.getDuration(),
                 ActionType.ADD
         );
-        Object result = pjp.proceed();
+        Object result = invocation.proceed();
         attemptSendingRequest(httpServletRequest, trainerWorkloadRequest);
         return result;
     }

@@ -8,6 +8,7 @@ import app.entities.User;
 import app.services.TrainingService;
 import app.strategies.MicroserviceInteraction.RemoveHoursFromTrainerStrategy;
 import jakarta.servlet.http.HttpServletRequest;
+import org.aopalliance.intercept.MethodInvocation;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.jboss.logging.MDC;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,7 +29,7 @@ class RemoveHoursFromTrainerStrategyTest {
 
     @Mock private TrainingService trainingService;
     @Mock private TrainerHistoryServiceMessaging trainerHistoryServiceMessaging;
-    @Mock private ProceedingJoinPoint pjp;
+    @Mock private MethodInvocation invocation;
     @Mock private HttpServletRequest httpServletRequest;
     @Mock private Training training;
     @Mock private Trainer trainer;
@@ -44,7 +45,7 @@ class RemoveHoursFromTrainerStrategyTest {
 
     @Test
     void testSendTheRequestProceedsThenSendsMessage() throws Throwable {
-        when(pjp.getArgs()).thenReturn(new Object[]{5L, httpServletRequest});
+        when(invocation.getArguments()).thenReturn(new Object[]{5L, httpServletRequest});
         when(trainingService.selectTraining(5L)).thenReturn(training);
         when(training.getTrainer()).thenReturn(trainer);
         when(trainer.getUser()).thenReturn(user);
@@ -55,12 +56,12 @@ class RemoveHoursFromTrainerStrategyTest {
         when(user.getLastName()).thenReturn("Doe");
         when(user.isActive()).thenReturn(true);
         when(httpServletRequest.getHeader(anyString())).thenReturn("Bearer token");
-        when(pjp.proceed()).thenReturn("proceeded");
+        when(invocation.proceed()).thenReturn("proceeded");
 
-        Object result = strategy.sendTheRequest(pjp);
+        Object result = strategy.sendTheRequest(invocation);
 
-        var inOrder = inOrder(pjp, trainerHistoryServiceMessaging);
-        inOrder.verify(pjp).proceed();
+        var inOrder = inOrder(invocation, trainerHistoryServiceMessaging);
+        inOrder.verify(invocation).proceed();
         ArgumentCaptor<TrainerWorkloadRequest> captor = ArgumentCaptor.forClass(TrainerWorkloadRequest.class);
         inOrder.verify(trainerHistoryServiceMessaging).sendMessage(
                 eq("training-update-channel"), captor.capture(), eq("Bearer token"), eq("txn-2"));
@@ -78,14 +79,14 @@ class RemoveHoursFromTrainerStrategyTest {
 
     @Test
     void testSendTheRequestUsesTrainingIdFromArgsToLookUpTraining() throws Throwable {
-        when(pjp.getArgs()).thenReturn(new Object[]{9L, httpServletRequest});
+        when(invocation.getArguments()).thenReturn(new Object[]{9L, httpServletRequest});
         when(trainingService.selectTraining(9L)).thenReturn(training);
         when(training.getTrainer()).thenReturn(trainer);
         when(trainer.getUser()).thenReturn(user);
         when(httpServletRequest.getHeader(anyString())).thenReturn("token");
-        when(pjp.proceed()).thenReturn("ok");
+        when(invocation.proceed()).thenReturn("ok");
 
-        strategy.sendTheRequest(pjp);
+        strategy.sendTheRequest(invocation);
 
         ArgumentCaptor<Long> idCaptor = ArgumentCaptor.forClass(Long.class);
         verify(trainingService).selectTraining(idCaptor.capture());

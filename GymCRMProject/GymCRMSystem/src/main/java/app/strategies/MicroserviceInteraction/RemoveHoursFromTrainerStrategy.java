@@ -10,6 +10,7 @@ import app.services.TrainingService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
+import org.aopalliance.intercept.MethodInvocation;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.jboss.logging.MDC;
 import org.springframework.stereotype.Component;
@@ -26,9 +27,9 @@ public class RemoveHoursFromTrainerStrategy implements MicroserviceInteractionSt
     private final TrainerHistoryServiceMessaging trainerHistoryServiceMessaging;
 
     @Override
-    public Object sendTheRequest(ProceedingJoinPoint pjp) throws Throwable {
-        Long trainingId = (Long) pjp.getArgs()[0];
-        HttpServletRequest httpServletRequest = (HttpServletRequest) pjp.getArgs()[1];
+    public Object sendTheRequest(MethodInvocation invocation) throws Throwable {
+        Long trainingId = (Long) invocation.getArguments()[0];
+        HttpServletRequest httpServletRequest = (HttpServletRequest) invocation.getArguments()[1];
 
         Training training = trainingService.selectTraining(trainingId);
 
@@ -45,7 +46,7 @@ public class RemoveHoursFromTrainerStrategy implements MicroserviceInteractionSt
                 ActionType.DELETE
         );
 
-        Object obj = pjp.proceed();
+        Object obj = invocation.proceed();
 
         attemptSendingRequest(httpServletRequest, trainerWorkloadRequest);
 

@@ -9,6 +9,7 @@ import app.entities.User;
 import app.services.TraineeService;
 import app.strategies.MicroserviceInteraction.BatchRemoveHoursFromTrainersStrategy;
 import jakarta.servlet.http.HttpServletRequest;
+import org.aopalliance.intercept.MethodInvocation;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.jboss.logging.MDC;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,7 +31,7 @@ class BatchRemoveHoursFromTrainersStrategyTest {
 
     @Mock private TraineeService traineeService;
     @Mock private TrainerHistoryServiceMessaging trainerHistoryServiceMessaging;
-    @Mock private ProceedingJoinPoint pjp;
+    @Mock private MethodInvocation invocation;
     @Mock private HttpServletRequest httpServletRequest;
     @Mock private Training training;
     @Mock private Trainer trainer;
@@ -46,7 +47,7 @@ class BatchRemoveHoursFromTrainersStrategyTest {
 
     @Test
     void testSendTheRequestProceedsThenSendsBatchMessage() throws Throwable {
-        when(pjp.getArgs()).thenReturn(new Object[]{"trainee.one", httpServletRequest});
+        when(invocation.getArguments()).thenReturn(new Object[]{"trainee.one", httpServletRequest});
         when(traineeService.getAllTrainingsForTrainee("trainee.one")).thenReturn(List.of(training));
         when(training.getTrainer()).thenReturn(trainer);
         when(trainer.getUser()).thenReturn(user);
@@ -57,12 +58,12 @@ class BatchRemoveHoursFromTrainersStrategyTest {
         when(user.getLastName()).thenReturn("Smith");
         when(user.isActive()).thenReturn(false);
         when(httpServletRequest.getHeader(anyString())).thenReturn("Bearer token");
-        when(pjp.proceed()).thenReturn("proceeded");
+        when(invocation.proceed()).thenReturn("proceeded");
 
-        Object result = strategy.sendTheRequest(pjp);
+        Object result = strategy.sendTheRequest(invocation);
 
-        var inOrder = inOrder(pjp, trainerHistoryServiceMessaging);
-        inOrder.verify(pjp).proceed();
+        var inOrder = inOrder(invocation, trainerHistoryServiceMessaging);
+        inOrder.verify(invocation).proceed();
         ArgumentCaptor<TrainerWorkloadBatchRequest> captor = ArgumentCaptor.forClass(TrainerWorkloadBatchRequest.class);
         inOrder.verify(trainerHistoryServiceMessaging).sendMessage(
                 eq("training-batch-update-channel"), captor.capture(), eq("Bearer token"), eq("txn-3"));
@@ -82,26 +83,26 @@ class BatchRemoveHoursFromTrainersStrategyTest {
 
     @Test
     void testSendTheRequestLooksUpTrainingsForGivenUsernameBeforeProceeding() throws Throwable {
-        when(pjp.getArgs()).thenReturn(new Object[]{"trainee.two", httpServletRequest});
+        when(invocation.getArguments()).thenReturn(new Object[]{"trainee.two", httpServletRequest});
         when(traineeService.getAllTrainingsForTrainee("trainee.two")).thenReturn(List.of());
         when(httpServletRequest.getHeader(anyString())).thenReturn("token");
-        when(pjp.proceed()).thenReturn("ok");
+        when(invocation.proceed()).thenReturn("ok");
 
-        strategy.sendTheRequest(pjp);
+        strategy.sendTheRequest(invocation);
 
-        var inOrder = inOrder(traineeService, pjp);
+        var inOrder = inOrder(traineeService, invocation);
         inOrder.verify(traineeService).getAllTrainingsForTrainee("trainee.two");
-        inOrder.verify(pjp).proceed();
+        inOrder.verify(invocation).proceed();
     }
 
     @Test
     void testSendTheRequestWithEmptyTrainingsListStillSendsMessage() throws Throwable {
-        when(pjp.getArgs()).thenReturn(new Object[]{"trainee.three", httpServletRequest});
+        when(invocation.getArguments()).thenReturn(new Object[]{"trainee.three", httpServletRequest});
         when(traineeService.getAllTrainingsForTrainee("trainee.three")).thenReturn(List.of());
         when(httpServletRequest.getHeader(anyString())).thenReturn("token");
-        when(pjp.proceed()).thenReturn("ok");
+        when(invocation.proceed()).thenReturn("ok");
 
-        strategy.sendTheRequest(pjp);
+        strategy.sendTheRequest(invocation);
 
         verify(trainerHistoryServiceMessaging).sendMessage(
                 eq("training-batch-update-channel"), any(TrainerWorkloadBatchRequest.class), eq("token"), eq("txn-3"));

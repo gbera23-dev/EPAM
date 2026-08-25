@@ -9,6 +9,7 @@ import app.entities.User;
 import app.services.TrainerService;
 import app.strategies.MicroserviceInteraction.AddHoursToTrainerStrategy;
 import jakarta.servlet.http.HttpServletRequest;
+import org.aopalliance.intercept.MethodInvocation;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.jboss.logging.MDC;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,7 +31,7 @@ class AddHoursToTrainerStrategyTest {
 
     @Mock private TrainerService trainerService;
     @Mock private TrainerHistoryServiceMessaging trainerHistoryServiceMessaging;
-    @Mock private ProceedingJoinPoint pjp;
+    @Mock private MethodInvocation invocation;
     @Mock private HttpServletRequest httpServletRequest;
     @Mock private TrainingRequest trainingRequest;
     @Mock private Trainer trainer;
@@ -46,7 +47,7 @@ class AddHoursToTrainerStrategyTest {
 
     @Test
     void testSendTheRequestBuildsWorkloadRequestAndSendsMessage() throws Throwable {
-        when(pjp.getArgs()).thenReturn(new Object[]{trainingRequest, httpServletRequest});
+        when(invocation.getArguments()).thenReturn(new Object[]{trainingRequest, httpServletRequest});
         when(trainingRequest.getTrainerUsername()).thenReturn("trainer.one");
         when(trainingRequest.getDate()).thenReturn(LocalDate.of(2025, 6, 1));
         when(trainingRequest.getDuration()).thenReturn(60);
@@ -57,9 +58,9 @@ class AddHoursToTrainerStrategyTest {
         when(user.getLastName()).thenReturn("Doe");
         when(user.isActive()).thenReturn(true);
         when(httpServletRequest.getHeader(anyString())).thenReturn("Bearer token");
-        when(pjp.proceed()).thenReturn("proceeded");
+        when(invocation.proceed()).thenReturn("proceeded");
 
-        Object result = strategy.sendTheRequest(pjp);
+        Object result = strategy.sendTheRequest(invocation);
 
         ArgumentCaptor<TrainerWorkloadRequest> captor = ArgumentCaptor.forClass(TrainerWorkloadRequest.class);
         verify(trainerHistoryServiceMessaging).sendMessage(
@@ -74,21 +75,21 @@ class AddHoursToTrainerStrategyTest {
         assertEquals(60, sent.getDuration());
         assertEquals(ActionType.ADD, sent.getActionType());
         assertEquals("proceeded", result);
-        verify(pjp).proceed();
+        verify(invocation).proceed();
     }
 
     @Test
     void testSendTheRequestSendsMessageBeforeProceeding() throws Throwable {
-        when(pjp.getArgs()).thenReturn(new Object[]{trainingRequest, httpServletRequest});
+        when(invocation.getArguments()).thenReturn(new Object[]{trainingRequest, httpServletRequest});
         when(trainingRequest.getTrainerUsername()).thenReturn("trainer.two");
         when(trainerService.selectTrainerProfileByUsername("trainer.two")).thenReturn(trainer);
         when(trainer.getUser()).thenReturn(user);
         when(httpServletRequest.getHeader(anyString())).thenReturn("token");
-        when(pjp.proceed()).thenReturn("result");
+        when(invocation.proceed()).thenReturn("result");
 
-        strategy.sendTheRequest(pjp);
+        strategy.sendTheRequest(invocation);
 
-        var inOrder = inOrder(trainerHistoryServiceMessaging, pjp);
+        var inOrder = inOrder(trainerHistoryServiceMessaging, invocation);
         inOrder.verify(trainerHistoryServiceMessaging).sendMessage(any(), any(), any(), any());
     }
 }

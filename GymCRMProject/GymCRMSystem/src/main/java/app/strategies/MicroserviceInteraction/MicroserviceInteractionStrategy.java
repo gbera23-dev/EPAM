@@ -1,7 +1,7 @@
 package app.strategies.MicroserviceInteraction;
 
-import org.aspectj.lang.ProceedingJoinPoint;
+import org.aopalliance.intercept.MethodInvocation;
 
 public interface MicroserviceInteractionStrategy {
-    Object sendTheRequest(ProceedingJoinPoint pjp) throws Throwable;
+    Object sendTheRequest(MethodInvocation invocation) throws Throwable;
 }
