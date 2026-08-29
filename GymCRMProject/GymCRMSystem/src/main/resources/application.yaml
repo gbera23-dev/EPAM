@@ -1,0 +1,57 @@
+data:
+  # Data files
+  TraineeDataPath: TraineeData.json
+  TrainerDataPath: TrainerData.json
+  TrainingDataPath: TrainingData.json
+spring:
+  aop:
+    # AOP properties
+    proxy-target-class: true
+  output:
+    ansi:
+      # logger properties
+      enabled: ALWAYS
+  profiles:
+    # default profile
+    active: ${SPRING_PROFILES_ACTIVE:local}
+  activemq:
+    # ActiveMQ broker base information
+    broker-url: 'tcp://activemqbroker:61616'
+    packages:
+      trust-all: true
+    user: sa
+    password: ''
+management:
+  endpoints:
+    web:
+      exposure:
+        # Spring Boot actuator and health properties
+        include: '*'
+  endpoint:
+    health:
+      show-details: always
+logging:
+  pattern:
+    console: '%d{yyyy-MM-dd HH:mm:ss.SSS} %clr(%5p) [%X{transactionId}] [%thread] %logger{36} : %msg%n'
+security:
+  # JWT token properties
+  jwt_secret_key: 98828a5361ff22f71844d7b16bf881af6e7870e013e79a323c0cd93893efece2
+  jwt_expiration_time: 86400000
+microservice:
+  TrainerHistoryService:
+    # Trainer history service information
+    URI: 'http://gymcrmmicroserviceapp:8081'
+eureka:
+  client:
+    # Eureka properties
+    fetch-registry: true
+    register-with-eureka: false
+    service-url:
+      defaultZone: 'http://gymcrmdiscoveryapp:8761/eureka/'
+
+slow-execution-treshold:
+  1000
+
+ddos-protection:
+  num-login-attempts: 3
+  lock-duration: 5

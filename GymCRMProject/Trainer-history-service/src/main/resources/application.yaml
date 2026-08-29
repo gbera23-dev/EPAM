@@ -1,0 +1,46 @@
+spring:
+  application:
+    name: Trainer-history-service
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    open-in-view: true
+  output:
+    ansi:
+      enabled: ALWAYS
+  activemq:
+    broker-url: tcp://activemqbroker:61616
+    packages:
+      trust-all: true
+  mongodb:
+    uri: mongodb://admin:admin@mongodb:27017/?authSource=admin
+    database: trainer_history_db
+  data:
+    mongodb:
+      auto-index-creation: true
+
+server:
+  port: 8081
+
+logging:
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} %clr(%5p) [%X{transactionId}] [%thread] %logger{36} : %msg%n"
+
+security:
+  jwt_secret_key: 98828a5361ff22f71844d7b16bf881af6e7870e013e79a323c0cd93893efece2
+  jwt_expiration_time: 86400000
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://gymcrmdiscoveryapp:8761/eureka/
+    register-with-eureka: true
+    fetch-registry: true
+  instance:
+    prefer-ip-address: false
+
+
+slow-execution-treshold:
+  1000

@@ -1,10 +1,10 @@
 package com.example.Trainer_history_service.integration.cucumber;
 
-import com.example.Trainer_history_service.documents.ActionType;
-import com.example.Trainer_history_service.documents.TrainerWorkload;
-import com.example.Trainer_history_service.dto.TrainerWorkloadRequest;
-import com.example.Trainer_history_service.facade.TrainerFacade;
-import com.example.Trainer_history_service.repository.TrainerWorkloadRepository;
+import com.example.Trainer_history_service.domain.documents.ActionType;
+import com.example.Trainer_history_service.domain.documents.TrainerWorkload;
+import com.example.Trainer_history_service.api.dto.TrainerWorkloadRequest;
+import com.example.Trainer_history_service.api.facade.TrainerFacade;
+import com.example.Trainer_history_service.domain.repository.TrainerWorkloadRepository;
 import io.cucumber.java.en.When;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
